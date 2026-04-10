@@ -17,5 +17,6 @@
 - [analysis-plan.md](./analysis-plan.md) — 分析フロー・Phase別の仮説と推定対象
 - [decision-log.md](./decision-log.md) — 意思決定ログ
 - [roadmap.md](./roadmap.md) — TODO・進捗ログ
+- [contradiction-log.md](./contradiction-log.md) — 先行研究との矛盾点リスト（解消状況管理）
 - [literature/](./literature/) — 先行研究（論文サマリー・マトリクス・検索ログ）
 - [data-sources/](./data-sources/) — データソース調査結果
