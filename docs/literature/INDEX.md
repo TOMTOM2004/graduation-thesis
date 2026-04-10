@@ -1,0 +1,64 @@
+# 文献レビュー インデックス
+
+## 概要
+
+本研究に関連する先行研究の管理。論文サマリーは `papers/` 以下に1論文1ファイルで格納。計26件。
+
+---
+
+## 分類
+
+### コストプッシュインフレと家計消費
+- [P001 Yagi et al. (2022)](papers/yagi-2022-pass-through.md) — 日本のコストプッシュ圧力→消費者物価の転嫁率推定
+- [P002 Cravino & Levchenko (2017)](papers/cravino-levchenko-2017-devaluations.md) — 為替切り下げの分配的帰結（メキシコ）
+- [P003 Jaravel (2021)](papers/jaravel-2021-inflation-inequality.md) — インフレ格差のサーベイ論文
+- [P007 Peersman & Wauters (2024)](papers/peersman-wauters-2024-energy-heterogeneity.md) — エネルギー価格ショックへの家計反応の異質性
+- [P009 Ferreira et al. (2023)](papers/ferreira-2023-inflation-balance-sheets.md) — インフレの家計資産への3チャネル分解
+- [P012 Hottman & Monarch (2020)](papers/hottman-monarch-2020-import-price-inflation.md) — 所得層別の輸入物価インフレ
+- [P025 Rubbo (2023)](papers/rubbo-2023-networks-phillips-curves.md) — 生産ネットワークを通じたコストプッシュの増幅メカニズム
+
+### 消費の価格弾力性・カテゴリ別分析
+- [P007 Peersman & Wauters (2024)](papers/peersman-wauters-2024-energy-heterogeneity.md) — エネルギー需要弾力性の非対称性・非線形性
+- [P010 Hobijn & Lagakos (2005)](papers/hobijn-lagakos-2005-inflation-inequality-us.md) — 家計別CPI構築の先駆的手法
+
+### 地域間異質性
+- [P021 Kiss & Strasser (2024)](papers/kiss-strasser-2024-inflation-heterogeneity-households.md) — インフレ格差の40%は地域要因（独仏スキャナーデータ）
+- [P013 Autor, Dorn, Hanson (2013)](papers/autor-dorn-hanson-2013-china-syndrome.md) — 地域別の輸入競争効果（shift-share IV）
+
+### シミュレーションモデル・政策評価
+- [P023 Dollman et al. (2024)](papers/dollman-2024-austria-microsimulation.md) — EUROMODマイクロシミュレーションによるインフレ+政策の分配効果
+- [P008 Chan, Diz, Kanngiesser (2024)](papers/chan-diz-kanngiesser-2024-gas-tank.md) — Gas-TANKモデル（家計異質性×エネルギー）
+- [P011 Erceg et al. (2024)](papers/erceg-2024-energy-subsidies.md) — エネルギー補助金の反インフレ効果
+- [P022 Kaplan, Moll, Violante (2018)](papers/kaplan-moll-violante-2018-hank.md) — HANKモデル（異質的エージェント×金融政策）
+- [P025 Rubbo (2023)](papers/rubbo-2023-networks-phillips-curves.md) — 生産ネットワーク×フィリップス曲線（コスト波及の理論）
+- [P026 Hisanaga (2022)](papers/hisanaga-2022-japan-tax-microsimulation.md) — 日本の税制改革のマイクロシミュレーション（IMF）
+
+### オルタナティブデータを用いた消費分析
+- [P016 Aastveit et al. (2024)](papers/aastveit-2024-nowcasting-debit-card.md) — デビットカード全取引で消費ナウキャスト（ノルウェー）
+- [P017 Aladangady et al. (2019)](papers/aladangady-2019-transaction-data-spending.md) — クレジットカード取引→地理別消費統計（米国FRB）
+- [P018 Chetty et al. (2024)](papers/chetty-2020-economic-tracker.md) — 民間データ統合による経済活動DB（Opportunity Insights）
+- [P019 Cavallo & Rigobon (2016)](papers/cavallo-2016-billion-prices.md) — オンライン価格で日次物価指数（Billion Prices Project）
+- [P020 Watanabe & Omori (2020)](papers/watanabe-2020-online-consumption-japan.md) — 日本のスキャナーデータ・オンライン消費分析
+- [P024 Galbraith & Tkacz (2018)](papers/galbraith-tkacz-2018-payments-nowcasting.md) — 決済データGDPナウキャスト（カナダ）
+
+### 識別戦略・手法（shift-share, DID等）
+- [P004 Borusyak, Hull, Jaravel (2022)](papers/borusyak-hull-jaravel-2022-shift-share.md) — Shift-share IVの計量理論（ショック外生性）
+- [P005 Goldsmith-Pinkham et al. (2020)](papers/goldsmith-pinkham-2020-bartik.md) — Bartik IVの分解（シェア外生性）
+- [P006 Adão, Kolesár, Morales (2019)](papers/adao-kolesar-morales-2019-shift-share-inference.md) — Shift-shareの推論理論
+
+### 日本の家計消費分析
+- [P001 Yagi et al. (2022)](papers/yagi-2022-pass-through.md) — コスト転嫁率（日銀WP）
+- [P014 宇南山 (2023)](papers/unanayama-2023-japan-consumption.md) — 日本の消費分析の包括的著書
+- [P015 Niizeki & Hori (2023)](papers/niizeki-hori-2023-inflation-expectations-japan.md) — インフレ期待と消費支出（疑似パネル）
+- [P020 Watanabe & Omori (2020)](papers/watanabe-2020-online-consumption-japan.md) — スキャナーデータ・オンライン消費（日本）
+- [P026 Hisanaga (2022)](papers/hisanaga-2022-japan-tax-microsimulation.md) — 日本の税制マイクロシミュレーション（IMF・KHPS使用）
+
+---
+
+## 文献マトリクス
+
+→ [matrix.md](./matrix.md)
+
+## 検索ログ
+
+→ [search-log.md](./search-log.md)

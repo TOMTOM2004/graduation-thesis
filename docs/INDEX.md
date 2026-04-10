@@ -1,19 +1,22 @@
 # 卒業論文 ドキュメントインデックス
 
 ## テーマ
-コストプッシュインフレ下の日本の家計実消費の実態把握
+コストプッシュインフレ下の日本の家計消費の構造解明と政策シミュレーション
 
 ## 一文要約
-現在の日本における家計消費の実態を、コストプッシュインフレという構造変化の下で、可能な範囲で公的統計とオルタナティブデータを用いながら、実消費ベースでより現実に近く把握しようとする実証研究。
+コストプッシュインフレ下の日本の家計消費への波及構造を因果推論で実証し、その推定結果に基づくシミュレーションモデルを構築して政策効果を評価する研究。
 
 ---
 
 ## ファイル構成
 
-- [overview.md](./overview.md) — テーマ・スコープ・研究質問
+- [overview.md](./overview.md) — テーマ・研究質問（主問＋副問1〜3）・スコープ
 - [objectives.md](./objectives.md) — 目的・制約・成功基準
-- [research-design.md](./research-design.md) — 研究設計・識別戦略・分析フロー
+- [research-design.md](./research-design.md) — 研究設計（Phase 1〜3）・識別戦略・シミュレーションモデルの位置づけ
 - [data-plan.md](./data-plan.md) — データソース・変数・オルタナティブデータ計画
-- [analysis-plan.md](./analysis-plan.md) — 仮説・分析方針・モデル構想
+- [analysis-plan.md](./analysis-plan.md) — 分析フロー・Phase別の仮説と推定対象
 - [decision-log.md](./decision-log.md) — 意思決定ログ
-- [roadmap.md](./roadmap.md) — 未決事項・進捗ログ
+- [roadmap.md](./roadmap.md) — TODO・進捗ログ
+- [contradiction-log.md](./contradiction-log.md) — 先行研究との矛盾点リスト（解消状況管理）
+- [literature/](./literature/) — 先行研究（論文サマリー・マトリクス・検索ログ）
+- [data-sources/](./data-sources/) — データソース調査結果
