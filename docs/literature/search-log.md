@@ -12,3 +12,9 @@
 | 2026-04-10 | inflation heterogeneity households scanner data regional | ECB WP, Google Scholar | ~10 | 1 | P021 |
 | 2026-04-10 | microsimulation inflation policy distributional household | IJM, Google Scholar | ~10 | 1 | P023 |
 | 2026-04-10 | HANK heterogeneous agent consumption monetary policy | Google Scholar, NBER | ~10 | 1 | P022 |
+| 2026-04-10 | production network input-output cost-push inflation propagation | Google Scholar, NBER | ~10 | 1 | P025 |
+| 2026-04-10 | Japan microsimulation tax benefit household EUROMOD equivalent | IMF, Google Scholar | ~8 | 1 | P026 |
+| 2026-04-10 | 日銀 RIETI コストプッシュ 家計消費 実証 | Google, RIETI | ~10 | 0 | 政策資料のみ。因果推論ベースの学術論文は見当たらず |
+| 2026-04-10 | 円安 yen depreciation household consumption Japan 2022-2024 | Google Scholar, IMF | ~10 | 0 | 直近の円安→消費の因果推論研究は空白 |
+| 2026-04-10 | demand system AIDS QUAIDS food energy elasticity | Google Scholar | ~15 | 0 | 方法論として認知。個別論文の保存は不要 |
+| 2026-04-10 | 電気ガス価格激変緩和 補助金 効果 検証 | Google | ~10 | 0 | 政府試算(CPI -0.6%pt)はあるが学術的効果検証は見当たらず |

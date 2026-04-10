@@ -2,7 +2,7 @@
 
 ## 概要
 
-本研究に関連する先行研究の管理。論文サマリーは `papers/` 以下に1論文1ファイルで格納。計24件。
+本研究に関連する先行研究の管理。論文サマリーは `papers/` 以下に1論文1ファイルで格納。計26件。
 
 ---
 
@@ -15,6 +15,7 @@
 - [P007 Peersman & Wauters (2024)](papers/peersman-wauters-2024-energy-heterogeneity.md) — エネルギー価格ショックへの家計反応の異質性
 - [P009 Ferreira et al. (2023)](papers/ferreira-2023-inflation-balance-sheets.md) — インフレの家計資産への3チャネル分解
 - [P012 Hottman & Monarch (2020)](papers/hottman-monarch-2020-import-price-inflation.md) — 所得層別の輸入物価インフレ
+- [P025 Rubbo (2023)](papers/rubbo-2023-networks-phillips-curves.md) — 生産ネットワークを通じたコストプッシュの増幅メカニズム
 
 ### 消費の価格弾力性・カテゴリ別分析
 - [P007 Peersman & Wauters (2024)](papers/peersman-wauters-2024-energy-heterogeneity.md) — エネルギー需要弾力性の非対称性・非線形性
@@ -29,6 +30,8 @@
 - [P008 Chan, Diz, Kanngiesser (2024)](papers/chan-diz-kanngiesser-2024-gas-tank.md) — Gas-TANKモデル（家計異質性×エネルギー）
 - [P011 Erceg et al. (2024)](papers/erceg-2024-energy-subsidies.md) — エネルギー補助金の反インフレ効果
 - [P022 Kaplan, Moll, Violante (2018)](papers/kaplan-moll-violante-2018-hank.md) — HANKモデル（異質的エージェント×金融政策）
+- [P025 Rubbo (2023)](papers/rubbo-2023-networks-phillips-curves.md) — 生産ネットワーク×フィリップス曲線（コスト波及の理論）
+- [P026 Hisanaga (2022)](papers/hisanaga-2022-japan-tax-microsimulation.md) — 日本の税制改革のマイクロシミュレーション（IMF）
 
 ### オルタナティブデータを用いた消費分析
 - [P016 Aastveit et al. (2024)](papers/aastveit-2024-nowcasting-debit-card.md) — デビットカード全取引で消費ナウキャスト（ノルウェー）
@@ -48,6 +51,7 @@
 - [P014 宇南山 (2023)](papers/unanayama-2023-japan-consumption.md) — 日本の消費分析の包括的著書
 - [P015 Niizeki & Hori (2023)](papers/niizeki-hori-2023-inflation-expectations-japan.md) — インフレ期待と消費支出（疑似パネル）
 - [P020 Watanabe & Omori (2020)](papers/watanabe-2020-online-consumption-japan.md) — スキャナーデータ・オンライン消費（日本）
+- [P026 Hisanaga (2022)](papers/hisanaga-2022-japan-tax-microsimulation.md) — 日本の税制マイクロシミュレーション（IMF・KHPS使用）
 
 ---
 
