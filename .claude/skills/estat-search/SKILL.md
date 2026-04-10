@@ -1,70 +1,101 @@
 ---
 name: estat-search
-description: Search Japan's e-Stat (政府統計) for datasets, metadata, and variable availability. Use when the user asks about government statistics, e-Stat, 政府統計, データ検索, or needs to check what public data is available for their analysis.
-allowed-tools: WebSearch, WebFetch, Read
+description: Search Japan's e-Stat and other data sources for datasets, metadata, and variable availability. Use when the user asks about government statistics, e-Stat, 政府統計, データ検索, or needs to check what public data is available. Saves results to docs/data-sources/.
+context: fork
+allowed-tools: WebSearch, WebFetch, Read, Write, Edit, Glob
 ---
 
 # e-Stat Search
 
-Search Japan's government statistics portal and related data sources. Follow these steps.
+Search Japan's government statistics and related data sources, assess fitness, and save results.
 
-**Reference:** [shared/search-guidelines.md](../shared/search-guidelines.md) — apply all shared formatting and query rules.
-
----
-
-## Step 1: Understand the Data Need
-
-Classify what the user needs:
-- **A) Dataset discovery**: what datasets exist for a topic (e.g., "household consumption by prefecture")
-- **B) Variable check**: what variables are available in a specific survey (e.g., "what categories does 家計調査 break down into")
-- **C) Metadata/coverage**: time range, geographic granularity, frequency, sample size
-- **D) API/download info**: how to access the data programmatically
+**Reference**: [shared/search-guidelines.md](../shared/search-guidelines.md) — query construction and formatting rules.
 
 ---
 
-## Step 2: Construct Queries
+## Step 0: Parse Data Need
 
-Build queries targeting these sources:
-1. **e-Stat portal**: `site:e-stat.go.jp` + topic keywords in Japanese
-   - Example: `site:e-stat.go.jp 家計調査 都道府県 月次`
-2. **Survey documentation**: survey name + 調査概要 or 利用案内
-   - Example: `家計調査 調査概要 総務省`
-3. **Related sources** (when relevant):
-   - BOJ statistics: `site:boj.or.jp 統計`
-   - Cabinet Office: `site:cao.go.jp` for GDP/consumption accounts
-   - METI: `site:meti.go.jp` for industrial/commercial statistics
+Classify:
+- **A) Dataset discovery**: what datasets exist for a topic
+- **B) Variable check**: what variables are in a specific survey
+- **C) Metadata/coverage**: time range, granularity, frequency, sample size
+- **D) API/download info**: how to access programmatically
 
-Use `WebSearch` for queries. Use `WebFetch` to read specific e-Stat pages for metadata when needed.
+Check `docs/data-sources/INDEX.md` for prior results on the same dataset.
 
 ---
 
-## Step 3: Assess Data Fitness
+## Step 1: Parallel Search
 
-For each dataset found, evaluate:
-- **Geographic granularity**: national / prefectural / municipal
-- **Time granularity**: annual / quarterly / monthly
-- **Time range**: start year — latest available
-- **Key variables**: what breakdowns are available
-- **Sample size / coverage**: survey-based or census-based
-- **Access**: API available? CSV download? Requires application?
+Run queries targeting:
+
+**Group A — e-Stat portal**:
+- `site:e-stat.go.jp` + topic keywords in Japanese
+
+**Group B — Survey documentation**:
+- Survey name + `調査概要` or `利用案内` or `総務省`
+
+**Group C — Related sources** (when relevant):
+- BOJ: `site:boj.or.jp 統計`
+- Cabinet Office: `site:cao.go.jp` (GDP/SNA)
+- METI: `site:meti.go.jp` (commercial statistics)
+- RIETI: `site:rieti.go.jp` (research data)
+
+Use `WebFetch` to read specific pages for metadata when needed.
 
 ---
 
-## Step 4: Output
+## Step 2: Assess Fitness
 
-Present as a structured table:
+For each dataset, evaluate:
 
-| Survey | Granularity | Frequency | Range | Key Variables | Access |
-|--------|------------|-----------|-------|---------------|--------|
+| 項目 | 内容 |
+|------|------|
+| Geographic granularity | national / prefectural / municipal |
+| Time granularity | annual / quarterly / monthly |
+| Time range | start — latest available |
+| Key variables | breakdowns available |
+| Sample size / coverage | survey-based or census-based |
+| Access method | API / CSV / application required |
+| Known limitations | sample size, coverage gaps, revision frequency |
 
-Add a **fitness assessment** (1-2 sentences): how well each dataset matches the user's research needs, and any known limitations (e.g., sample size too small for prefectural breakdown).
+---
 
-### Key Surveys to Know
+## Step 3: Preview and Save
 
-For household consumption research, these are the primary candidates:
+Present fitness assessment to the user. Then save:
+
+1. **Dataset entry**: Append to `docs/data-sources/INDEX.md` under the appropriate section (公的統計 or オルタナティブデータ)
+
+Format per dataset:
+```markdown
+### [Survey Name]（Source Organization）
+- **粒度**: prefecture × monthly × category
+- **期間**: 2015-01 — 2026-02
+- **主要変数**: ...
+- **アクセス**: API / CSV download
+- **適合度**: Phase 1 の都道府県×月次×カテゴリ分析に [適合/一部適合/不適合]
+- **制約**: ...
+- **調査日**: 2026-04-10
+```
+
+---
+
+## Key Surveys Reference
+
+For household consumption research, check these first:
 - **家計調査** (Family Income and Expenditure Survey) — 総務省
 - **全国家計構造調査** (National Survey of Family Income and Expenditure) — 総務省
 - **家計消費状況調査** (Survey of Household Economy) — 総務省
 - **消費者物価指数** (CPI) — 総務省
 - **国民経済計算** (SNA/GDP) — 内閣府
 - **商業動態統計** (Commercial Statistics) — 経産省
+
+---
+
+## Scope Boundaries
+
+This skill does **NOT**:
+- Download actual datasets
+- Write data cleaning code
+- Perform data quality assessment beyond metadata review
