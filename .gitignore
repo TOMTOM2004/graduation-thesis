@@ -1,6 +1,10 @@
-# Data
-data/raw/
-data/processed/
+# Data (raw files are large; track structure via .gitkeep)
+data/raw/**
+!data/raw/**/
+!data/raw/**/.gitkeep
+data/processed/**
+!data/processed/**/
+!data/processed/**/.gitkeep
 
 # Python
 __pycache__/
@@ -22,3 +26,4 @@ Thumbs.db
 
 # Jupyter
 .ipynb_checkpoints/
+src/*.egg-info/
