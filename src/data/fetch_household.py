@@ -1,70 +1,72 @@
 """
-Fetch household survey data from e-Stat.
+Fetch household survey data from e-Stat API.
 - Family Income and Expenditure Survey (家計調査): income quintile x expenditure category
-- National Survey of Family Income, Consumption and Wealth (全国家計構造調査 2019)
 """
 
 from pathlib import Path
 
-import httpx
+import pandas as pd
 
-RAW_DIR_SURVEY = Path(__file__).resolve().parents[2] / "data" / "raw" / "household-survey"
-RAW_DIR_STRUCTURE = Path(__file__).resolve().parents[2] / "data" / "raw" / "household-structure"
+from .estat_api import get_stats_data
+
+RAW_DIR = Path(__file__).resolve().parents[2] / "data" / "raw" / "household-survey"
+
+# Table IDs
+HOUSEHOLD_QUINTILE_YEARLY = "0002070005"  # 用途分類（年間収入五分位階級別）年次
 
 
-def fetch_household_survey_quintile():
+def fetch_household_quintile(years: tuple[int, int] = (2015, 2024)) -> pd.DataFrame:
     """
-    Download household survey data by income quintile from e-Stat.
+    Fetch household expenditure by income quintile and expenditure category.
 
-    Target: 家計調査 > 家計収支編 > 二人以上の世帯のうち勤労者世帯
-    > 年間収入五分位階級別 > 1世帯当たり年平均1か月間の収入と支出
+    Parameters
+    ----------
+    years : tuple
+        (start_year, end_year) inclusive.
 
-    The data needs to be downloaded from e-Stat DB or file download.
-    e-Stat dataset IDs need to be confirmed for the specific tables.
+    Returns
+    -------
+    pd.DataFrame with columns: year, quintile, category, value
     """
-    RAW_DIR_SURVEY.mkdir(parents=True, exist_ok=True)
+    RAW_DIR.mkdir(parents=True, exist_ok=True)
+    cache_path = RAW_DIR / f"household_quintile_{years[0]}_{years[1]}.csv"
 
-    print("Household Survey (家計調査) - Income Quintile data")
-    print("=" * 60)
-    print()
-    print("Manual download required from e-Stat:")
-    print("  https://www.e-stat.go.jp/stat-search/files?toukei=00200561")
-    print()
-    print("Target tables:")
-    print("  - 家計収支編 > 二人以上の世帯のうち勤労者世帯")
-    print("  - 年間収入五分位階級別")
-    print("  - 1世帯当たり年平均1か月間の収入と支出")
-    print("  - Years: 2015-2024")
-    print()
-    print(f"Save files to: {RAW_DIR_SURVEY}/")
+    if cache_path.exists():
+        print(f"Loading cached data: {cache_path}")
+        return pd.read_csv(cache_path)
 
+    print(f"Fetching household survey (quintile, {years[0]}-{years[1]})...")
 
-def fetch_household_structure_survey():
-    """
-    Download National Survey of Family Income, Consumption and Wealth (2019).
+    # Build time code filter
+    time_from = f"{years[0]}000000"
+    time_to = f"{years[1]}000000"
 
-    Target: 全国家計構造調査 2019年
-    > 所得十分位(五分位)階級別 > 1世帯当たりの消費支出
+    df = get_stats_data(
+        HOUSEHOLD_QUINTILE_YEARLY,
+        cdTab="01",  # 金額
+        cdTimeFrom=time_from,
+        cdTimeTo=time_to,
+    )
 
-    This provides a more detailed breakdown by income decile/quintile,
-    covering all household types (not just worker households).
-    """
-    RAW_DIR_STRUCTURE.mkdir(parents=True, exist_ok=True)
+    if df.empty:
+        print("Warning: No data returned from API")
+        return df
 
-    print("National Survey of Family Income (全国家計構造調査 2019)")
-    print("=" * 60)
-    print()
-    print("Manual download required from e-Stat:")
-    print("  https://www.e-stat.go.jp/stat-search/files?toukei=00200564")
-    print()
-    print("Target tables:")
-    print("  - 所得十分位(五分位)階級別")
-    print("  - 1世帯当たりの消費支出（費目別）")
-    print()
-    print(f"Save files to: {RAW_DIR_STRUCTURE}/")
+    # Save raw data
+    df.to_csv(cache_path, index=False)
+    print(f"Saved to {cache_path} ({len(df)} rows)")
+
+    return df
 
 
 if __name__ == "__main__":
-    fetch_household_survey_quintile()
-    print()
-    fetch_household_structure_survey()
+    df = fetch_household_quintile()
+    print(f"\nTotal rows: {len(df)}")
+    print(f"\nQuintile categories (cat03):")
+    if "cat03_name" in df.columns:
+        for name in df["cat03_name"].unique():
+            print(f"  {name}")
+    print(f"\nExpenditure categories (cat01, first 20):")
+    if "cat01_name" in df.columns:
+        for name in df["cat01_name"].unique()[:20]:
+            print(f"  {name}")

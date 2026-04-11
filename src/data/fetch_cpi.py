@@ -1,49 +1,75 @@
 """
-Fetch Consumer Price Index (CPI) by expenditure category from e-Stat.
+Fetch Consumer Price Index (CPI) by expenditure category from e-Stat API.
 """
 
 from pathlib import Path
 
-import httpx
+import pandas as pd
+
+from .estat_api import search_stats, get_stats_data
 
 RAW_DIR = Path(__file__).resolve().parents[2] / "data" / "raw" / "cpi"
 
-# e-Stat API endpoint
-ESTAT_API_BASE = "https://api.e-stat.go.jp/rest/3.0/app"
+# 消費者物価指数（2020年基準）
+CPI_2020_TABLE = "0003427113"
 
 
-def fetch_cpi_by_category():
+def find_cpi_table() -> str:
+    """Search for the CPI monthly table by category."""
+    tables = search_stats("消費者物価指数 全国 月次 中分類", limit=20)
+    for t in tables:
+        tid = t.get("@id", "N/A")
+        title = t.get("TITLE", {})
+        if isinstance(title, dict):
+            tname = title.get("$", "N/A")
+        else:
+            tname = title
+        cycle = t.get("CYCLE", "N/A")
+        print(f"ID: {tid} | Cycle: {cycle} | Title: {tname}")
+    return ""
+
+
+def fetch_cpi_by_category(years: tuple[int, int] = (2015, 2025)) -> pd.DataFrame:
     """
-    Download CPI data by expenditure category (費目別) from e-Stat.
+    Fetch CPI data by expenditure category (monthly).
 
-    Target: 消費者物価指数 > 全国 > 中分類 > 月次
-    Period: 2015-01 to latest
+    Parameters
+    ----------
+    years : tuple
+        (start_year, end_year) inclusive.
 
-    CPI data is available through:
-    1. e-Stat file download (Excel)
-    2. e-Stat API (JSON/CSV)
-
-    For API access, an appId is required (free registration).
+    Returns
+    -------
+    pd.DataFrame
     """
     RAW_DIR.mkdir(parents=True, exist_ok=True)
+    cache_path = RAW_DIR / f"cpi_category_{years[0]}_{years[1]}.csv"
 
-    print("Consumer Price Index (消費者物価指数) - by category")
-    print("=" * 60)
-    print()
-    print("Download from e-Stat:")
-    print("  https://www.e-stat.go.jp/stat-search/files?toukei=00200573")
-    print()
-    print("Target:")
-    print("  - 全国 > 月次 > 中分類指数")
-    print("  - Period: 2015-01 to latest")
-    print("  - Base year: 2020")
-    print()
-    print("For API access:")
-    print("  Register at https://www.e-stat.go.jp/mypage/view/api")
-    print("  Set ESTAT_API_KEY environment variable")
-    print()
-    print(f"Save files to: {RAW_DIR}/")
+    if cache_path.exists():
+        print(f"Loading cached data: {cache_path}")
+        return pd.read_csv(cache_path)
+
+    print(f"Fetching CPI data ({years[0]}-{years[1]})...")
+
+    time_from = f"{years[0]}00"
+    time_to = f"{years[1]}12"
+
+    df = get_stats_data(
+        CPI_2020_TABLE,
+        cdArea="00000",  # 全国
+        cdTimeFrom=time_from,
+        cdTimeTo=time_to,
+    )
+
+    if df.empty:
+        print("Warning: No data returned. Try find_cpi_table() to get correct table ID.")
+        return df
+
+    df.to_csv(cache_path, index=False)
+    print(f"Saved to {cache_path} ({len(df)} rows)")
+    return df
 
 
 if __name__ == "__main__":
-    fetch_cpi_by_category()
+    print("Searching for CPI tables...")
+    find_cpi_table()
