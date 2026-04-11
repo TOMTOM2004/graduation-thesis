@@ -516,6 +516,122 @@ def plot_scatter_panel(
     print(f"Saved: {output_path}")
 
 
+def plot_yearly_correlation(
+    df: pd.DataFrame,
+    output_path: Path | None = None,
+) -> None:
+    """
+    年次別 IC-ΔCPI 相関係数の棒グラフ（ショック期 vs プラセボ期の比較）。
+
+    デマンドプル汚染への反論として：
+    - もし需要要因が支配的なら、全年で IC との相関はゼロに近いはず
+    - ショック期（2021-2024）: r が一貫して正（コストプッシュシグナル）
+    - プラセボ期（2015-2019）: r がゼロ近傍または負（コストプッシュ不在）
+    このコントラストが識別の視覚的証拠となる。
+
+    2 パネル構成:
+      左: 全41カテゴリーの年次相関棒グラフ
+      右: 競争的輸入財除外後（衣料・履物）の年次相関棒グラフ
+
+    Output: data/processed/price-indices/fig_yearly_correlation.png
+    """
+    import matplotlib.pyplot as plt
+    import japanize_matplotlib
+
+    if output_path is None:
+        output_path = PRICE_DIR / "fig_yearly_correlation.png"
+
+    PRICE_DIR.mkdir(parents=True, exist_ok=True)
+
+    shock_years = list(range(2021, 2025))
+    placebo_years = list(range(2015, 2020))
+    all_years = sorted(placebo_years + shock_years)
+
+    # 競争的輸入財除外フラグ
+    df_excl = df[~df["is_competitive_import"]].copy()
+
+    fig, axes = plt.subplots(1, 2, figsize=(14, 6), sharey=True)
+    fig.suptitle(
+        "IC-ΔCPI 年次相関: ショック期 vs プラセボ期（デマンドプル識別テスト）",
+        fontsize=13,
+        fontweight="bold",
+    )
+
+    titles = ["全41カテゴリー", "競争的輸入財除外後（衣料・履物除く）"]
+    datasets = [df, df_excl]
+
+    for ax, data, title in zip(axes, datasets, titles):
+        corrs = []
+        colors = []
+        for yr in all_years:
+            sub = data[data["year"] == yr].dropna(subset=["ic", "delta_cpi"])
+            r = sub["ic"].corr(sub["delta_cpi"]) if len(sub) >= 5 else np.nan
+            corrs.append(r)
+            colors.append("#c0392b" if yr in shock_years else "#2980b9")
+
+        bars = ax.bar(all_years, corrs, color=colors, alpha=0.82, edgecolor="white", linewidth=0.8)
+
+        ax.axhline(0, color="black", linewidth=0.8, linestyle="-")
+        ax.axvline(2019.5, color="gray", linewidth=1.2, linestyle="--", alpha=0.7, label="ショック開始境界")
+
+        # 値ラベル
+        for bar, val in zip(bars, corrs):
+            if not np.isnan(val):
+                va = "bottom" if val >= 0 else "top"
+                offset = 0.01 if val >= 0 else -0.01
+                ax.text(
+                    bar.get_x() + bar.get_width() / 2,
+                    val + offset,
+                    f"{val:.2f}",
+                    ha="center",
+                    va=va,
+                    fontsize=8,
+                )
+
+        # 凡例（パッチで手動）
+        from matplotlib.patches import Patch
+        legend_elements = [
+            Patch(facecolor="#2980b9", alpha=0.82, label="プラセボ期 (2015–2019)"),
+            Patch(facecolor="#c0392b", alpha=0.82, label="ショック期 (2021–2024)"),
+        ]
+        ax.legend(handles=legend_elements, fontsize=9, loc="upper left")
+
+        ax.set_xticks(all_years)
+        ax.set_xticklabels(all_years, rotation=45, fontsize=9)
+        ax.set_xlabel("年", fontsize=11)
+        ax.set_ylabel("IC-ΔCPI 相関係数 r", fontsize=11)
+        ax.set_title(title, fontsize=11)
+        ax.set_ylim(-0.45, 0.75)
+        ax.grid(axis="y", alpha=0.25)
+
+    # 注記
+    fig.text(
+        0.5, -0.03,
+        "注: IC_c は IO2020 年表から算出した輸入含有率（時間不変）。ΔCPI_{c,t} は 2020 年比の pp 変化。"
+        "相関がショック期に一貫して正となり、プラセボ期にゼロ近傍となることが、"
+        "コストプッシュ識別の視覚的根拠を与える。",
+        ha="center",
+        fontsize=8,
+        color="gray",
+    )
+
+    plt.tight_layout()
+    plt.savefig(output_path, dpi=150, bbox_inches="tight")
+    plt.close()
+    print(f"Saved: {output_path}")
+
+    # 数値サマリーも表示
+    print("\n=== 年次別 IC-ΔCPI 相関係数 ===")
+    print(f"{'年':>6}  {'全カテゴリー':>14}  {'競争的輸入財除外':>16}  {'期間'}")
+    for yr in all_years:
+        s1 = df[df["year"] == yr].dropna(subset=["ic", "delta_cpi"])
+        s2 = df_excl[df_excl["year"] == yr].dropna(subset=["ic", "delta_cpi"])
+        r1 = s1["ic"].corr(s1["delta_cpi"])
+        r2 = s2["ic"].corr(s2["delta_cpi"])
+        period = "ショック" if yr in shock_years else "プラセボ"
+        print(f"  {yr}   {r1:+.3f}           {r2:+.3f}           {period}")
+
+
 if __name__ == "__main__":
     print("=== Building Panel Dataset ===")
     df = build_panel_dataset()
@@ -538,5 +654,8 @@ if __name__ == "__main__":
     print("\n=== Saving Results ===")
     make_regression_table(sens)
 
-    print("\n=== Plot ===")
+    print("\n=== Plot: Scatter ===")
     plot_scatter_panel(df)
+
+    print("\n=== Plot: Yearly Correlation (Demand-Pull Defense) ===")
+    plot_yearly_correlation(df)
