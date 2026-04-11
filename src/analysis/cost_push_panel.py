@@ -86,7 +86,10 @@ def build_panel_dataset() -> pd.DataFrame:
     パネルデータセット（long 形式）を構築する。
 
     BOJ CGPI 輸入物価は 2020年基準のため、CPI ベースラインも 2020 年に合わせる。
-    回帰に使う観測年: 2021-2025（2020 は ΔCPI=0 かつ P_import≈100 でショックなし）。
+    データは 2015-2025 の全年を保持する:
+      - 主分析期間: 2021-2024（ショック期、輸入価格急騰）
+      - プラセボ期間: 2015-2019（非ショック期、日本の近ゼロインフレ期）
+      - 2020 は P_import≈100 かつ ΔCPI≈0 で識別力がないため、回帰では除外する
 
     Returns
     -------
@@ -97,7 +100,8 @@ def build_panel_dataset() -> pd.DataFrame:
         p_import,        : P_import_t (BOJ CGPI total, 2020=100)
         shift_share,     : IC_c × (P_import_t − 100) (ショック幅との交差項)
         group,
-        is_transport_comms
+        is_transport_comms,
+        is_competitive_import
     Cache: data/processed/price-indices/panel_cost_push.csv
     """
     PRICE_DIR.mkdir(parents=True, exist_ok=True)
@@ -125,7 +129,7 @@ def build_panel_dataset() -> pd.DataFrame:
     cpi_annual = cpi_annual.merge(baseline, on="cpi_code", how="left")
     cpi_annual["delta_cpi"] = cpi_annual["cpi_index"] - cpi_annual["baseline_2020"]
 
-    # 3. P_import_t
+    # 3. P_import_t（2015-2026 の連続系列）
     p_import = _load_import_price_annual()
 
     # 4. パネル結合（inner join → P_import がある年のみ）
@@ -143,10 +147,12 @@ def build_panel_dataset() -> pd.DataFrame:
     )
     panel = panel.rename(columns={"import_content": "ic"})
 
-    # 5. 交差項: IC_c × (P_import_t − 100) — ショック幅を使う
-    #    2020 年は P_import≈100 かつ ΔCPI≈0 で識別力なし → 除外
+    # 5. 交差項: IC_c × (P_import_t − 100)
     panel["shift_share"] = panel["ic"] * (panel["p_import"] - 100.0)
-    panel = panel[panel["year"].between(2021, 2025)].copy()
+
+    # 2020 は識別力なし（P_import≈100, ΔCPI≈0）なので除外
+    # 2025 は CPI データが年途中のため除外
+    panel = panel[panel["year"].between(2015, 2024) & (panel["year"] != 2020)].copy()
 
     # 欠損を除去
     panel = panel.dropna(subset=["delta_cpi", "ic", "p_import"]).reset_index(drop=True)
@@ -158,9 +164,13 @@ def build_panel_dataset() -> pd.DataFrame:
     ]
     panel = panel[cols].sort_values(["cpi_mid_name", "year"]).reset_index(drop=True)
 
+    shock_obs = panel[panel["year"].between(2021, 2024)]
+    placebo_obs = panel[panel["year"].between(2015, 2019)]
     panel.to_csv(cache_path, index=False)
-    print(f"Saved panel dataset: {cache_path} ({len(panel)} obs, "
-          f"{panel['cpi_mid_name'].nunique()} categories × {panel['year'].nunique()} years)")
+    print(f"Saved panel dataset: {cache_path} ({len(panel)} obs total, "
+          f"{panel['cpi_mid_name'].nunique()} categories)")
+    print(f"  ショック期 2021-2024: {len(shock_obs)} obs")
+    print(f"  プラセボ期 2015-2019: {len(placebo_obs)} obs")
     return panel
 
 
@@ -331,14 +341,16 @@ def run_sensitivity_analyses(df: pd.DataFrame) -> pd.DataFrame:
     """
     5パターンの感度分析を実行する。
 
-    (i)   ベースライン:           全カテゴリー × 2021-2024
+    (i)   ベースライン:           全カテゴリー × 2021-2024（ショック期）
     (ii)  通信除外:               is_transport_comms==False × 2021-2024
     (iii) 競争的輸入財除外:       衣料・履物類を除外 × 2021-2024
           衣料・履物は中国製品主体のため IC 高いが価格転嫁が起きない外れ値。
           除外により R² と有意性が大幅改善 → コストプッシュ識別の頑健性を示す。
     (iv)  一階差分 2021→2022:    最大 ΔP_import (+47pp) 横断面 n=41
-    (v)   プラセボ（IC 置換）:    IC をランダム並べ替え → β ≈ 0 を期待
-          IC の外生性（IO2020 技術構造に依拠）を検証する偽陽性チェック
+    (v)   プラセボ（2015-2019）: 非ショック期（日本の近ゼロインフレ期）→ β ≈ 0 を期待。
+          ショック期特有の結果であることを支持する期間ベースの偽陽性チェック。
+          IC の外生性を直接検証: 同じ IC 構造で P_import が変動した場合でも、
+          コストプッシュが働かない時期では β ≈ 0 になる。
 
     Returns
     -------
@@ -346,32 +358,26 @@ def run_sensitivity_analyses(df: pd.DataFrame) -> pd.DataFrame:
     """
     rows = []
 
-    # (i) ベースライン
-    res = run_panel_regression(df, se_type="cluster")
+    # (i) ベースライン（ショック期）
+    res = run_panel_regression(df, se_type="cluster", years=(2021, 2024))
     rows.append({"仕様": "(i) ベースライン（全41カテゴリー）", **_fmt(res)})
 
     # (ii) 通信除外（政策的価格操作を排除）
-    res = run_panel_regression(df, se_type="cluster", exclude_transport=True)
+    res = run_panel_regression(df, se_type="cluster", exclude_transport=True, years=(2021, 2024))
     rows.append({"仕様": "(ii) 通信除外", **_fmt(res)})
 
     # (iii) 競争的輸入財除外（衣料・履物）
-    res = run_panel_regression(df, se_type="cluster", exclude_competitive_imports=True)
+    res = run_panel_regression(df, se_type="cluster", exclude_competitive_imports=True, years=(2021, 2024))
     rows.append({"仕様": "(iii) 競争的輸入財除外（衣料・履物）", **_fmt(res)})
 
     # (iv) 一階差分 2021→2022
     res = run_cross_section_fd(df, year_from=2021, year_to=2022)
     rows.append({"仕様": "(iv) 一階差分 2021→22（n=41）", **_fmt(res)})
 
-    # (v) プラセボ: IC を固定シードでシャッフル
-    np.random.seed(42)
-    df_placebo = df.copy()
-    ic_vals = df_placebo.drop_duplicates("cpi_mid_name")["ic"].values.copy()
-    np.random.shuffle(ic_vals)
-    ic_shuffled = dict(zip(df_placebo.drop_duplicates("cpi_mid_name")["cpi_mid_name"], ic_vals))
-    df_placebo["ic"] = df_placebo["cpi_mid_name"].map(ic_shuffled)
-    df_placebo["shift_share"] = df_placebo["ic"] * (df_placebo["p_import"] - 100.0)
-    res = run_panel_regression(df_placebo, se_type="cluster")
-    rows.append({"仕様": "(v) プラセボ（IC 置換）", **_fmt(res)})
+    # (v) 期間ベースプラセボ: 非ショック期（2015-2019）
+    #     同じ IC 構造・同様の P_import 変動で β ≈ 0 → ショック期の結果がショック特有であることを確認
+    res = run_panel_regression(df, se_type="cluster", years=(2015, 2019))
+    rows.append({"仕様": "(v) プラセボ（2015-2019 非ショック期）", **_fmt(res)})
 
     return pd.DataFrame(rows)
 
