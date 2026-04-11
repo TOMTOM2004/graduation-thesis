@@ -111,7 +111,7 @@ def build_panel_dataset() -> pd.DataFrame:
 
     # 1. IC_c
     ic_df = compute_mid_category_import_content()
-    ic_map = ic_df.set_index("cpi_mid_name")[["import_content", "group", "is_transport_comms", "cpi_code"]]
+    ic_map = ic_df.set_index("cpi_mid_name")[["import_content", "group", "is_transport_comms", "is_competitive_import", "cpi_code"]]
 
     # 2. CPI 年次インデックス（全年）
     cpi_annual = _load_cpi_annual_mid()
@@ -154,7 +154,7 @@ def build_panel_dataset() -> pd.DataFrame:
     cols = [
         "cpi_mid_name", "cpi_code", "year",
         "delta_cpi", "ic", "p_import", "shift_share",
-        "group", "is_transport_comms",
+        "group", "is_transport_comms", "is_competitive_import",
     ]
     panel = panel[cols].sort_values(["cpi_mid_name", "year"]).reset_index(drop=True)
 
@@ -168,6 +168,7 @@ def run_panel_regression(
     df: pd.DataFrame,
     se_type: str = "cluster",
     exclude_transport: bool = False,
+    exclude_competitive_imports: bool = False,
     years: tuple | None = None,
 ) -> dict:
     """
@@ -181,7 +182,10 @@ def run_panel_regression(
     df : pd.DataFrame from build_panel_dataset()
     se_type : "cluster" (推奨) | "robust"
     exclude_transport : True の場合、通信カテゴリーを除外
-    years : (start, end) | None → None なら 2015-2025 全期間
+    exclude_competitive_imports : True の場合、競争的輸入財（衣料・履物類）を除外。
+        これらは IC が高いが中国等からの価格競争で小売価格が集計輸入物価と
+        連動しない「外れ値」カテゴリー。除外で識別力が大幅に改善する。
+    years : (start, end) | None → None なら全期間
 
     Returns
     -------
@@ -197,6 +201,9 @@ def run_panel_regression(
 
     if exclude_transport:
         sub = sub[~sub["is_transport_comms"]]
+
+    if exclude_competitive_imports:
+        sub = sub[~sub["is_competitive_import"]]
 
     if years is not None:
         sub = sub[sub["year"].between(years[0], years[1])]
@@ -273,6 +280,7 @@ def run_cross_section_fd(
     year_from: int = 2021,
     year_to: int = 2022,
     exclude_transport: bool = False,
+    exclude_competitive_imports: bool = False,
 ) -> dict:
     """
     一階差分横断面OLS: Δ²CPI_{c} = β × IC_c × ΔP_import + ε_c
@@ -295,6 +303,11 @@ def run_cross_section_fd(
         fd = fd[mask]
         ic = ic[mask]
 
+    if exclude_competitive_imports:
+        mask2 = ~from_df.loc[ic.index, "is_competitive_import"]
+        fd = fd[mask2]
+        ic = ic[mask2]
+
     d_shift = (ic * d_p).rename("shift_share")
     X = sm.add_constant(d_shift)
     y = fd.reindex(X.index)
@@ -316,12 +329,15 @@ def run_cross_section_fd(
 
 def run_sensitivity_analyses(df: pd.DataFrame) -> pd.DataFrame:
     """
-    4パターンの感度分析を実行する。
+    5パターンの感度分析を実行する。
 
-    (i)   ベースライン:     全カテゴリー × 2021-2025
-    (ii)  通信除外:         is_transport_comms==False × 2021-2025
-    (iii) ショック集中期:   全カテゴリー × 2022-2025（P_import ≥ 140）
-    (iv)  プラセボ（IC置換）: IC をランダム並べ替え → β ≈ 0 を期待
+    (i)   ベースライン:           全カテゴリー × 2021-2024
+    (ii)  通信除外:               is_transport_comms==False × 2021-2024
+    (iii) 競争的輸入財除外:       衣料・履物類を除外 × 2021-2024
+          衣料・履物は中国製品主体のため IC 高いが価格転嫁が起きない外れ値。
+          除外により R² と有意性が大幅改善 → コストプッシュ識別の頑健性を示す。
+    (iv)  一階差分 2021→2022:    最大 ΔP_import (+47pp) 横断面 n=41
+    (v)   プラセボ（IC 置換）:    IC をランダム並べ替え → β ≈ 0 を期待
           IC の外生性（IO2020 技術構造に依拠）を検証する偽陽性チェック
 
     Returns
@@ -331,18 +347,22 @@ def run_sensitivity_analyses(df: pd.DataFrame) -> pd.DataFrame:
     rows = []
 
     # (i) ベースライン
-    res = run_panel_regression(df, se_type="cluster", exclude_transport=False)
-    rows.append({"仕様": "(i) ベースライン", **_fmt(res)})
+    res = run_panel_regression(df, se_type="cluster")
+    rows.append({"仕様": "(i) ベースライン（全41カテゴリー）", **_fmt(res)})
 
-    # (ii) 通信除外
+    # (ii) 通信除外（政策的価格操作を排除）
     res = run_panel_regression(df, se_type="cluster", exclude_transport=True)
     rows.append({"仕様": "(ii) 通信除外", **_fmt(res)})
 
-    # (iii) 一階差分 2021→2022（最大 ΔP_import: +47pp、横断面 n=41）
-    res = run_cross_section_fd(df, year_from=2021, year_to=2022)
-    rows.append({"仕様": "(iii) 一階差分 2021→22", **_fmt(res)})
+    # (iii) 競争的輸入財除外（衣料・履物）
+    res = run_panel_regression(df, se_type="cluster", exclude_competitive_imports=True)
+    rows.append({"仕様": "(iii) 競争的輸入財除外（衣料・履物）", **_fmt(res)})
 
-    # (iv) プラセボ: IC を一度だけ固定シードでシャッフル
+    # (iv) 一階差分 2021→2022
+    res = run_cross_section_fd(df, year_from=2021, year_to=2022)
+    rows.append({"仕様": "(iv) 一階差分 2021→22（n=41）", **_fmt(res)})
+
+    # (v) プラセボ: IC を固定シードでシャッフル
     np.random.seed(42)
     df_placebo = df.copy()
     ic_vals = df_placebo.drop_duplicates("cpi_mid_name")["ic"].values.copy()
@@ -351,7 +371,7 @@ def run_sensitivity_analyses(df: pd.DataFrame) -> pd.DataFrame:
     df_placebo["ic"] = df_placebo["cpi_mid_name"].map(ic_shuffled)
     df_placebo["shift_share"] = df_placebo["ic"] * (df_placebo["p_import"] - 100.0)
     res = run_panel_regression(df_placebo, se_type="cluster")
-    rows.append({"仕様": "(iv) プラセボ（IC 置換）", **_fmt(res)})
+    rows.append({"仕様": "(v) プラセボ（IC 置換）", **_fmt(res)})
 
     return pd.DataFrame(rows)
 

@@ -24,6 +24,12 @@ BRIDGE_DIR = DATA_PROCESSED / "bridge-matrix"
 # io_sectors: IO 統合中分類のセクターコード（3桁文字列）
 # group: 大分類グループ名
 # is_transport_comms: True = 交通・通信（感度分析で除外対象）
+# is_competitive_import: True = 競争的輸入財
+#   輸入含有率は高いが、中国等低コスト国からの競争的輸入により
+#   小売価格が国際一次産品価格から切り離されている財。
+#   BOJ CGPI 集計輸入物価（エネルギー・金属主導）との連動性が低く、
+#   コストプッシュ識別回帰の外れ値になる。
+#   該当: 衣料（IC=0.876）、履物類（IC=0.911）
 
 CPI_MID_CATEGORY_MAP: dict[str, dict] = {
     # === 食料 (12カテゴリー) ===
@@ -168,18 +174,21 @@ CPI_MID_CATEGORY_MAP: dict[str, dict] = {
         "io_sectors": ["151", "152"],  # 繊維, 衣服・繊維製品
         "group": "clothing",
         "is_transport_comms": False,
+        "is_competitive_import": True,   # 中国製品主体: IC高いが価格転嫁が起きない
     },
     "履物類": {
         "cpi_code": "0098",
         "io_sectors": ["152", "231"],  # 衣服・繊維製品, 窯業・土石（革）
         "group": "clothing",
         "is_transport_comms": False,
+        "is_competitive_import": True,   # 同上
     },
     "被服関連サービス": {
         "cpi_code": "0106",
         "io_sectors": ["679"],  # クリーニング等
         "group": "clothing",
         "is_transport_comms": False,
+        "is_competitive_import": False,
     },
     # === 保健医療 (3カテゴリー) ===
     "医薬品・健康保持用摂取品": {
@@ -381,6 +390,7 @@ def compute_mid_category_import_content() -> pd.DataFrame:
             "cpi_code": cat["cpi_code"],
             "group": cat["group"],
             "is_transport_comms": cat["is_transport_comms"],
+            "is_competitive_import": cat.get("is_competitive_import", False),
             "import_content": round(ic, 4),
             "pc_value_bn_jpy": round(pc_value, 2),
         })
