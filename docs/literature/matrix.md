@@ -87,6 +87,9 @@
 | P061 | Bussière et al. | 2013 | IO表による輸入集約度調整 | OECD 18カ国パネル | 需要構成が貿易弾力性を決定、IADで弾力性パズル解消 | Medium |
 | P062 | Koopman, Wang, Wei | 2014 | 付加価値貿易分解 | 多国間IO表 | 粗輸出の付加価値分解・二重計上識別の統一フレームワーク | High |
 | P063 | Hale, Hobijn, Nechio, Wilson | 2019 | IO表による消費輸入含有量 | 米国BEA IO表・PCE | 消費1ドルあたり約11セントが輸入コスト、間接輸入含む | Medium |
+| P070 | Minton & Somale | 2025 | IO輸入含有量×関税変更 | 米国BEA GVC IO表・PCE | 関税はほぼ完全転嫁、コア財PCE+3.1% | High |
+| P071 | Amiti, Itskhoki, Konings | 2019 | 企業レベル価格設定モデル | ベルギー製造業micro | 大企業は戦略的補完性強く転嫁率0.5、小企業は完全転嫁 | High |
+| P072 | Fajgelbaum et al. | 2020 | 多品目貿易モデル | 米国HS品目別輸入 | 関税は完全転嫁、消費者損失$51B（GDP比0.27%） | High |
 
 ## シミュレーションモデル（エネルギーショック・コストプッシュ）
 
@@ -96,6 +99,15 @@
 | P049 | Ciola et al. | 2023 | MATRIX（ABM） | 米国キャリブレーション | エネルギーショックは非線形的に波及、異質的エージェント間で増幅 | Medium |
 | P050 | Turco et al. | 2023 | MATRIX（ABM） | ユーロ圏キャリブレーション | エネルギー料金引下げ+超過利潤税が厚生損失最小化 | Medium |
 | P051 | Liu et al. | 2015 | 金融CGE | 中国 | 原油100%上昇→金利+2.5%pt・準備率+3.0%pt引上げ必要 | Medium |
+
+## IO-HBS接合・マイクロシミュレーション（方法論）
+
+| ID | 著者 | 年 | 手法 | データ | 主要発見 | 重要度 |
+|----|------|-----|------|--------|---------|--------|
+| P073 | Cabrera, Luger, Roettger | 2020 | マトリクスバランシング | EU30カ国COICOP-CPA | COICOP-CPA間ブリッジ・マトリクスを体系的に構築 | Medium |
+| P074 | Cazcarro, Amores, Arto, Kratena | 2022 | HBS-IO接合手法 | EU HBS+多地域IO表 | 所得階層間で消費の産業構成が大きく異なる | High |
+| P075 | O'Donoghue et al. | 2025 | PRICESマイクロシミュレーション | パキスタンHBS+IO表 | インフレ影響はやや累進的、IO間接効果を含む分解 | Medium |
+| P076 | Amores et al. | 2025 | EUROMOD+ITT | EU-SILC+HBS（独仏伊西葡希） | 所得措置の格差縮小効果は価格措置の3倍、大半は非ターゲット型 | High |
 
 ## 資金循環・構造変化（日本、背景）
 

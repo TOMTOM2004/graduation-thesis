@@ -2,7 +2,7 @@
 
 ## 概要
 
-本研究に関連する先行研究の管理。論文サマリーは `papers/` 以下に1論文1ファイルで格納。計69件。
+本研究に関連する先行研究の管理。論文サマリーは `papers/` 以下に1論文1ファイルで格納。計76件。
 
 ---
 
@@ -21,7 +21,7 @@
 - [P032 Bobasu, di Nino, Osbat (2023)](papers/bobasu-2023-inflation-surge-households-ecb.md) — インフレ急騰の家計層別影響（ECB）
 - [P033 Marin & Vona (2024)](papers/marin-vona-2024-energy-price-distributional.md) — エネルギー価格政策の分配的・気候的含意
 
-### 貿易政策・IO分析・国際波及
+### 貿易政策・IO分析・国際波及・コスト転嫁
 - [P041 Camatte et al. (2023)](papers/camatte-2023-exchange-rate-elasticity-io.md) — IO表による為替→消費者物価弾力性の会計的分解（40カ国+）
 - [P042 Huo, Levchenko, Pandalai-Nayar (2025)](papers/huo-levchenko-pandalai-nayar-2025-comovement-production-network.md) — グローバル生産ネットワークとGDP共変動（G7）
 - [P043 Takeda & Arimura (2021)](papers/takeda-arimura-2021-cge-environmental-tax-japan.md) — 日本の環境税改革の動学CGE分析
@@ -32,6 +32,9 @@
 - [P061 Bussière et al. (2013)](papers/bussiere-etal-2013-trade-elasticities-demand-composition.md) — 需要構成と貿易弾力性（IAD指標、AEJ:Macro）
 - [P062 Koopman, Wang, Wei (2014)](papers/koopman-wang-wei-2014-value-added-gross-exports.md) — 付加価値貿易の統一的分解フレームワーク（AER）
 - [P063 Hale, Hobijn, Nechio, Wilson (2019)](papers/hale-hobijn-nechio-wilson-2019-import-spending.md) — 消費支出の輸入含有量測定（FRBSF）
+- [P070 Minton & Somale (2025)](papers/minton-somale-2025-tariff-consumer-prices-real-time.md) — IO輸入含有量で関税の消費者価格効果をリアルタイム検出（FRB FEDS Notes）
+- [P071 Amiti, Itskhoki, Konings (2019)](papers/amiti-itskhoki-konings-2019-international-shocks-markups.md) — 可変マークアップと国際ショックの国内価格転嫁（ベルギー、REStat）
+- [P072 Fajgelbaum et al. (2020)](papers/fajgelbaum-etal-2020-return-protectionism.md) — 2018年米国関税の厚生・分配効果（QJE）
 
 ### 消費の価格弾力性・カテゴリ別分析
 - [P007 Peersman & Wauters (2024)](papers/peersman-wauters-2024-energy-heterogeneity.md) — エネルギー需要弾力性の非対称性・非線形性
@@ -52,6 +55,8 @@
 - [P049 Ciola et al. (2023)](papers/ciola-etal-2023-matrix-model.md) — MATRIXモデル：エネルギーショックの多エージェント分析
 - [P050 Turco et al. (2023)](papers/turco-etal-2023-matrix-energy-policy.md) — MATRIXモデル：エネルギー価格ショックの安定化政策比較
 - [P051 Liu et al. (2015)](papers/liu-etal-2015-financial-cge-oil-china.md) — 金融CGEによる原油価格ショックと金融政策（中国）
+- [P075 O'Donoghue et al. (2025)](papers/odonoghue-etal-2025-distributional-inflation-pakistan-prices.md) — PRICESマイクロシミュレーション：インフレの分配的影響（パキスタン）
+- [P076 Amores et al. (2025)](papers/amores-etal-2025-inflation-fiscal-inequality-eu-euromod.md) — EUROMOD: インフレ+財政措置の分配効果（EU6カ国、RoIW）
 
 ### オルタナティブデータを用いた消費分析
 - [P016 Aastveit et al. (2024)](papers/aastveit-2024-nowcasting-debit-card.md) — デビットカード全取引で消費ナウキャスト（ノルウェー）
@@ -93,6 +98,10 @@
 ### サービス貿易・デジタル赤字
 - [P068 Suominen (2025)](papers/suominen-2025-digital-services-imports-japan.md) — デジタルサービス輸入の日本経済への効果（CSIS）
 - [P069 Neeraj & Trofimov (2025)](papers/neeraj-trofimov-2025-depreciation-services-trade-japan.md) — 円安とサービス貿易収支：Jカーブ不在の実証（JEFAS）
+
+### IO-HBS接合・ブリッジ手法
+- [P073 Cabrera, Luger, Roettger (2020)](papers/cabrera-luger-roettger-2020-bridge-matrix-coicop-cpa.md) — COICOP-CPAブリッジ・マトリクス（EU30カ国、Data in Brief）
+- [P074 Cazcarro, Amores, Arto, Kratena (2022)](papers/cazcarro-amores-arto-kratena-2022-linking-multisectoral-consumption.md) — 多部門モデルとHBSの体系的接合手法（Econ Systems Research）
 
 ### 日本の家計消費分析
 - [P001 Yagi et al. (2022)](papers/yagi-2022-pass-through.md) — コスト転嫁率（日銀WP）
