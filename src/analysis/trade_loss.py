@@ -1,13 +1,24 @@
 """
 Phase 1 Step 1-3: Trade loss (terms of trade loss) estimation.
 
-Trade loss = the additional yen cost of the same import volume due to price increases.
-Formula: ΔTL_g(t) = M_g(2020) × (P_g(t) / P_g(base) - 1)
+Two estimates are computed:
+
+(A) Upper-bound (absolute):
+    ΔTL_g(t) = M_g(2020) × (P_import_g(t) / 100 − 1)
+    Measures the additional import cost vs. 2020. Overestimates income outflow
+    because it ignores the rise in domestic prices (inflation neutralizes part of
+    the increase in nominal import costs).
+
+(B) Net income transfer (preferred):
+    ΔTL_g(t) = M_g(2020) × (P_import_g(t) − P_domestic(t)) / 100
+    Measures only the excess price increase relative to domestic inflation — the
+    portion that represents a real income transfer to foreign exporters.
+    Comparable to Cabinet Office 交易利得（損失）in the SNA.
 
 Where:
-    M_g(2020)   = IO table import value for group g (2020 snapshot, 100mn JPY)
-    P_g(t)      = BOJ CGPI import price index for group g at time t (2020=100)
-    P_g(base)   = Baseline index (2020=100 by definition for this series)
+    M_g(2020)      = IO table import value for group g (2020, billion JPY)
+    P_import_g(t)  = BOJ CGPI import price index for group g (2020=100)
+    P_domestic(t)  = BOJ CGPI domestic price index total (2020=100)
 """
 
 from pathlib import Path
@@ -20,20 +31,13 @@ from src.analysis.import_content import (
     GROUPS,
     GROUP_JA,
 )
+from src.data.fetch_import_prices import extract_domestic_cgpi
 
 DATA_RAW = Path(__file__).resolve().parents[2] / "data" / "raw"
 DATA_PROCESSED = Path(__file__).resolve().parents[2] / "data" / "processed"
 TRADE_LOSS_DIR = DATA_PROCESSED / "trade-loss"
 
 CGPI_PATH = DATA_RAW / "boj-cgpi" / "import_prices_extracted.csv"
-
-# Baseline period: 2020 (= 100 by BOJ definition for this series)
-# Since BOJ CGPI only starts from 2020, we use 2020 as base year.
-# We compare:
-#   - Trough: 2020 average (≈100 by construction)
-#   - Pre-shock reference: 2021 (first full post-COVID year)
-#   - Peak shock: 2022-2023
-#   - Recent: 2024
 BASE_YEAR = 2020
 
 
@@ -76,23 +80,46 @@ def compute_annual_price_index() -> pd.DataFrame:
     return annual
 
 
+def compute_domestic_annual_index() -> pd.DataFrame:
+    """
+    Compute annual average of domestic CGPI total index.
+
+    Returns
+    -------
+    pd.DataFrame with columns: year, domestic_cgpi
+    """
+    dom = extract_domestic_cgpi()
+    dom["year"] = dom["date"].dt.year
+    return (
+        dom.groupby("year")["value"]
+        .mean()
+        .reset_index()
+        .rename(columns={"value": "domestic_cgpi"})
+    )
+
+
 def compute_trade_loss() -> pd.DataFrame:
     """
     Estimate trade loss (所得流出額) by group and year.
 
-    Trade loss = import_value_2020 × (price_index_t / 100 - 1)
+    Two estimates:
+    - trade_loss_ub_bn_jpy : upper bound — absolute import price change
+        = M_2020 × (P_import − 100) / 100
+    - trade_loss_net_bn_jpy : net income transfer (preferred, comparable to Cabinet Office)
+        = M_2020 × (P_import − P_domestic) / 100
 
-    Positive value = income outflow from Japan (Japan pays more for same imports).
+    Positive value = income outflow from Japan (Japan pays more than domestic prices rise).
 
     Returns
     -------
     pd.DataFrame with columns:
         year, group, group_ja,
-        price_index,          : BOJ CGPI annual average (2020=100)
-        price_change_pct,     : price change vs 2020 base (%)
-        import_value_base,    : 2020 IO import value (100mn JPY)
-        trade_loss_100mn_jpy, : estimated trade loss (100mn JPY)
-        trade_loss_bn_jpy,    : estimated trade loss (bn JPY)
+        import_price_index,       : group-level BOJ CGPI import (2020=100)
+        domestic_cgpi,            : domestic CGPI total (2020=100)
+        net_price_diff,           : P_import − P_domestic (pp)
+        import_value_base_bn_jpy, : 2020 IO import value (billion JPY)
+        trade_loss_ub_bn_jpy,     : upper-bound trade loss (billion JPY)
+        trade_loss_net_bn_jpy,    : net trade loss — preferred estimate (billion JPY)
     """
     TRADE_LOSS_DIR.mkdir(parents=True, exist_ok=True)
     cache_path = TRADE_LOSS_DIR / "trade_loss_by_group.csv"
@@ -103,31 +130,44 @@ def compute_trade_loss() -> pd.DataFrame:
 
     annual_price = compute_annual_price_index()
     group_io = compute_group_import_content()
+    domestic = compute_domestic_annual_index()
 
     # IO import values by group (billion JPY = 十億円)
     group_import_map = dict(
         zip(group_io["group"], group_io["import_value_total"])
     )
 
+    # Merge domestic CGPI into annual price table
+    annual_price = annual_price.merge(domestic, on="year", how="left")
+
     rows = []
     for _, row in annual_price.iterrows():
         group = row["group"]
         year = int(row["year"])
-        price_idx = row["price_index"]
+        p_import = row["price_index"]
+        p_domestic = row["domestic_cgpi"]
 
         base_value = group_import_map.get(group, 0.0)  # billion JPY
-        price_change_pct = price_idx - 100.0  # vs 2020=100 base
-        trade_loss_bn = base_value * (price_change_pct / 100.0)  # billion JPY
+
+        # (A) Upper bound: absolute import price change
+        trade_loss_ub_bn = base_value * (p_import - 100.0) / 100.0
+
+        # (B) Net income transfer: import price - domestic price
+        net_diff = p_import - p_domestic if pd.notna(p_domestic) else np.nan
+        trade_loss_net_bn = base_value * net_diff / 100.0 if pd.notna(net_diff) else np.nan
 
         rows.append({
             "year": year,
             "group": group,
             "group_ja": row["group_ja"],
-            "price_index": round(price_idx, 2),
-            "price_change_pct": round(price_change_pct, 2),
+            "import_price_index": round(p_import, 2),
+            "domestic_cgpi": round(p_domestic, 2) if pd.notna(p_domestic) else np.nan,
+            "net_price_diff": round(net_diff, 2) if pd.notna(net_diff) else np.nan,
             "import_value_base_bn_jpy": round(base_value, 2),
-            "trade_loss_bn_jpy": round(trade_loss_bn, 2),
-            "trade_loss_tn_jpy": round(trade_loss_bn / 1000, 4),
+            "trade_loss_ub_bn_jpy": round(trade_loss_ub_bn, 2),
+            "trade_loss_ub_tn_jpy": round(trade_loss_ub_bn / 1000, 4),
+            "trade_loss_net_bn_jpy": round(trade_loss_net_bn, 2) if pd.notna(trade_loss_net_bn) else np.nan,
+            "trade_loss_net_tn_jpy": round(trade_loss_net_bn / 1000, 4) if pd.notna(trade_loss_net_bn) else np.nan,
         })
 
     df = pd.DataFrame(rows).sort_values(["group", "year"]).reset_index(drop=True)
@@ -140,10 +180,15 @@ def compute_total_trade_loss() -> pd.DataFrame:
     """
     Aggregate trade loss across all 5 groups by year.
 
+    Returns both upper-bound and net estimates.
+
     Returns
     -------
-    pd.DataFrame with columns: year, total_trade_loss_100mn_jpy, total_trade_loss_bn_jpy,
-                                total_trade_loss_tn_jpy (兆円)
+    pd.DataFrame with columns:
+        year,
+        total_ub_bn_jpy, total_ub_tn_jpy,     : upper bound aggregate
+        total_net_bn_jpy, total_net_tn_jpy,    : net income transfer aggregate (preferred)
+        plus per-group breakdown columns
     """
     TRADE_LOSS_DIR.mkdir(parents=True, exist_ok=True)
     cache_path = TRADE_LOSS_DIR / "trade_loss_total.csv"
@@ -154,20 +199,23 @@ def compute_total_trade_loss() -> pd.DataFrame:
 
     group_loss = compute_trade_loss()
 
-    total = (
-        group_loss.groupby("year")["trade_loss_bn_jpy"]
-        .sum()
-        .reset_index()
-        .rename(columns={"trade_loss_bn_jpy": "total_trade_loss_bn_jpy"})
-    )
+    agg = group_loss.groupby("year").agg(
+        total_ub_bn_jpy=("trade_loss_ub_bn_jpy", "sum"),
+        total_net_bn_jpy=("trade_loss_net_bn_jpy", "sum"),
+    ).reset_index()
 
-    total["total_trade_loss_tn_jpy"] = total["total_trade_loss_bn_jpy"] / 1000
+    agg["total_ub_tn_jpy"] = agg["total_ub_bn_jpy"] / 1000
+    agg["total_net_tn_jpy"] = agg["total_net_bn_jpy"] / 1000
 
-    # Add group breakdown (billion JPY)
-    group_pivot = group_loss.pivot(index="year", columns="group", values="trade_loss_bn_jpy")
-    group_pivot.columns = [f"{c}_bn_jpy" for c in group_pivot.columns]
-    total = total.merge(group_pivot.reset_index(), on="year")
+    # Per-group upper-bound breakdown
+    ub_pivot = group_loss.pivot(index="year", columns="group", values="trade_loss_ub_bn_jpy")
+    ub_pivot.columns = [f"{c}_ub_bn_jpy" for c in ub_pivot.columns]
 
+    # Per-group net breakdown
+    net_pivot = group_loss.pivot(index="year", columns="group", values="trade_loss_net_bn_jpy")
+    net_pivot.columns = [f"{c}_net_bn_jpy" for c in net_pivot.columns]
+
+    total = agg.merge(ub_pivot.reset_index(), on="year").merge(net_pivot.reset_index(), on="year")
     total.to_csv(cache_path, index=False)
     print(f"Saved total trade loss to {cache_path}")
     return total
@@ -179,31 +227,33 @@ if __name__ == "__main__":
     pivot = annual_px.pivot(index="year", columns="group_ja", values="price_index")
     print(pivot.round(1).to_string())
 
-    print("\n=== Trade Loss by Group (bn JPY, 十億円) ===")
-    print("Note: Upper bound — assumes 2020 import volumes held constant.")
+    print("\n=== Domestic CGPI Annual Average (2020=100) ===")
+    dom = compute_domestic_annual_index()
+    print(dom.to_string(index=False))
+
+    print("\n=== Trade Loss by Group (bn JPY) ===")
     loss_df = compute_trade_loss()
 
     for year in sorted(loss_df["year"].unique()):
         year_data = loss_df[loss_df["year"] == year]
-        total_bn = year_data["trade_loss_bn_jpy"].sum()
-        print(f"\n[{year}] Total: {total_bn:,.0f} bn JPY ({total_bn/1000:.2f} tn JPY)")
-        for _, row in year_data.sort_values("trade_loss_bn_jpy", ascending=False).iterrows():
-            bar = "#" * max(0, int(row["trade_loss_bn_jpy"] / 500))
-            print(f"  {row['group_ja']:24s}: {row['price_change_pct']:+6.1f}%  "
-                  f"loss={row['trade_loss_bn_jpy']:8,.0f} bn JPY  {bar}")
+        total_ub = year_data["trade_loss_ub_bn_jpy"].sum()
+        total_net = year_data["trade_loss_net_bn_jpy"].sum()
+        print(f"\n[{year}]  Upper bound: {total_ub/1000:.1f} tn JPY   Net transfer: {total_net/1000:.1f} tn JPY")
+        for _, row in year_data.sort_values("trade_loss_net_bn_jpy", ascending=False).iterrows():
+            print(f"  {row['group_ja']:24s}: "
+                  f"P_import={row['import_price_index']:6.1f}  "
+                  f"P_dom={row['domestic_cgpi']:6.1f}  "
+                  f"diff={row['net_price_diff']:+6.1f}pp  "
+                  f"net={row['trade_loss_net_bn_jpy']:7,.0f} bn JPY")
 
     print("\n=== Total Trade Loss by Year ===")
     total_df = compute_total_trade_loss()
-    print(total_df[["year", "total_trade_loss_bn_jpy", "total_trade_loss_tn_jpy"]].to_string(index=False))
-
-    # Contextual comparison: as % of Japan's nominal GDP
-    # Japan nominal GDP 2020 ≈ 537 tn JPY = 537,000 bn JPY
     GDP_2020_BN = 537_000
-    print("\n=== Trade Loss as % of Japan GDP (2020) ===")
+    print(f"\n{'Year':>6}  {'UB (tn)':>9}  {'Net (tn)':>9}  {'Net % GDP':>10}")
     for _, row in total_df.iterrows():
-        pct = row["total_trade_loss_bn_jpy"] / GDP_2020_BN * 100
-        print(f"  {int(row['year'])}: {row['total_trade_loss_tn_jpy']:.1f} tn JPY  "
-              f"({pct:.1f}% of 2020 GDP)")
+        pct = row["total_net_bn_jpy"] / GDP_2020_BN * 100
+        print(f"  {int(row['year'])}: UB={row['total_ub_tn_jpy']:6.1f} tn  "
+              f"Net={row['total_net_tn_jpy']:6.1f} tn  ({pct:.1f}% of GDP)")
 
-    print("\nNote: IO table unit = billion JPY (十億円). 2020 base year = 100.")
-    print("Trade loss = import_value_2020 × (price_index_t / 100 - 1). Upper bound (fixed 2020 volumes).")
+    print("\nNote: Net estimate = import price rise minus domestic inflation.")
+    print("Comparable to Cabinet Office 交易利得（損失）. Upper bound = absolute import cost increase.")

@@ -33,6 +33,10 @@ IMPORT_PRICE_SERIES = {
 # Our 5 analysis groups
 FIVE_GROUPS = ["energy", "metals", "chemicals", "food", "wood"]
 
+# Domestic CGPI series code for net terms-of-trade calculation
+DOMESTIC_CGPI_CODE = "PRCG20_2200000000"
+DOMESTIC_CGPI_NAME = "国内企業物価指数 総平均"
+
 
 def fetch_cgpi_bulk() -> Path:
     """Download BOJ CGPI bulk CSV (ZIP)."""
@@ -114,6 +118,49 @@ def extract_import_prices() -> pd.DataFrame:
 
     result.to_csv(cache_path, index=False)
     print(f"Saved to {cache_path} ({len(result)} rows)")
+    return result
+
+
+def extract_domestic_cgpi() -> pd.DataFrame:
+    """
+    Extract domestic CGPI total average (国内企業物価指数 総平均) from bulk ZIP.
+
+    Used as the reference price for computing net terms-of-trade loss:
+        net_change = P_import - P_domestic
+
+    Returns
+    -------
+    pd.DataFrame with columns: date, value (index, 2020=100)
+    """
+    cache_path = RAW_DIR / "domestic_cgpi.csv"
+    if cache_path.exists():
+        print(f"Loading cached: {cache_path}")
+        return pd.read_csv(cache_path, parse_dates=["date"])
+
+    raw = load_cgpi_raw()
+    code_col = raw.columns[0]
+    date_cols = [c for c in raw.columns[3:] if str(c).isdigit() and len(str(c)) == 6]
+
+    mask = raw[code_col] == DOMESTIC_CGPI_CODE
+    row = raw.loc[mask]
+    if row.empty:
+        raise ValueError(f"Domestic CGPI code {DOMESTIC_CGPI_CODE} not found in bulk data")
+    row = row.iloc[0]
+
+    rows = []
+    for date_str in date_cols:
+        val = row.get(date_str)
+        if pd.notna(val):
+            year = int(str(date_str)[:4])
+            month = int(str(date_str)[4:6])
+            rows.append({
+                "date": pd.Timestamp(year, month, 1),
+                "value": float(val),
+            })
+
+    result = pd.DataFrame(rows).sort_values("date").reset_index(drop=True)
+    result.to_csv(cache_path, index=False)
+    print(f"Saved domestic CGPI to {cache_path} ({len(result)} rows)")
     return result
 
 
