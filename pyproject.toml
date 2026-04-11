@@ -13,6 +13,7 @@ dependencies = [
     # Linear algebra / statistics
     "scipy>=1.10",
     "statsmodels>=0.14",
+    "linearmodels>=6.0",         # Panel OLS with cluster SE
 
     # Visualization
     "matplotlib>=3.7",
