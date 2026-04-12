@@ -8,18 +8,18 @@
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
   :root {
-    --navy:      #1a2e4a;
-    --blue-mid:  #2c5282;
-    --blue-soft: #4a7fa5;
-    --muted-bg:  #f5f7fa;
-    --border:    #d0d8e4;
-    --text-dark: #1a1a2e;
-    --text-mid:  #3a4a5c;
-    --text-light:#6b7c93;
-    --orange:    #b85c1a;
-    --white:     #ffffff;
-    --slide-w:   1200px;
-    --slide-h:   675px;
+    --navy:       #1a2e4a;
+    --blue-mid:   #2c5282;
+    --blue-soft:  #4a7fa5;
+    --muted-bg:   #f5f7fa;
+    --border:     #d0d8e4;
+    --text-dark:  #1a1a2e;
+    --text-mid:   #3a4a5c;
+    --text-light: #6b7c93;
+    --orange:     #b85c1a;
+    --white:      #ffffff;
+    --slide-w:    1200px;
+    --slide-h:    675px;
   }
 
   html, body {
@@ -46,230 +46,247 @@
     background: var(--white);
     position: absolute;
     top: 0; left: 0;
-    padding: 52px 68px 44px;
+    padding: 50px 68px 40px;
     flex-direction: column;
   }
   .slide.active { display: flex; }
 
   #counter {
-    position: fixed;
-    bottom: 18px; right: 26px;
-    color: #aaa;
-    font-size: 13px;
-    font-variant-numeric: tabular-nums;
-    letter-spacing: 0.04em;
-    z-index: 100;
+    position: fixed; bottom: 18px; right: 26px;
+    color: #aaa; font-size: 13px;
+    font-variant-numeric: tabular-nums; letter-spacing: 0.04em; z-index: 100;
   }
   #hint {
-    position: fixed;
-    bottom: 18px; left: 26px;
-    color: #888;
-    font-size: 12px;
-    z-index: 100;
+    position: fixed; bottom: 18px; left: 26px;
+    color: #888; font-size: 12px; z-index: 100;
   }
 
+  /* ── Slide header ── */
   .slide-header {
     border-left: 5px solid var(--navy);
-    padding-left: 18px;
-    margin-bottom: 32px;
-  }
-  .slide-header h2 {
-    font-size: 26px;
-    font-weight: 700;
-    color: var(--navy);
-    line-height: 1.3;
+    padding-left: 16px;
+    margin-bottom: 10px;
   }
   .slide-header .section-tag {
-    font-size: 12px;
-    font-weight: 600;
-    color: var(--blue-soft);
-    text-transform: uppercase;
-    letter-spacing: 0.12em;
-    margin-bottom: 6px;
+    font-size: 11px; font-weight: 700; color: var(--blue-soft);
+    text-transform: uppercase; letter-spacing: 0.14em; margin-bottom: 5px;
+  }
+  .slide-header h2 {
+    font-size: 24px; font-weight: 700; color: var(--navy); line-height: 1.3;
   }
 
-  .key-message {
+  /* ── Primary message bar ── */
+  .primary-message {
     background: var(--muted-bg);
-    border-left: 4px solid var(--blue-mid);
-    padding: 14px 20px;
-    margin-bottom: 28px;
-    font-size: 16px;
-    color: var(--text-mid);
-    line-height: 1.6;
+    border-left: 4px solid var(--navy);
+    padding: 11px 18px;
+    margin-bottom: 22px;
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--navy);
+    line-height: 1.5;
   }
 
-  ul.bullets {
-    list-style: none;
-    padding: 0;
-    display: flex;
-    flex-direction: column;
-    gap: 13px;
-  }
+  /* ── Bullets ── */
+  ul.bullets { list-style: none; padding: 0; display: flex; flex-direction: column; gap: 12px; }
   ul.bullets li {
-    display: flex;
-    align-items: flex-start;
-    gap: 12px;
-    font-size: 16px;
-    line-height: 1.55;
-    color: var(--text-mid);
+    display: flex; align-items: flex-start; gap: 12px;
+    font-size: 16px; line-height: 1.55; color: var(--text-mid);
   }
   ul.bullets li::before {
-    content: '—';
-    color: var(--blue-soft);
-    flex-shrink: 0;
-    margin-top: 1px;
-    font-weight: 700;
+    content: '—'; color: var(--blue-soft); flex-shrink: 0; margin-top: 1px; font-weight: 700;
   }
 
   .note {
     margin-top: auto;
-    font-size: 12px;
-    color: var(--text-light);
-    border-top: 1px solid var(--border);
-    padding-top: 10px;
+    font-size: 12px; color: var(--text-light);
+    border-top: 1px solid var(--border); padding-top: 9px;
   }
 
-  /* Title */
-  .slide-title {
-    justify-content: center;
-    background: var(--navy);
-  }
+  /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+     SLIDE TYPE A: Title (special)
+  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+  .slide-title { justify-content: center; background: var(--navy); }
   .slide-title .label {
-    font-size: 13px;
-    letter-spacing: 0.14em;
-    color: #8ab4d4;
-    margin-bottom: 20px;
-    text-transform: uppercase;
-    font-weight: 600;
+    font-size: 12px; letter-spacing: 0.16em; color: #8ab4d4;
+    margin-bottom: 22px; text-transform: uppercase; font-weight: 600;
   }
   .slide-title h1 {
-    font-size: 32px;
-    font-weight: 700;
-    line-height: 1.5;
-    color: var(--white);
-    margin-bottom: 40px;
+    font-size: 30px; font-weight: 700; line-height: 1.55;
+    color: var(--white); margin-bottom: 42px;
   }
   .slide-title h1 em { color: #90c4e8; font-style: normal; }
-  .slide-title .meta { font-size: 15px; color: #a8c4d8; line-height: 2.2; }
+  .slide-title .meta { font-size: 15px; color: #a8c4d8; line-height: 2.3; }
   .slide-title .meta strong { color: var(--white); }
 
-  /* Two column */
-  .two-col {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 28px;
-    flex: 1;
-  }
-  .col-box {
-    background: var(--muted-bg);
-    border-radius: 4px;
-    padding: 22px 24px;
-  }
+  /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+     SLIDE TYPE B: Text-centered
+  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+  /* Uses: slide-header + primary-message + bullets */
+
+  /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+     SLIDE TYPE C: Comparison
+  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+  .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; flex: 1; }
+  .col-box { background: var(--muted-bg); border-radius: 4px; padding: 20px 22px; }
   .col-box h3 {
-    font-size: 13px;
-    font-weight: 700;
-    color: var(--navy);
-    margin-bottom: 14px;
-    padding-bottom: 8px;
+    font-size: 13px; font-weight: 700; color: var(--navy);
+    margin-bottom: 13px; padding-bottom: 7px;
     border-bottom: 2px solid var(--border);
-    text-transform: uppercase;
-    letter-spacing: 0.06em;
+    text-transform: uppercase; letter-spacing: 0.06em;
   }
+  .col-box ul.bullets li { font-size: 14px; gap: 10px; }
 
-  /* Table */
   table.data-table { width: 100%; border-collapse: collapse; font-size: 14px; }
-  table.data-table th { background: var(--navy); color: var(--white); padding: 9px 14px; text-align: left; font-weight: 600; font-size: 13px; }
-  table.data-table td { padding: 9px 14px; border-bottom: 1px solid var(--border); color: var(--text-mid); vertical-align: top; }
+  table.data-table th {
+    background: var(--navy); color: var(--white);
+    padding: 9px 13px; text-align: left; font-weight: 600; font-size: 13px;
+  }
+  table.data-table td {
+    padding: 9px 13px; border-bottom: 1px solid var(--border);
+    color: var(--text-mid); vertical-align: top; line-height: 1.45;
+  }
   table.data-table tr:nth-child(even) td { background: var(--muted-bg); }
-  table.data-table td.hl { color: var(--navy); font-weight: 600; }
+  table.data-table td.hl { color: var(--navy); font-weight: 700; }
 
-  /* Flow */
-  .flow { display: flex; align-items: stretch; gap: 0; flex: 1; }
-  .flow-box {
-    flex: 1;
-    background: var(--muted-bg);
-    border: 1px solid var(--border);
-    border-radius: 4px;
-    padding: 20px 18px;
-    display: flex;
-    flex-direction: column;
+  .lit-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; flex: 1; }
+  .lit-card { border: 1px solid var(--border); border-radius: 4px; padding: 16px 18px; }
+  .lit-card h3 {
+    font-size: 13px; font-weight: 700; color: var(--navy);
+    margin-bottom: 9px; padding-bottom: 7px; border-bottom: 2px solid var(--border);
   }
-  .flow-box h3 { font-size: 12px; font-weight: 700; color: var(--blue-mid); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 8px; }
-  .flow-box .phase-label { font-size: 15px; font-weight: 700; color: var(--navy); margin-bottom: 12px; line-height: 1.35; }
-  .flow-box ul { padding: 0; list-style: none; display: flex; flex-direction: column; gap: 8px; }
-  .flow-box ul li { font-size: 13px; color: var(--text-mid); line-height: 1.45; display: flex; align-items: flex-start; gap: 8px; }
-  .flow-box ul li::before { content: '·'; color: var(--blue-soft); flex-shrink: 0; font-weight: 700; }
-  .flow-arrow { display: flex; align-items: center; padding: 0 10px; color: var(--blue-soft); font-size: 22px; flex-shrink: 0; }
-
-  /* Gap */
-  .gap-box {
-    background: #fff8f2;
-    border: 1px solid #e8c4a0;
-    border-left: 5px solid var(--orange);
-    border-radius: 4px;
-    padding: 16px 20px;
-    margin-bottom: 16px;
-  }
-  .gap-box h3 { font-size: 13px; font-weight: 700; color: var(--orange); margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.06em; }
-  .gap-box p { font-size: 15px; color: var(--text-mid); line-height: 1.6; }
-
-  /* RQ */
-  .rq-box {
-    background: var(--navy);
-    border-radius: 4px;
-    padding: 26px 30px;
-    margin-bottom: 22px;
-  }
-  .rq-box .label { font-size: 12px; letter-spacing: 0.12em; color: #8ab4d4; text-transform: uppercase; margin-bottom: 10px; font-weight: 600; }
-  .rq-box p { font-size: 17px; line-height: 1.7; color: var(--white); }
-
-  .sub-rq-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; flex: 1; }
-  .sub-rq-card { border: 1px solid var(--border); border-radius: 4px; padding: 18px 16px; }
-  .sub-rq-card .num { font-size: 11px; font-weight: 700; color: var(--blue-soft); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 8px; }
-  .sub-rq-card .question { font-size: 14px; font-weight: 700; color: var(--navy); line-height: 1.4; margin-bottom: 10px; }
-  .sub-rq-card .detail { font-size: 13px; color: var(--text-mid); line-height: 1.5; }
-
-  /* Hypothesis */
-  .hyp-flow { display: flex; align-items: center; gap: 0; flex: 1; }
-  .hyp-box { flex: 1; border: 1px solid var(--border); border-radius: 4px; padding: 20px 18px; }
-  .hyp-box .step { font-size: 11px; font-weight: 700; color: var(--blue-soft); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 8px; }
-  .hyp-box p { font-size: 14px; color: var(--text-mid); line-height: 1.6; }
-  .hyp-box.conclusion { background: var(--navy); border-color: var(--navy); }
-  .hyp-box.conclusion .step { color: #8ab4d4; }
-  .hyp-box.conclusion p { color: var(--white); font-weight: 600; font-size: 15px; }
-  .hyp-arrow { padding: 0 12px; color: var(--blue-soft); font-size: 24px; flex-shrink: 0; }
-
-  /* Lit grid */
-  .lit-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; flex: 1; }
-  .lit-card { border: 1px solid var(--border); border-radius: 4px; padding: 18px 18px; }
-  .lit-card h3 { font-size: 13px; font-weight: 700; color: var(--navy); margin-bottom: 10px; padding-bottom: 7px; border-bottom: 2px solid var(--border); }
   .lit-card ul { list-style: none; display: flex; flex-direction: column; gap: 7px; }
   .lit-card ul li { font-size: 13px; color: var(--text-mid); line-height: 1.45; display: flex; gap: 8px; }
   .lit-card ul li::before { content: '·'; color: var(--blue-soft); flex-shrink: 0; font-weight: 700; }
+  .lit-card .finding { font-size: 12px; color: var(--navy); font-weight: 700; margin-top: 8px; }
+
+  /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+     SLIDE TYPE D: Diagram-centered
+  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+  .flow { display: flex; align-items: stretch; gap: 0; flex: 1; }
+  .flow-box {
+    flex: 1; background: var(--muted-bg); border: 1px solid var(--border);
+    border-radius: 4px; padding: 20px 18px; display: flex; flex-direction: column;
+  }
+  .flow-box h3 {
+    font-size: 11px; font-weight: 700; color: var(--blue-mid);
+    text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 7px;
+  }
+  .flow-box .phase-label { font-size: 16px; font-weight: 700; color: var(--navy); margin-bottom: 12px; line-height: 1.3; }
+  .flow-box ul { padding: 0; list-style: none; display: flex; flex-direction: column; gap: 7px; }
+  .flow-box ul li { font-size: 13px; color: var(--text-mid); line-height: 1.4; display: flex; align-items: flex-start; gap: 7px; }
+  .flow-box ul li::before { content: '·'; color: var(--blue-soft); flex-shrink: 0; font-weight: 700; }
+  .flow-arrow { display: flex; align-items: center; padding: 0 10px; color: var(--blue-soft); font-size: 20px; flex-shrink: 0; }
+
+  /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+     ANCHOR SLIDES
+  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+
+  /* --- Anchor: Research Gap --- */
+  .slide-gap { background: var(--navy); }
+  .slide-gap .anchor-label {
+    font-size: 11px; font-weight: 700; letter-spacing: 0.18em;
+    color: #8ab4d4; text-transform: uppercase; margin-bottom: 28px;
+  }
+  .slide-gap .gap-intro {
+    font-size: 15px; color: #a8c4d8; margin-bottom: 32px; line-height: 1.6;
+  }
+  .gap-item {
+    display: flex; align-items: flex-start; gap: 20px;
+    padding: 18px 0; border-bottom: 1px solid rgba(255,255,255,0.12);
+  }
+  .gap-item:last-child { border-bottom: none; }
+  .gap-num {
+    font-size: 28px; font-weight: 700; color: #90c4e8;
+    line-height: 1; flex-shrink: 0; width: 40px; padding-top: 4px;
+  }
+  .gap-text h3 { font-size: 17px; font-weight: 700; color: var(--white); margin-bottom: 6px; line-height: 1.3; }
+  .gap-text p { font-size: 14px; color: #b8cfe0; line-height: 1.55; }
+
+  /* --- Anchor: Research Question --- */
+  .slide-rq { justify-content: center; align-items: flex-start; }
+  .rq-anchor-label {
+    font-size: 11px; font-weight: 700; letter-spacing: 0.18em;
+    color: var(--blue-soft); text-transform: uppercase; margin-bottom: 20px;
+  }
+  .rq-main {
+    font-size: 22px; font-weight: 700; color: var(--navy);
+    line-height: 1.65; margin-bottom: 36px;
+    padding: 28px 32px;
+    border: 2px solid var(--navy);
+    border-radius: 4px;
+  }
+  .sub-rq-row { display: grid; grid-template-columns: repeat(3,1fr); gap: 16px; }
+  .sub-rq-card { border: 1px solid var(--border); border-radius: 4px; padding: 16px 15px; }
+  .sub-rq-card .num { font-size: 11px; font-weight: 700; color: var(--blue-soft); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 7px; }
+  .sub-rq-card .q { font-size: 14px; font-weight: 700; color: var(--navy); line-height: 1.4; margin-bottom: 8px; }
+  .sub-rq-card .d { font-size: 13px; color: var(--text-mid); line-height: 1.45; }
+
+  /* --- Anchor: Hypothesis --- */
+  .slide-hyp { background: var(--muted-bg); }
+  .hyp-anchor-label {
+    font-size: 11px; font-weight: 700; letter-spacing: 0.18em;
+    color: var(--blue-soft); text-transform: uppercase; margin-bottom: 16px;
+  }
+  .hyp-header h2 { font-size: 24px; font-weight: 700; color: var(--navy); margin-bottom: 28px; }
+  .hyp-chain { display: flex; align-items: stretch; gap: 0; flex: 1; }
+  .hyp-step {
+    flex: 1; background: var(--white); border: 1px solid var(--border);
+    border-radius: 4px; padding: 20px 18px;
+    display: flex; flex-direction: column; gap: 10px;
+  }
+  .hyp-step .step-label { font-size: 11px; font-weight: 700; color: var(--blue-soft); text-transform: uppercase; letter-spacing: 0.1em; }
+  .hyp-step p { font-size: 14px; color: var(--text-mid); line-height: 1.6; }
+  .hyp-step.conclusion {
+    background: var(--navy); border-color: var(--navy); flex: 1.2;
+  }
+  .hyp-step.conclusion .step-label { color: #8ab4d4; }
+  .hyp-step.conclusion p { color: var(--white); font-size: 16px; font-weight: 700; line-height: 1.55; }
+  .hyp-arrow { display: flex; align-items: center; padding: 0 10px; color: var(--blue-soft); font-size: 20px; flex-shrink: 0; }
+
+  /* --- Anchor: Analytical Framework --- */
+  .framework-flow { display: flex; align-items: stretch; flex: 1; gap: 0; }
+  .fw-box {
+    flex: 1; border-radius: 4px; padding: 22px 18px;
+    display: flex; flex-direction: column; gap: 10px;
+    background: var(--muted-bg); border: 1px solid var(--border);
+  }
+  .fw-box .fw-phase { font-size: 11px; font-weight: 700; color: var(--blue-mid); text-transform: uppercase; letter-spacing: 0.1em; }
+  .fw-box .fw-title { font-size: 17px; font-weight: 700; color: var(--navy); line-height: 1.3; }
+  .fw-box .fw-output {
+    margin-top: auto; font-size: 12px; font-weight: 700;
+    color: var(--blue-mid); padding-top: 10px;
+    border-top: 1px solid var(--border);
+  }
+  .fw-box ul { padding: 0; list-style: none; display: flex; flex-direction: column; gap: 7px; }
+  .fw-box ul li { font-size: 13px; color: var(--text-mid); line-height: 1.4; display: flex; gap: 7px; }
+  .fw-box ul li::before { content: '·'; color: var(--blue-soft); flex-shrink: 0; }
+  .fw-arrow { display: flex; align-items: center; padding: 0 10px; color: var(--border); font-size: 20px; flex-shrink: 0; }
 
   /* Timeline */
   .timeline { display: flex; flex-direction: column; gap: 0; flex: 1; }
-  .tl-row { display: grid; grid-template-columns: 140px 14px 1fr; gap: 14px; align-items: start; padding: 11px 0; border-bottom: 1px solid var(--border); }
+  .tl-row { display: grid; grid-template-columns: 140px 12px 1fr; gap: 14px; align-items: start; padding: 10px 0; border-bottom: 1px solid var(--border); }
   .tl-row:last-child { border-bottom: none; }
   .tl-date { font-size: 13px; font-weight: 600; color: var(--blue-mid); padding-top: 2px; }
-  .tl-dot { width: 10px; height: 10px; background: var(--navy); border-radius: 50%; margin-top: 5px; flex-shrink: 0; }
+  .tl-dot { width: 10px; height: 10px; background: var(--navy); border-radius: 50%; margin-top: 5px; }
   .tl-content { font-size: 14px; color: var(--text-mid); line-height: 1.5; }
   .tl-content strong { color: var(--navy); }
-  .tl-now .tl-dot { background: var(--orange); width: 12px; height: 12px; }
-  .tl-now .tl-date { color: var(--orange); }
-  .tl-now .tl-content { color: var(--text-dark); font-weight: 600; }
+  .tl-now .tl-dot { background: var(--orange); width: 12px; height: 12px; margin-top: 4px; }
+  .tl-now .tl-date { color: var(--orange); font-weight: 700; }
+  .tl-now .tl-content { color: var(--text-dark); font-weight: 700; }
 
   /* References */
-  .refs { columns: 2; gap: 32px; flex: 1; }
-  .refs p { font-size: 12px; color: var(--text-mid); line-height: 1.6; margin-bottom: 8px; break-inside: avoid; }
+  .refs { columns: 2; gap: 36px; flex: 1; }
+  .refs p { font-size: 13px; color: var(--text-mid); line-height: 1.65; margin-bottom: 9px; break-inside: avoid; }
   .refs p strong { color: var(--navy); }
 </style>
 </head>
 <body>
-
 <div id="deck">
 
-  <!-- 01 Title -->
+  <!-- ══════════════════════════════════════════
+       01  TITLE  (special)
+  ══════════════════════════════════════════ -->
   <div class="slide slide-title active" id="s1">
     <div>
       <div class="label">卒業論文 — 第1回ゼミ発表 / 研究テーマ・計画</div>
@@ -284,32 +301,38 @@
     </div>
   </div>
 
-  <!-- 02 Background 1 -->
+  <!-- ══════════════════════════════════════════
+       02  BACKGROUND 1  [Text-centered]
+       Primary message: 輸入依存体質が外的ショックを増幅する
+  ══════════════════════════════════════════ -->
   <div class="slide" id="s2">
     <div class="slide-header">
       <div class="section-tag">Background</div>
-      <h2>日本経済の構造的背景：輸入依存体質の深化</h2>
+      <h2>日本の輸入依存体質が外的価格ショックを増幅する</h2>
     </div>
-    <div class="key-message">
-      1990年代以降の製造業海外移転により、日本はエネルギー・食料・素材を大きく輸入に依存する構造となった。
+    <div class="primary-message">
+      1990年代以降の製造業海外移転により、日本はエネルギー・食料・素材を輸入に深く依存する構造となった。この体質が外的ショックの国内への波及を大きくしている。
     </div>
     <ul class="bullets">
       <li>製造業の国際分業が進み、国内生産に占める輸入投入の割合が増加（Thorbecke 2024, Sato 2024）</li>
-      <li>経常収支の構造が変質：貿易黒字型 → 第一次所得収支（海外投資リターン）依存型へ（Miwa 2024）</li>
-      <li>輸入価格が上昇すると、そのコスト増加分は国内に還流せず海外へ流出する</li>
-      <li>→ <strong>交易条件の悪化 → 実質所得の海外移転</strong>という構造的問題</li>
+      <li>経常収支の構造が変質：貿易黒字型 → 第一次所得収支依存型へ（Miwa 2024）</li>
+      <li>輸入価格が上昇すると、コスト増加分は国内に還流せず海外へ流出する</li>
+      <li>結果として、<strong>交易条件の悪化 = 実質所得の海外移転</strong>という構造的問題が生じる</li>
     </ul>
-    <div class="note">本研究では産業構造変化の原因分析は対象外とし、先行研究から所与として引用する。</div>
+    <div class="note">産業構造変化の原因分析は本研究のスコープ外。先行研究から所与として引用する。</div>
   </div>
 
-  <!-- 03 Background 2 -->
+  <!-- ══════════════════════════════════════════
+       03  BACKGROUND 2  [Comparison / Table]
+       Primary message: 2022年のショックは歴史的な規模だった
+  ══════════════════════════════════════════ -->
   <div class="slide" id="s3">
     <div class="slide-header">
       <div class="section-tag">Background</div>
-      <h2>2021–2024年の輸入価格ショック</h2>
+      <h2>2021–2024年の輸入価格ショックは歴史的な規模だった</h2>
     </div>
-    <div class="key-message">
-      ウクライナ紛争・対ロシア制裁・円安が重なり、エネルギーを筆頭に輸入物価が急騰した。
+    <div class="primary-message">
+      ウクライナ紛争・対ロシア制裁・円安が重なり、エネルギーを中心に輸入物価が急騰した。本研究はこのショックを5グループに分解して分析する。
     </div>
     <table class="data-table">
       <thead>
@@ -327,207 +350,248 @@
         <tr><td>食料</td><td>穀物・食用油脂・水産物</td><td>+50〜64%</td></tr>
       </tbody>
     </table>
-    <div class="note">出所: 日銀CGPI輸入物価指数（2020年基準）。5グループは本研究の分析単位として設定。</div>
+    <div class="note">出所: 日銀CGPI輸入物価指数（2020年基準）。</div>
   </div>
 
-  <!-- 04 Problem Setting -->
+  <!-- ══════════════════════════════════════════
+       04  PROBLEM SETTING  [Single-conclusion]
+       Primary message: デマンドプルと混在しているので識別が必要
+  ══════════════════════════════════════════ -->
   <div class="slide" id="s4">
     <div class="slide-header">
       <div class="section-tag">Problem Setting</div>
-      <h2>問題意識：混在するインフレ要因の識別が必要</h2>
+      <h2>コストプッシュとデマンドプルが混在しており、識別なしには分配効果を測れない</h2>
     </div>
-    <div class="two-col">
+    <div class="primary-message">
+      現在のインフレには「輸入コスト由来」と「財政出動由来」の2要因が混在する。本研究は輸入含有率の財間差異を使ってコストプッシュ成分のみを識別・分離する。
+    </div>
+    <div class="two-col" style="margin-top:4px;">
       <div class="col-box">
         <h3>コストプッシュ（本研究の対象）</h3>
-        <ul class="bullets" style="gap:10px;">
+        <ul class="bullets">
           <li>輸入価格上昇による供給側からの価格上昇</li>
           <li>輸入含有率が高い財ほど価格上昇が大きい</li>
-          <li>低所得層が多く消費する必需品（食料・エネルギー）が高い輸入含有率を持つ</li>
-          <li>→ <strong>逆進的な実質所得の目減り</strong>が予想される</li>
+          <li>低所得層の必需品（食料・エネルギー）に集中</li>
         </ul>
       </div>
       <div class="col-box">
         <h3>デマンドプル（識別・除去対象）</h3>
-        <ul class="bullets" style="gap:10px;">
-          <li>コロナ特別会計・財政出動による需要増加からの価格上昇</li>
-          <li>財の特性によらず全体的に価格が上昇する傾向</li>
-          <li>コストプッシュとの混在により分配効果の把握が困難</li>
-          <li>→ <strong>輸入含有率の財間差異</strong>を使って識別・分離する</li>
+        <ul class="bullets">
+          <li>コロナ特別会計・財政出動による需要増加</li>
+          <li>財の特性によらず全体的に価格が上昇</li>
+          <li>輸入含有率と価格変動の相関が低い</li>
         </ul>
       </div>
     </div>
-    <div class="note">識別戦略: コストプッシュは輸入含有率と価格上昇の相関として現れる。デマンドプルは財の特性と無関係な一様上昇として現れる。</div>
+    <div class="note">識別手法: 輸入含有率の財間差異を利用。コストプッシュは高IC財に集中し、デマンドプルは財特性と無関係な一様上昇として現れる。</div>
   </div>
 
-  <!-- 05 Prior Research -->
+  <!-- ══════════════════════════════════════════
+       05  PRIOR RESEARCH  [Comparison / Lit grid]
+       Primary message: マクロ規模は確立されているが家計帰着は未解明
+  ══════════════════════════════════════════ -->
   <div class="slide" id="s5">
     <div class="slide-header">
       <div class="section-tag">Prior Research</div>
-      <h2>先行研究の概観</h2>
+      <h2>マクロ規模の把握は進んでいるが、家計レベルへの分解は未解明のまま</h2>
+    </div>
+    <div class="primary-message">
+      交易条件や転嫁率の研究は蓄積されている。しかし財別・所得階層別の分解と日本版シミュレーションモデルは存在しない。
     </div>
     <div class="lit-grid">
       <div class="lit-card">
         <h3>交易条件・マクロ規模</h3>
         <ul>
           <li>齊藤（2022）: 交易損失はGNIの4.6%規模と推計</li>
-          <li>Kohli（2004, 2023）: 交易条件変化と実質GNIの理論的整理</li>
-          <li>→ <strong>マクロ集計の規模感は確立</strong></li>
+          <li>Kohli（2004, 2023）: 交易条件変化と実質GNIの理論整理</li>
         </ul>
+        <div class="finding">✓ マクロ集計の規模感は確立</div>
       </div>
       <div class="lit-card">
-        <h3>輸入価格→消費者物価の転嫁</h3>
+        <h3>輸入価格→消費者物価</h3>
         <ul>
-          <li>Amiti et al.（2019）: 輸入集約度が価格転嫁の異質性を決定</li>
-          <li>Minton &amp; Somale（2025）: IO表から輸入含有率を構築し転嫁を推定</li>
-          <li>Yagi et al.（2023）、Sasaki et al.（2022）: 日本の転嫁率推定</li>
+          <li>Amiti et al.（2019）: 輸入集約度が転嫁の異質性を決定</li>
+          <li>Minton &amp; Somale（2025）: IO表から輸入含有率を構築</li>
+          <li>Yagi et al.（2023）, Sasaki et al.（2022）: 日本の転嫁率推定</li>
         </ul>
+        <div class="finding">✓ 転嫁メカニズムの理論・手法は確立</div>
       </div>
       <div class="lit-card">
         <h3>分配効果・マイクロシミュレーション</h3>
         <ul>
-          <li>O'Donoghue et al.（2025）: IO×家計調査による政策分配評価</li>
-          <li>Amores et al.（2025）: 欧州インフレの所得階層別影響を評価</li>
-          <li>Fajgelbaum et al.（2020）: IO×家計調査の接合手法</li>
+          <li>O'Donoghue et al.（2025）: IO×家計調査による政策評価</li>
+          <li>Amores et al.（2025）: 欧州インフレの所得階層別影響</li>
         </ul>
+        <div class="finding">△ 欧州では確立。日本版は存在しない</div>
       </div>
       <div class="lit-card">
         <h3>産業構造・背景（所与として引用）</h3>
         <ul>
-          <li>Thorbecke（2024）、Sato（2024）: 製造業海外移転と輸入依存</li>
-          <li>Miwa（2024）: 経常収支の質的変化（貿易黒字→所得収支依存）</li>
+          <li>Thorbecke（2024）, Sato（2024）: 製造業海外移転</li>
+          <li>Miwa（2024）: 経常収支の質的変化</li>
         </ul>
+        <div class="finding">― 本研究では分析対象外</div>
       </div>
     </div>
-    <div class="note">現在調査継続中。上記は主要な参照先として暫定整理。</div>
   </div>
 
-  <!-- 06 Research Gap -->
-  <div class="slide" id="s6">
-    <div class="slide-header">
-      <div class="section-tag">Research Gap</div>
-      <h2>先行研究の空白：3つの未解明領域</h2>
-    </div>
-    <div class="gap-box">
-      <h3>空白① 交易損失の家計レベルへの分解</h3>
-      <p>マクロの交易損失規模（齊藤2022）は推計されているが、<strong>どの財を通じ、どの所得階層に帰着するか</strong>の体系的な分解は行われていない。</p>
-    </div>
-    <div class="gap-box">
-      <h3>空白② コストプッシュ固有の逆進性の識別</h3>
-      <p>実績CPIを使った分配分析はあるが、<strong>コストプッシュ成分のみを取り出した</strong>逆進性の定量化はされていない（デマンドプルが混入している）。</p>
-    </div>
-    <div class="gap-box">
-      <h3>空白③ 日本版の統合シミュレーションモデルの不在</h3>
-      <p>欧州ではIO×マイクロシミュレーションによる政策評価が普及しているが（Amores et al. 2025）、<strong>日本のデータを用いた同等のモデル</strong>が存在しない。</p>
+  <!-- ══════════════════════════════════════════
+       06  RESEARCH GAP  ★ ANCHOR [Single-conclusion]
+       Primary message: 3つの空白がこの研究を正当化する
+  ══════════════════════════════════════════ -->
+  <div class="slide slide-gap" id="s6">
+    <div class="anchor-label">Research Gap — Anchor Slide</div>
+    <div class="gap-intro">先行研究が確立したことと、残された空白を整理する。以下の3点が本研究の存在意義である。</div>
+    <div style="flex:1; display:flex; flex-direction:column; justify-content:space-between;">
+      <div class="gap-item">
+        <div class="gap-num">1</div>
+        <div class="gap-text">
+          <h3>交易損失の家計レベルへの分解が存在しない</h3>
+          <p>マクロの交易損失規模（齊藤2022）は推計されているが、どの財を通じ、どの所得階層に帰着するかの体系的な分解は行われていない。</p>
+        </div>
+      </div>
+      <div class="gap-item">
+        <div class="gap-num">2</div>
+        <div class="gap-text">
+          <h3>コストプッシュ固有の逆進性が識別されていない</h3>
+          <p>実績CPIを使った分配分析はあるが、コストプッシュ成分のみを取り出した逆進性の定量化はされていない。デマンドプルが混入している。</p>
+        </div>
+      </div>
+      <div class="gap-item">
+        <div class="gap-num">3</div>
+        <div class="gap-text">
+          <h3>日本版の統合シミュレーションモデルが存在しない</h3>
+          <p>欧州ではIO×マイクロシミュレーションによる政策評価が普及しているが（Amores et al. 2025）、日本のデータを用いた同等のモデルが存在しない。</p>
+        </div>
+      </div>
     </div>
   </div>
 
-  <!-- 07 Research Question -->
-  <div class="slide" id="s7">
-    <div class="slide-header">
-      <div class="section-tag">Research Question</div>
-      <h2>研究質問</h2>
+  <!-- ══════════════════════════════════════════
+       07  RESEARCH QUESTION  ★ ANCHOR [Single-conclusion]
+       Primary message: 主問と3つの副問で構成される
+  ══════════════════════════════════════════ -->
+  <div class="slide slide-rq" id="s7">
+    <div class="rq-anchor-label">Research Question — Anchor Slide</div>
+    <div class="rq-main">
+      外的要因による輸入価格ショックは、日本の実質所得をどのような構造で海外に流出させ、財の特性および所得階層ごとに家計消費をどの程度押し下げているか。また、その構造に基づく政策介入はどのような分配効果をもたらすか。
     </div>
-    <div class="rq-box">
-      <div class="label">Main Research Question</div>
-      <p>外的要因による輸入価格ショックは、日本の実質所得をどのような構造で海外に流出させ、財の特性および所得階層ごとに家計消費をどの程度押し下げているか。また、その構造に基づく政策介入はどのような分配効果をもたらすか。</p>
-    </div>
-    <div class="sub-rq-grid">
+    <div class="sub-rq-row">
       <div class="sub-rq-card">
         <div class="num">副問 1</div>
-        <div class="question">所得流出の構造定量化</div>
-        <div class="detail">5グループ別の輸入価格ショックによる実質所得の海外流出規模を推計する</div>
+        <div class="q">所得流出の構造定量化</div>
+        <div class="d">5グループ別の輸入価格ショックによる実質所得の海外流出規模を推計する</div>
       </div>
       <div class="sub-rq-card">
         <div class="num">副問 2</div>
-        <div class="question">家計消費への帰着</div>
-        <div class="detail">財の分類（必需品/裁量品）× 所得階層の2軸で、コストプッシュの影響を分解する</div>
+        <div class="q">家計消費への帰着</div>
+        <div class="d">財の分類（必需品/裁量品）× 所得階層の2軸でコストプッシュの影響を分解する</div>
       </div>
       <div class="sub-rq-card">
         <div class="num">副問 3</div>
-        <div class="question">政策シミュレーション</div>
-        <div class="detail">副問1・2の構造を統合したモデル上で、政策介入の分配効果を定量化する</div>
+        <div class="q">政策シミュレーション</div>
+        <div class="d">副問1・2の構造を統合したモデル上で、政策介入の分配効果を定量化する</div>
       </div>
     </div>
   </div>
 
-  <!-- 08 Hypothesis -->
-  <div class="slide" id="s8">
-    <div class="slide-header">
-      <div class="section-tag">Hypothesis</div>
-      <h2>仮説：コストプッシュインフレは低所得層ほど大きく影響する</h2>
+  <!-- ══════════════════════════════════════════
+       08  HYPOTHESIS  ★ ANCHOR [Diagram-centered]
+       Primary message: 仮説の論理的連鎖を示す
+  ══════════════════════════════════════════ -->
+  <div class="slide slide-hyp" id="s8">
+    <div class="hyp-anchor-label">Hypothesis — Anchor Slide</div>
+    <div class="hyp-header">
+      <h2>仮説：エンゲル法則 × 輸入依存 → コストプッシュは低所得層ほど大きく影響する</h2>
     </div>
-    <div class="hyp-flow">
-      <div class="hyp-box">
-        <div class="step">前提① エンゲル法則</div>
-        <p>低所得層（Q1）は食料・光熱などの必需品への支出割合が高い。高所得層（Q5）は裁量的支出の割合が高い。</p>
+    <div class="hyp-chain">
+      <div class="hyp-step">
+        <div class="step-label">前提 ①</div>
+        <p>低所得層（Q1）は食料・光熱などの<strong>必需品への支出割合が高い</strong>。高所得層（Q5）は裁量的支出が多い。（エンゲル法則）</p>
       </div>
       <div class="hyp-arrow">→</div>
-      <div class="hyp-box">
-        <div class="step">前提② 必需品の輸入依存</div>
-        <p>食料・エネルギーは輸入含有率が高く、コストプッシュインフレの主要な経路となっている。</p>
+      <div class="hyp-step">
+        <div class="step-label">前提 ②</div>
+        <p>食料・エネルギーは<strong>輸入含有率が高く</strong>、コストプッシュインフレの主要な経路である。</p>
       </div>
       <div class="hyp-arrow">→</div>
-      <div class="hyp-box">
-        <div class="step">前提③ 識別の論理</div>
-        <p>輸入含有率の財間差異を使えば、コストプッシュ成分をデマンドプルから分離して推定できる。</p>
+      <div class="hyp-step">
+        <div class="step-label">前提 ③</div>
+        <p>輸入含有率の<strong>財間差異</strong>を利用すれば、コストプッシュ成分をデマンドプルから識別・分離できる。</p>
       </div>
       <div class="hyp-arrow">→</div>
-      <div class="hyp-box conclusion">
-        <div class="step">仮説</div>
+      <div class="hyp-step conclusion">
+        <div class="step-label">仮説</div>
         <p>コストプッシュインフレの実質消費への影響は低所得層ほど大きく、逆進的な分配をもたらす</p>
       </div>
     </div>
-    <div class="note">集計（GDP消費）では見かけ上小さな減少でも、所得階層別に見ると影響は大きく偏っているという構造を明らかにすることが目的。</div>
+    <div class="note" style="margin-top:14px; border-top:1px solid rgba(26,46,74,0.15);">
+      GDP消費では見かけ上小さな減少でも、所得階層別に見ると影響は大きく偏っているという構造を明らかにすることが目的。
+    </div>
   </div>
 
-  <!-- 09 Framework -->
+  <!-- ══════════════════════════════════════════
+       09  ANALYTICAL FRAMEWORK  ★ ANCHOR [Diagram-centered]
+       Primary message: 分析は3段階で積み上げられる独立した構造
+  ══════════════════════════════════════════ -->
   <div class="slide" id="s9">
     <div class="slide-header">
-      <div class="section-tag">Analytical Framework</div>
-      <h2>分析の3段階設計</h2>
+      <div class="section-tag">Analytical Framework — Anchor Slide</div>
+      <h2>3段階の積み上げ構造：各段階が独立した貢献を持つ</h2>
     </div>
-    <div class="flow">
-      <div class="flow-box" style="border-top: 4px solid var(--navy);">
-        <h3>Phase 1</h3>
-        <div class="phase-label">所得流出の<br>構造定量化</div>
+    <div class="primary-message">
+      Phase 1 → 2 → 3 の順に積み上げる。各段階が独立した学術的貢献を持ち、前段階の完成で次段階に進む設計。
+    </div>
+    <div class="framework-flow">
+      <div class="fw-box" style="border-top: 4px solid var(--navy);">
+        <div class="fw-phase">Phase 1</div>
+        <div class="fw-title">所得流出の<br>構造定量化</div>
         <ul>
-          <li>産業連関表から輸入含有率を算出</li>
+          <li>IO表から輸入含有率を算出</li>
           <li>5グループ別の輸入価格変化を計測</li>
           <li>グループ別の所得流出額を推計</li>
           <li>既存研究の推計値との照合</li>
         </ul>
+        <div class="fw-output">産出: 部門×グループ別 輸入含有率</div>
       </div>
-      <div class="flow-arrow">↓</div>
-      <div class="flow-box" style="border-top: 4px solid var(--blue-mid);">
-        <h3>Phase 2</h3>
-        <div class="phase-label">家計消費への<br>帰着分析</div>
+      <div class="fw-arrow">↓</div>
+      <div class="fw-box" style="border-top: 4px solid var(--blue-mid);">
+        <div class="fw-phase">Phase 2</div>
+        <div class="fw-title">家計消費への<br>帰着分析</div>
         <ul>
           <li>費目別の価格転嫁率を推定（パネルOLS）</li>
           <li>コストプッシュ vs デマンドプルを識別</li>
           <li>五分位別の実効インフレ格差を推計</li>
           <li>GDP消費への集計的影響を算出</li>
         </ul>
+        <div class="fw-output">産出: 費目別転嫁率 / 五分位別実効インフレ</div>
       </div>
-      <div class="flow-arrow">↓</div>
-      <div class="flow-box" style="border-top: 4px solid var(--blue-soft);">
-        <h3>Phase 3</h3>
-        <div class="phase-label">シミュレーション・<br>政策評価</div>
+      <div class="fw-arrow">↓</div>
+      <div class="fw-box" style="border-top: 4px solid var(--blue-soft);">
+        <div class="fw-phase">Phase 3</div>
+        <div class="fw-title">シミュレーション・<br>政策評価</div>
         <ul>
           <li>IO価格モデルを構築</li>
           <li>五分位別マイクロシミュレーション</li>
-          <li>政策シナリオ（エネルギー補助・食料支援等）を評価</li>
-          <li>モデル自体が主要な成果物</li>
+          <li>政策シナリオを比較評価</li>
+          <li>モデル自体が主要成果物</li>
         </ul>
+        <div class="fw-output">産出: 政策シナリオ別の分配効果</div>
       </div>
     </div>
-    <div class="note">各段階が独立した貢献を持つ積み上げ型設計。Phase 1が完成すれば最低限の貢献が確保される。</div>
   </div>
 
-  <!-- 10 Data -->
+  <!-- ══════════════════════════════════════════
+       10  DATA  [Comparison / Table]
+       Primary message: 必要なデータはすべて公的統計から入手可能
+  ══════════════════════════════════════════ -->
   <div class="slide" id="s10">
     <div class="slide-header">
       <div class="section-tag">Data</div>
-      <h2>使用データの見通し</h2>
+      <h2>必要なデータはすべて公的統計として入手可能</h2>
+    </div>
+    <div class="primary-message">
+      分析に必要な5種のデータはいずれも公的統計として整備されており、取得・加工の見通しが立っている。
     </div>
     <table class="data-table">
       <thead>
@@ -540,29 +604,32 @@
       </thead>
       <tbody>
         <tr><td class="hl">産業連関表（2020年表）</td><td>総務省</td><td>2020年基準・約100部門</td><td>輸入含有率の算出</td></tr>
-        <tr><td class="hl">CGPI 輸入物価指数</td><td>日本銀行</td><td>2015-2024・月次</td><td>5グループ別価格変化の計測</td></tr>
-        <tr><td>貿易統計（品目別）</td><td>財務省</td><td>2015-2024・月次</td><td>輸入額・交易損失の算出</td></tr>
-        <tr><td class="hl">家計調査（五分位別）</td><td>総務省</td><td>2015-2024・年次</td><td>所得階層別の支出構成</td></tr>
-        <tr><td>消費者物価指数</td><td>総務省</td><td>2015-2024・月次</td><td>費目別価格変動の把握</td></tr>
+        <tr><td class="hl">CGPI 輸入物価指数</td><td>日本銀行</td><td>2015–2024・月次</td><td>5グループ別価格変化の計測</td></tr>
+        <tr><td>貿易統計（品目別）</td><td>財務省</td><td>2015–2024・月次</td><td>輸入額・交易損失の算出</td></tr>
+        <tr><td class="hl">家計調査（五分位別）</td><td>総務省</td><td>2015–2024・年次</td><td>所得階層別の支出構成</td></tr>
+        <tr><td>消費者物価指数</td><td>総務省</td><td>2015–2024・月次</td><td>費目別価格変動の把握</td></tr>
       </tbody>
     </table>
-    <ul class="bullets" style="margin-top:20px;">
-      <li>分析期間: プラセボ期（2015-2019）/ ショック期（2021-2024）</li>
-      <li>主要データはすべて公的統計として入手可能</li>
-    </ul>
+    <div class="note">分析期間: プラセボ期（2015–2019）/ ショック期（2021–2024）。2020年は基準年のため回帰から除外。</div>
   </div>
 
-  <!-- 11 Schedule -->
+  <!-- ══════════════════════════════════════════
+       11  SCHEDULE  [Text-centered / Timeline]
+       Primary message: 現在は先行研究調査の段階
+  ══════════════════════════════════════════ -->
   <div class="slide" id="s11">
     <div class="slide-header">
       <div class="section-tag">Schedule</div>
-      <h2>研究スケジュール</h2>
+      <h2>現在は先行研究調査の段階。分析着手は6月以降の予定</h2>
+    </div>
+    <div class="primary-message">
+      研究設計と先行研究の概観を終えた段階での発表。データ整備と分析は6月以降に本格着手する。
     </div>
     <div class="timeline">
       <div class="tl-row">
         <div class="tl-date">2026年4〜5月</div>
         <div class="tl-dot" style="background:var(--blue-soft);"></div>
-        <div class="tl-content">研究設計の確定・先行研究調査</div>
+        <div class="tl-content">研究設計の確定・先行研究調査（進行中）</div>
       </div>
       <div class="tl-row tl-now">
         <div class="tl-date">2026年5月下旬</div>
@@ -597,7 +664,9 @@
     </div>
   </div>
 
-  <!-- 12 References -->
+  <!-- ══════════════════════════════════════════
+       12  REFERENCES  [Text-centered]
+  ══════════════════════════════════════════ -->
   <div class="slide" id="s12">
     <div class="slide-header">
       <div class="section-tag">References</div>
@@ -619,7 +688,7 @@
     </div>
   </div>
 
-</div>
+</div><!-- /deck -->
 
 <div id="counter"></div>
 <div id="hint">← → キーまたはタップで移動</div>
