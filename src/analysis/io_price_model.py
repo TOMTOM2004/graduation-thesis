@@ -39,6 +39,12 @@ SIM_DIR = DATA_PROCESSED / "simulation-params"
 # Empirical pass-through coefficient (Phase 2a-3 panel OLS, spec iii)
 BETA_EMPIRICAL = 0.431
 
+# Koyck partial adjustment: annual pass-through rate
+# δ=0.55: estimated by minimizing RMSE against actual CPI (2021-2024 shock period)
+# Economic interpretation: 55% of import cost increase is passed through within one year
+# Half-life ≈ 10.4 months. Sensitivity range: 0.4, 0.55, 0.7
+DELTA_KOYCK = 0.55
+
 # CPI categories with near-zero pass-through (competitive imports, DEC-010)
 COMPETITIVE_IMPORT_CATEGORIES = {"衣料", "履物類"}
 
@@ -251,12 +257,52 @@ def map_to_cpi_categories(
 
 
 # --------------------------------------------------------------------------- #
-# 4. Multi-year run + cache                                                    #
+# 4. Koyck partial adjustment lag                                              #
+# --------------------------------------------------------------------------- #
+
+def apply_koyck_lag(
+    shock_by_year: dict[int, pd.Series],
+    delta: float = DELTA_KOYCK,
+) -> dict[int, pd.Series]:
+    """
+    Apply Koyck partial adjustment to the sectoral import shock series.
+
+    m_eff(t) = δ × m(t) + (1-δ) × m_eff(t-1)
+
+    Converts instantaneous annual shocks into lagged effective shocks that
+    better approximate the delayed consumer price pass-through observed in data.
+
+    Parameters
+    ----------
+    shock_by_year : dict mapping year (int) → sectoral shock vector (pd.Series)
+    delta : annual pass-through rate (0 < δ ≤ 1).
+            δ=0.55 is the RMSE-minimizing estimate from 2021-2024 validation data.
+            δ=1.0 reduces to the static (instantaneous) model.
+
+    Returns
+    -------
+    dict mapping year → Koyck-adjusted shock vector
+    """
+    years_sorted = sorted(shock_by_year.keys())
+    m_eff_prev = pd.Series(0.0, index=shock_by_year[years_sorted[0]].index)
+    result: dict[int, pd.Series] = {}
+    for yr in years_sorted:
+        m_t = shock_by_year[yr]
+        m_eff = delta * m_t + (1 - delta) * m_eff_prev
+        result[yr] = m_eff
+        m_eff_prev = m_eff
+    return result
+
+
+# --------------------------------------------------------------------------- #
+# 5. Multi-year run + cache                                                    #
 # --------------------------------------------------------------------------- #
 
 def run_io_price_model_all_years(
     years: list[int] | None = None,
     base_year: int = 2020,
+    koyck: bool = True,
+    delta: float = DELTA_KOYCK,
     force: bool = False,
 ) -> pd.DataFrame:
     """
@@ -267,38 +313,90 @@ def run_io_price_model_all_years(
     ----------
     years : list of years to run. Default: 2015-2019, 2021-2024.
     base_year : reference year for price index (default 2020).
+    koyck : if True, apply Koyck partial adjustment (δ=delta) before Leontief.
+            Adds delta_cpi_koyck_pp column to output.
+    delta : Koyck annual pass-through rate (only used when koyck=True).
     force : recompute even if cache exists.
 
     Returns
     -------
     pd.DataFrame with columns:
         year, cpi_mid_name, cpi_code, group, is_competitive_import,
-        delta_cpi_leontief_pp, delta_cpi_empirical_pp
+        delta_cpi_leontief_pp, delta_cpi_empirical_pp[, delta_cpi_koyck_pp]
     Cache: data/processed/simulation-params/io_price_model_output.csv
     """
     SIM_DIR.mkdir(parents=True, exist_ok=True)
     cache_path = SIM_DIR / "io_price_model_output.csv"
 
     if cache_path.exists() and not force:
-        print(f"Loading cached: {cache_path}")
-        return pd.read_csv(cache_path)
+        df = pd.read_csv(cache_path)
+        # Recompute Koyck column if missing (backward compat)
+        if koyck and "delta_cpi_koyck_pp" not in df.columns:
+            print("Cache missing delta_cpi_koyck_pp — recomputing...")
+        else:
+            print(f"Loading cached: {cache_path}")
+            return df
 
     if years is None:
         years = [2015, 2016, 2017, 2018, 2019, 2021, 2022, 2023, 2024]
 
+    # Build raw per-year sector shocks (before Koyck)
+    raw_shocks: dict[int, pd.Series] = {}
+    for yr in years:
+        raw_shocks[yr] = build_import_price_shock_vector(yr, base_year)
+
+    # Apply Koyck adjustment if requested
+    koyck_shocks = apply_koyck_lag(raw_shocks, delta=delta) if koyck else raw_shocks
+
     all_rows = []
     for yr in years:
         print(f"Running IO price model: year={yr}, base={base_year}")
+
+        # Instantaneous specs (δ=1)
         sector_df = run_leontief_price_model(yr, base_year)
         cpi_df = map_to_cpi_categories(sector_df, yr)
         cpi_df["year"] = yr
+
+        # Koyck-adjusted spec: re-run Leontief with adjusted shock
+        if koyck:
+            from src.utils.io_utils import compute_input_coefficients, compute_leontief_inverse
+            io_data = load_io_table()
+            A = compute_input_coefficients(io_data)
+            L = compute_leontief_inverse(A)
+            m_k = koyck_shocks[yr].reindex(A.index, fill_value=0.0)
+            p_koyck = pd.Series(
+                L.values.T @ m_k.values,
+                index=io_data["sector_codes"],
+            ) * BETA_EMPIRICAL  # apply empirical scaling
+
+            # Bridge Koyck sector prices to CPI categories
+            bridge = pd.read_csv(
+                DATA_PROCESSED / "bridge-matrix" / "bridge_matrix_mid.csv",
+                index_col=0,
+            )
+            p_koyck_pp = p_koyck * 100
+            koyck_vals: list[float] = []
+            for cat_name in cpi_df["cpi_mid_name"]:
+                cat_info = CPI_MID_CATEGORY_MAP.get(cat_name, {})
+                is_comp = cat_info.get("is_competitive_import", False)
+                if cat_name in bridge.index and not is_comp:
+                    w = bridge.loc[cat_name]
+                    common = w.index.intersection(p_koyck_pp.index)
+                    w_sum = w[common].sum()
+                    val = (w[common] * p_koyck_pp[common]).sum() / w_sum if w_sum > 0 else 0.0
+                else:
+                    val = 0.0
+                koyck_vals.append(val)
+            cpi_df["delta_cpi_koyck_pp"] = koyck_vals
+
         all_rows.append(cpi_df)
 
     result = pd.concat(all_rows, ignore_index=True)
-    result = result[[
-        "year", "cpi_mid_name", "cpi_code", "group", "is_competitive_import",
-        "delta_cpi_leontief_pp", "delta_cpi_empirical_pp",
-    ]]
+    cols = ["year", "cpi_mid_name", "cpi_code", "group", "is_competitive_import",
+            "delta_cpi_leontief_pp", "delta_cpi_empirical_pp"]
+    if koyck:
+        cols.append("delta_cpi_koyck_pp")
+    result = result[cols]
     result.to_csv(cache_path, index=False)
     print(f"Saved: {cache_path} ({len(result)} rows)")
     return result
@@ -333,6 +431,9 @@ def validate_against_actual_cpi(
     panel = panel.rename(columns={"delta_cpi": "delta_cpi_actual_pp"})
     # Normalize cpi_code to 4-digit string for consistent merge
     panel["cpi_code"] = panel["cpi_code"].astype(str).str.zfill(4)
+
+    model_df = model_df.copy()
+    model_df["cpi_code"] = model_df["cpi_code"].astype(str).str.zfill(4)
 
     merged = model_df.merge(
         panel, on=["year", "cpi_mid_name", "cpi_code"], how="left"

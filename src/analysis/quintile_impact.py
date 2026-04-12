@@ -387,6 +387,128 @@ def print_gdp_aggregate_summary(df: pd.DataFrame) -> None:
     print("      コストプッシュインフレが低所得層に集中する逆進的な分配効果を示す。")
 
 
+# --------------------------------------------------------------------------- #
+# Microsimulation: IO price model output → quintile effective inflation       #
+# --------------------------------------------------------------------------- #
+
+# Maps CPI_MID_CATEGORY_MAP 'group' → HH_CATEGORY_MAP key (household survey cat)
+_GROUP_TO_HH_CODE: dict[str, int] = {
+    "food": 60,
+    "housing": 102,
+    "energy": 107,
+    "furniture": 112,
+    "clothing": 122,
+    "health": 140,
+    "transport": 145,
+    "comms": 145,      # 交通・通信と統合
+    "education": 152,
+    "recreation": 156,
+    "other": 165,
+}
+
+
+def run_microsimulation(
+    cpi_changes: pd.DataFrame,
+    scenario_label: str = "baseline",
+) -> pd.DataFrame:
+    """
+    Quintile-level microsimulation using IO price model output.
+
+    This is the Phase 3 version of compute_quintile_inflation_burden():
+    instead of actual CPI data, it accepts the IO model's predicted
+    CPI mid-category price changes as input.
+
+    Aggregation logic:
+      1. Map CPI mid-categories (41) → HH major categories (10) via group field
+      2. Compute consumption-weighted average ΔCPI per HH major category
+      3. Apply quintile expenditure shares (fixed at 2019 structure)
+      4. Sum to effective inflation per quintile per year
+
+    Parameters
+    ----------
+    cpi_changes : pd.DataFrame
+        columns = [year, cpi_mid_name, delta_cpi_pp]
+        Source: IO price model output (e.g. delta_cpi_koyck_pp or scenario-adjusted)
+    scenario_label : str
+        Label for cache file and output column; identifies the policy scenario.
+
+    Returns
+    -------
+    pd.DataFrame with columns:
+        year, quintile, quintile_label, scenario,
+        effective_inflation_pp, q1_q5_gap_pp, gdp_avg_pp
+    Cache: data/processed/simulation-params/microsim_{scenario_label}.csv
+    """
+    from src.analysis.bridge_matrix_mid import CPI_MID_CATEGORY_MAP
+
+    RESULTS_DIR.mkdir(parents=True, exist_ok=True)
+    cache_path = RESULTS_DIR / f"microsim_{scenario_label}.csv"
+
+    if cache_path.exists():
+        print(f"Loading cached: {cache_path}")
+        return pd.read_csv(cache_path)
+
+    # Expenditure shares (fixed at 2019 structure): index=quintile (0-5), cols=hh_cat_code
+    shares = load_expenditure_shares(year=2019)
+
+    # Build group lookup from CPI_MID_CATEGORY_MAP
+    mid_to_group: dict[str, str] = {
+        name: info.get("group", "other")
+        for name, info in CPI_MID_CATEGORY_MAP.items()
+    }
+
+    years = sorted(cpi_changes["year"].unique())
+    rows = []
+    for year in years:
+        yr_changes = cpi_changes[cpi_changes["year"] == year].copy()
+
+        # Step 1: aggregate mid-category → HH major category (consumption-weighted mean)
+        yr_changes["hh_code"] = yr_changes["cpi_mid_name"].map(
+            lambda n: _GROUP_TO_HH_CODE.get(mid_to_group.get(n, "other"), 165)
+        )
+        hh_avg = (
+            yr_changes.groupby("hh_code")["delta_cpi_pp"]
+            .mean()
+            .to_dict()
+        )
+
+        # Step 2: compute quintile effective inflation
+        q_inflation: dict[int, float] = {}
+        for q_code in range(0, 6):
+            if q_code not in shares.index:
+                continue
+            q_shares = shares.loc[q_code]
+            burden = 0.0
+            for hh_code in HH_CATEGORY_MAP.keys():
+                share = q_shares.get(hh_code, np.nan)
+                delta_cpi = hh_avg.get(hh_code, np.nan)
+                if pd.notna(share) and pd.notna(delta_cpi):
+                    burden += share * delta_cpi
+            q_inflation[q_code] = burden
+
+        # Step 3: compute summary statistics
+        q1 = q_inflation.get(1, np.nan)
+        q5 = q_inflation.get(5, np.nan)
+        avg = q_inflation.get(0, np.nan)  # quintile 0 = 平均 (all households)
+        q1_q5_gap = q1 - q5 if pd.notna(q1) and pd.notna(q5) else np.nan
+
+        for q_code, eff_inf in q_inflation.items():
+            rows.append({
+                "year": year,
+                "quintile": q_code,
+                "quintile_label": QUINTILE_LABELS.get(q_code, str(q_code)),
+                "scenario": scenario_label,
+                "effective_inflation_pp": round(eff_inf, 4),
+                "q1_q5_gap_pp": round(q1_q5_gap, 4) if pd.notna(q1_q5_gap) else np.nan,
+                "gdp_avg_pp": round(avg, 4) if pd.notna(avg) else np.nan,
+            })
+
+    df = pd.DataFrame(rows)
+    df.to_csv(cache_path, index=False)
+    print(f"Saved microsim ({scenario_label}): {cache_path} ({len(df)} rows)")
+    return df
+
+
 if __name__ == "__main__":
     print("=== Expenditure Shares by Quintile (2019) ===")
     shares = load_expenditure_shares(2019)
