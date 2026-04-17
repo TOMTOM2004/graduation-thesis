@@ -78,3 +78,43 @@
 - [ ] 考察・政策含意の執筆
 - [ ] 図表の整備
 - [ ] 指導教員フィードバック対応
+
+---
+
+## スライドレイアウト修正（`slides/20260520-seminar1-proposal.html`）
+
+### 課題
+
+| # | 現象 | 原因 |
+|---|---|---|
+| 1 | 枠（ボックス）内の余白が多く、図として締まりがない | `.fw-box`・`.hyp-step`・`.col-box`・`.rq-main` 等の padding が 20–32px と大きい。スライド外周 padding も 50px/68px で二重に余白が生じている |
+| 2 | 文字が小さくスライド全体のバランスが悪い／余白が目立つ | ボックス内テキストが 11–14px（DESIGN.md の最小 15px ルール違反）。小さな文字 + 大きな padding の組み合わせが「空箱に豆文字」状態を作っている |
+
+### 修正方針
+
+1. **テキストサイズの底上げ**
+   - ボックス内本文（`.flow-box ul li`・`.fw-box ul li`・`.col-box ul li`・`.lit-card ul li`・`.hyp-step p` 等）: 13–14px → 15px
+   - セクションラベル（`.flow-box h3`・`.fw-box .fw-phase`・`.section-tag`・`anchor-label` 等）: 11px → 13px
+   - サブタイトル・カード見出し: 13px → 14–15px
+
+2. **ボックス padding の圧縮**
+   - `.fw-box`・`.flow-box`・`.hyp-step`: `20–22px 18px` → `14px 16px`
+   - `.col-box`: `20px 22px` → `14px 16px`
+   - `.lit-card`: `16px 18px` → `12px 15px`
+   - `.rq-main`: `28px 32px` → `18px 24px`
+   - `.sub-rq-card`: `16px 15px` → `12px 14px`
+
+3. **スライド外周 padding の調整**
+   - 現在: `50px 68px 40px` → `40px 56px 32px`（左右の二重余白を緩和）
+
+4. **修正後の検証観点**
+   - 各スライドで枠とテキストの密度バランスが取れているか
+   - DESIGN.md「最小 15px」ルールをすべての本文要素が満たしているか
+   - スライドを 80% 縮小しても読めるか
+
+### タスク
+
+- [ ] ブランチ `claude/fix-slide-layout` で修正 HTML を作成
+- [ ] 全 12 スライドを目視確認
+- [ ] DESIGN.md Final Check を実施
+- [ ] main へマージ
