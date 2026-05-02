@@ -17,6 +17,7 @@
     --text-mid:  #3a4a5c;
     --text-light:#6b7c93;
     --orange:    #b85c1a;
+    --crimson:   #b03050;
     --white:     #ffffff;
     --slide-w:   1200px;
     --slide-h:   675px;
@@ -53,11 +54,13 @@
 
   #counter {
     position: fixed;
-    bottom: 18px; right: 26px;
+    bottom: 50px;
+    left: 50%;
+    transform: translateX(-50%);
     color: #aaa;
     font-size: 13px;
     font-variant-numeric: tabular-nums;
-    letter-spacing: 0.04em;
+    letter-spacing: 0.06em;
     z-index: 100;
   }
   #hint {
@@ -132,12 +135,16 @@
   /* Title */
   .slide-title {
     justify-content: center;
-    background: var(--navy);
+    background-color: var(--white);
+    background-image: url('assets/s01-title-bg.png');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
   }
   .slide-title .label {
     font-size: 13px;
     letter-spacing: 0.14em;
-    color: #8ab4d4;
+    color: var(--blue-mid);
     margin-bottom: 20px;
     text-transform: uppercase;
     font-weight: 600;
@@ -146,12 +153,32 @@
     font-size: 32px;
     font-weight: 700;
     line-height: 1.5;
-    color: var(--white);
+    color: var(--navy);
     margin-bottom: 40px;
   }
-  .slide-title h1 em { color: #90c4e8; font-style: normal; }
-  .slide-title .meta { font-size: 15px; color: #a8c4d8; line-height: 2.2; }
-  .slide-title .meta strong { color: var(--white); }
+  .slide-title h1 em { color: var(--blue-mid); font-style: normal; }
+  .slide-title .meta { font-size: 15px; color: var(--text-mid); line-height: 2.2; }
+  .slide-title .meta strong { color: var(--navy); }
+
+  /* Slide images (s02 / s04 / s06 / s08 / s09) */
+  .slide-image {
+    display: block;
+    max-width: 100%;
+    height: auto;
+    margin: 14px auto 0;
+    border-radius: 4px;
+  }
+  .slide-image-s02 { max-height: 220px; }
+  .slide-image-s04 { max-height: 210px; }
+  .slide-image-s06 { max-height: 170px; margin-top: 10px; }
+  .slide-image-s08 { max-height: 200px; }
+  .slide-image-s09 {
+    flex: 1 1 auto;
+    min-height: 0;
+    max-height: 460px;
+    object-fit: contain;
+    width: 100%;
+  }
 
   /* Two column */
   .two-col {
@@ -231,13 +258,230 @@
 
   /* Hypothesis */
   .hyp-flow { display: flex; align-items: center; gap: 0; flex: 1; }
-  .hyp-box { flex: 1; border: 1px solid var(--border); border-radius: 4px; padding: 20px 18px; }
+  .hyp-box { flex: 1; border: 1px solid var(--border); border-radius: 4px; padding: 18px 14px; }
   .hyp-box .step { font-size: 11px; font-weight: 700; color: var(--blue-soft); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 8px; }
-  .hyp-box p { font-size: 14px; color: var(--text-mid); line-height: 1.6; }
+  .hyp-box p { font-size: 14px; color: var(--text-mid); line-height: 1.6; word-break: keep-all; overflow-wrap: anywhere; }
+  .hyp-box p + p { margin-top: 8px; }
   .hyp-box.conclusion { background: var(--navy); border-color: var(--navy); }
   .hyp-box.conclusion .step { color: #8ab4d4; }
   .hyp-box.conclusion p { color: var(--white); font-weight: 600; font-size: 15px; }
-  .hyp-arrow { padding: 0 12px; color: var(--blue-soft); font-size: 24px; flex-shrink: 0; }
+  .hyp-arrow { padding: 0 6px; color: var(--blue-soft); font-size: 22px; flex-shrink: 0; }
+
+  /* Inline phrase protection */
+  .nowrap { white-space: nowrap; }
+
+  /* Headline emphasis (per DESIGN.md "Emphasis Usage" rule) */
+  .emp { color: var(--crimson); font-weight: 700; }
+  table.data-table td.emp { color: var(--crimson); font-weight: 700; }
+
+  /* Feasibility (s9b) — checkpoint list */
+  .feasibility-list {
+    list-style: none;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 11px;
+    flex: 1;
+  }
+  .feasibility-list li {
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    font-size: 15px;
+    color: var(--text-mid);
+    line-height: 1.55;
+  }
+  .feasibility-list .check {
+    flex-shrink: 0;
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    background: var(--navy);
+    color: var(--white);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    font-weight: 700;
+    margin-top: 1px;
+  }
+  .feasibility-list .item strong {
+    color: var(--navy);
+    font-weight: 700;
+  }
+  .feasibility-conclusion {
+    margin-top: 14px;
+    font-size: 14px;
+    color: var(--text-mid);
+    text-align: left;
+  }
+
+  /* Background 2 (s3) — table + time-series chart in two columns */
+  .bg2-layout {
+    display: grid;
+    grid-template-columns: 5fr 4fr;
+    gap: 26px;
+    flex: 1;
+    align-items: center;
+  }
+  .bg2-image {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+  }
+  .slide-image-s03 {
+    max-width: 100%;
+    max-height: 340px;
+    width: auto;
+    height: auto;
+    object-fit: contain;
+    margin: 0;
+  }
+
+  /* Expected Contribution (s10b) — three-axis cards */
+  .contribution-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 18px;
+    flex: 0 0 auto;
+    align-content: start;
+  }
+  .contrib-card {
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 14px 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+  .contrib-card .contrib-tag {
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--blue-soft);
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+  }
+  .contrib-card .contrib-title {
+    font-size: 17px;
+    font-weight: 700;
+    color: var(--navy);
+    padding-bottom: 4px;
+    border-bottom: 2px solid var(--border);
+    margin-bottom: 0;
+  }
+  .contrib-card .contrib-detail {
+    font-size: 13px;
+    color: var(--text-mid);
+    line-height: 1.65;
+    word-break: keep-all;
+    overflow-wrap: anywhere;
+  }
+  .contrib-card .contrib-detail strong {
+    color: var(--navy);
+    font-weight: 700;
+  }
+  .contribution-conclusion {
+    margin-top: 22px;
+    font-size: 19px;
+    font-weight: 600;
+    color: var(--text-dark);
+    text-align: center;
+    line-height: 1.6;
+    letter-spacing: 0.01em;
+  }
+
+  /* Hook slide (s1b) — single large number layout */
+  .slide-hook {
+    justify-content: center;
+    align-items: center;
+  }
+  .slide-hook .hook-tag {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--blue-soft);
+    text-transform: uppercase;
+    letter-spacing: 0.16em;
+    margin-bottom: 28px;
+  }
+  .hook-figure {
+    display: flex;
+    align-items: baseline;
+    gap: 14px;
+    margin-bottom: 26px;
+  }
+  .hook-number {
+    font-size: 140px;
+    font-weight: 800;
+    color: var(--navy);
+    line-height: 1;
+    letter-spacing: -0.02em;
+    font-variant-numeric: tabular-nums;
+  }
+  .hook-unit {
+    font-size: 38px;
+    font-weight: 600;
+    color: var(--blue-mid);
+  }
+  .hook-caption {
+    text-align: center;
+    font-size: 18px;
+    color: var(--text-mid);
+    line-height: 1.65;
+    max-width: 760px;
+    margin: 0 auto 18px;
+  }
+  .hook-anchor {
+    text-align: center;
+    font-size: 16px;
+    color: var(--text-mid);
+    letter-spacing: 0.04em;
+    margin-bottom: 30px;
+    line-height: 1.5;
+  }
+  .hook-anchor .hook-emp {
+    font-size: 32px;
+    font-weight: 800;
+    color: var(--crimson);
+    letter-spacing: -0.01em;
+    margin: 0 4px;
+    vertical-align: -2px;
+  }
+  .slide-hook .note {
+    margin-top: 0;
+    text-align: center;
+    border-top: none;
+    padding-top: 0;
+  }
+
+  /* Gap layout (s6: text left / image right) */
+  .gap-layout {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 32px;
+    flex: 1;
+    align-items: center;
+  }
+  .gap-layout .gap-list {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+  .gap-layout .gap-list .gap-box { margin-bottom: 0; }
+  .gap-layout .gap-image {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+  }
+  .slide-image-s06-large {
+    max-width: 100%;
+    max-height: 460px;
+    width: auto;
+    height: auto;
+    object-fit: contain;
+    margin: 0;
+  }
 
   /* Lit grid */
   .lit-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; flex: 1; }
@@ -271,6 +515,7 @@
 
   <!-- 01 Title -->
   <div class="slide slide-title active" id="s1">
+    <!-- [IMAGE: slides/assets/s01-title-bg.png] — 配置: .slide-title の背景レイヤー（CSS background-image として差し込み）/ サイズ 1200×675 / 文字可読性のため低 opacity 想定 -->
     <div>
       <div class="label">卒業論文 — 第1回ゼミ発表 / 研究テーマ・計画</div>
       <h1>輸入価格ショックによる実質所得の海外流出と<br>
@@ -278,10 +523,26 @@
           — 財の分類・所得階層別の分解と政策評価 —</h1>
       <div class="meta">
         <strong>石田友典</strong><br>
-        ○○大学経済学部<br>
-        2026年5月
+        専修大学経済学部<br>
+        2026年5月20日
       </div>
     </div>
+  </div>
+
+  <!-- 01b Hook — Scale of the Problem -->
+  <div class="slide slide-hook" id="s1b">
+    <div class="hook-tag">Scale of the Problem</div>
+    <div class="hook-figure">
+      <div class="hook-number">34.6</div>
+      <div class="hook-unit">兆円</div>
+    </div>
+    <div class="hook-caption">
+      輸入価格ショックを通じた<br>実質所得の海外流出（2022 年・5 グループ合計）
+    </div>
+    <div class="hook-anchor">
+      名目 GDP の <span class="hook-emp">約 6%</span> 相当 ／ うちエネルギーが <span class="hook-emp">67%</span>
+    </div>
+    <div class="note">出所: 自前推計（暫定）— 産業連関表 + BOJ CGPI + 国際収支統計</div>
   </div>
 
   <!-- 02 Background 1 -->
@@ -294,11 +555,12 @@
       1990年代以降の製造業海外移転により、日本はエネルギー・食料・素材を大きく輸入に依存する構造となった。
     </div>
     <ul class="bullets">
-      <li>製造業の国際分業が進み、国内生産に占める輸入投入の割合が増加（Thorbecke 2024, Sato 2024）</li>
+      <li>製造業の国際分業が進み、国内生産に占める輸入投入の割合が増加（Thorbecke 2024）</li>
       <li>経常収支の構造が変質：貿易黒字型 → 第一次所得収支（海外投資リターン）依存型へ（Miwa 2024）</li>
       <li>輸入価格が上昇すると、そのコスト増加分は国内に還流せず海外へ流出する</li>
-      <li>→ <strong>交易条件の悪化 → 実質所得の海外移転</strong>という構造的問題</li>
+      <li>→ <strong class="emp">交易条件の悪化 → 実質所得の海外移転</strong>という構造的問題</li>
     </ul>
+    <img src="assets/s02-structural-shift.png" alt="製造業海外移転 → 輸入依存 → 所得流出 の3段階フロー" class="slide-image slide-image-s02">
     <div class="note">本研究では産業構造変化の原因分析は対象外とし、先行研究から所与として引用する。</div>
   </div>
 
@@ -311,23 +573,28 @@
     <div class="key-message">
       ウクライナ紛争・対ロシア制裁・円安が重なり、エネルギーを筆頭に輸入物価が急騰した。
     </div>
-    <table class="data-table">
-      <thead>
-        <tr>
-          <th>グループ</th>
-          <th>主な品目</th>
-          <th>2020→2022年 価格上昇率（目安）</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr><td class="hl">エネルギー</td><td>石油・天然ガス・石炭</td><td class="hl">+200% 超</td></tr>
-        <tr><td>木材</td><td>丸太・製材・合板</td><td>+100〜110%</td></tr>
-        <tr><td>金属</td><td>銅・アルミ・鉄鋼</td><td>+80〜100%</td></tr>
-        <tr><td>化学</td><td>石油化学・プラスチック</td><td>+70〜90%</td></tr>
-        <tr><td>食料</td><td>穀物・食用油脂・水産物</td><td>+50〜64%</td></tr>
-      </tbody>
-    </table>
-    <div class="note">出所: 日銀CGPI輸入物価指数（2020年基準）。5グループは本研究の分析単位として設定。</div>
+    <div class="bg2-layout">
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>グループ</th>
+            <th>主な品目</th>
+            <th>2020→2022年 価格上昇率（目安）</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td class="hl">エネルギー</td><td>石油・天然ガス・石炭</td><td class="hl emp">+213〜286%</td></tr>
+          <tr><td>木材</td><td>丸太・製材・合板</td><td>+100〜110%</td></tr>
+          <tr><td>金属</td><td>銅・アルミ・鉄鋼</td><td>+80〜100%</td></tr>
+          <tr><td>化学</td><td>石油化学・プラスチック</td><td>+70〜90%</td></tr>
+          <tr><td>食料</td><td>穀物・食用油脂・水産物</td><td>+50〜64%</td></tr>
+        </tbody>
+      </table>
+      <div class="bg2-image">
+        <img src="assets/s03-import-price-timeseries.png" alt="5グループ別 輸入物価指数の時系列（2020-2024）— エネルギーが最も大きく上昇" class="slide-image-s03">
+      </div>
+    </div>
+    <div class="note">出所: 日本銀行 企業物価指数 (CGPI) 輸入物価指数（2020年基準）。2015–2019 は連結指数（cgpilink1.csv）で補完。5グループは本研究の分析単位として設定。</div>
   </div>
 
   <!-- 04 Problem Setting -->
@@ -343,7 +610,7 @@
           <li>輸入価格上昇による供給側からの価格上昇</li>
           <li>輸入含有率が高い財ほど価格上昇が大きい</li>
           <li>低所得層が多く消費する必需品（食料・エネルギー）が高い輸入含有率を持つ</li>
-          <li>→ <strong>逆進的な実質所得の目減り</strong>が予想される</li>
+          <li>→ <strong class="emp">逆進的な実質所得の目減り</strong>が予想される</li>
         </ul>
       </div>
       <div class="col-box">
@@ -352,10 +619,11 @@
           <li>コロナ特別会計・財政出動による需要増加からの価格上昇</li>
           <li>財の特性によらず全体的に価格が上昇する傾向</li>
           <li>コストプッシュとの混在により分配効果の把握が困難</li>
-          <li>→ <strong>輸入含有率の財間差異</strong>を使って識別・分離する</li>
+          <li>→ <strong class="emp">輸入含有率の財間差異</strong>を使って識別・分離する</li>
         </ul>
       </div>
     </div>
+    <img src="assets/s04-identification-mechanism.png" alt="コストプッシュ vs デマンドプルの識別メカニズム" class="slide-image slide-image-s04">
     <div class="note">識別戦略: コストプッシュは輸入含有率と価格上昇の相関として現れる。デマンドプルは財の特性と無関係な一様上昇として現れる。</div>
   </div>
 
@@ -379,7 +647,7 @@
         <ul>
           <li>Amiti et al.（2019）: 輸入集約度が価格転嫁の異質性を決定</li>
           <li>Minton &amp; Somale（2025）: IO表から輸入含有率を構築し転嫁を推定</li>
-          <li>Yagi et al.（2023）、Sasaki et al.（2022）: 日本の転嫁率推定</li>
+          <li>Yagi et al.（2022）、Sasaki et al.（2022）: 日本の転嫁率推定</li>
         </ul>
       </div>
       <div class="lit-card">
@@ -393,12 +661,12 @@
       <div class="lit-card">
         <h3>産業構造・背景（所与として引用）</h3>
         <ul>
-          <li>Thorbecke（2024）、Sato（2024）: 製造業海外移転と輸入依存</li>
+          <li>Thorbecke（2024）: 機械輸出構造と海外移転</li>
           <li>Miwa（2024）: 経常収支の質的変化（貿易黒字→所得収支依存）</li>
         </ul>
       </div>
     </div>
-    <div class="note">現在調査継続中。上記は主要な参照先として暫定整理。</div>
+    <div class="note">主要な参照先（詳細は <code>docs/literature/</code> に 76 件整備済）。</div>
   </div>
 
   <!-- 06 Research Gap -->
@@ -407,17 +675,24 @@
       <div class="section-tag">Research Gap</div>
       <h2>先行研究の空白：3つの未解明領域</h2>
     </div>
-    <div class="gap-box">
-      <h3>空白① 交易損失の家計レベルへの分解</h3>
-      <p>マクロの交易損失規模（齊藤2022）は推計されているが、<strong>どの財を通じ、どの所得階層に帰着するか</strong>の体系的な分解は行われていない。</p>
-    </div>
-    <div class="gap-box">
-      <h3>空白② コストプッシュ固有の逆進性の識別</h3>
-      <p>実績CPIを使った分配分析はあるが、<strong>コストプッシュ成分のみを取り出した</strong>逆進性の定量化はされていない（デマンドプルが混入している）。</p>
-    </div>
-    <div class="gap-box">
-      <h3>空白③ 日本版の統合シミュレーションモデルの不在</h3>
-      <p>欧州ではIO×マイクロシミュレーションによる政策評価が普及しているが（Amores et al. 2025）、<strong>日本のデータを用いた同等のモデル</strong>が存在しない。</p>
+    <div class="gap-layout">
+      <div class="gap-list">
+        <div class="gap-box">
+          <h3>空白① 交易損失の家計レベルへの分解</h3>
+          <p>マクロの交易損失規模（齊藤2022）は推計されているが、<strong>どの財を通じ、どの所得階層に帰着するか</strong>の体系的な分解は行われていない。</p>
+        </div>
+        <div class="gap-box">
+          <h3>空白② コストプッシュ固有の逆進性の識別</h3>
+          <p>実績CPIを使った分配分析はあるが、<strong>コストプッシュ成分のみを取り出した</strong>逆進性の定量化はされていない（デマンドプルが混入している）。</p>
+        </div>
+        <div class="gap-box">
+          <h3>空白③ 日本版の統合シミュレーションモデルの不在</h3>
+          <p>欧州ではIO×マイクロシミュレーションによる政策評価が普及しているが（Amores et al. 2025）、<strong>日本のデータを用いた同等のモデル</strong>が存在しない。</p>
+        </div>
+      </div>
+      <div class="gap-image">
+        <img src="assets/s06-gap-venn.png" alt="3つの空白の重なり：本研究の独自貢献領域" class="slide-image-s06-large">
+      </div>
     </div>
   </div>
 
@@ -459,24 +734,26 @@
     <div class="hyp-flow">
       <div class="hyp-box">
         <div class="step">前提① エンゲル法則</div>
-        <p>低所得層（Q1）は食料・光熱などの必需品への支出割合が高い。高所得層（Q5）は裁量的支出の割合が高い。</p>
+        <p><span class="nowrap">低所得層</span>（Q1）は<span class="nowrap">食料・光熱</span>などの必需品への支出割合が高い。</p>
+        <p><span class="nowrap">高所得層</span>（Q5）は<span class="nowrap">裁量的支出</span>の割合が高い。</p>
       </div>
       <div class="hyp-arrow">→</div>
       <div class="hyp-box">
         <div class="step">前提② 必需品の輸入依存</div>
-        <p>食料・エネルギーは輸入含有率が高く、コストプッシュインフレの主要な経路となっている。</p>
+        <p><span class="nowrap">食料・エネルギー</span>は<span class="nowrap">輸入含有率</span>が高く、<br><span class="nowrap">コストプッシュインフレ</span>の主要な経路となっている。</p>
       </div>
       <div class="hyp-arrow">→</div>
       <div class="hyp-box">
         <div class="step">前提③ 識別の論理</div>
-        <p>輸入含有率の財間差異を使えば、コストプッシュ成分をデマンドプルから分離して推定できる。</p>
+        <p><span class="nowrap">輸入含有率</span>の財間差異を使えば、<br><span class="nowrap">コストプッシュ成分</span>を<span class="nowrap">デマンドプル</span>から分離して推定できる。</p>
       </div>
       <div class="hyp-arrow">→</div>
       <div class="hyp-box conclusion">
         <div class="step">仮説</div>
-        <p>コストプッシュインフレの実質消費への影響は低所得層ほど大きく、逆進的な分配をもたらす</p>
+        <p><span class="nowrap">コストプッシュインフレ</span>の<span class="nowrap">実質消費</span>への影響は<br><span class="nowrap">低所得層</span>ほど大きく、逆進的な分配をもたらす</p>
       </div>
     </div>
+    <img src="assets/s08-engel-import-shock.png" alt="所得五分位別の必需品支出割合と輸入価格ショック影響" class="slide-image slide-image-s08">
     <div class="note">集計（GDP消費）では見かけ上小さな減少でも、所得階層別に見ると影響は大きく偏っているという構造を明らかにすることが目的。</div>
   </div>
 
@@ -486,40 +763,7 @@
       <div class="section-tag">Analytical Framework</div>
       <h2>分析の3段階設計</h2>
     </div>
-    <div class="flow">
-      <div class="flow-box" style="border-top: 4px solid var(--navy);">
-        <h3>Phase 1</h3>
-        <div class="phase-label">所得流出の<br>構造定量化</div>
-        <ul>
-          <li>産業連関表から輸入含有率を算出</li>
-          <li>5グループ別の輸入価格変化を計測</li>
-          <li>グループ別の所得流出額を推計</li>
-          <li>既存研究の推計値との照合</li>
-        </ul>
-      </div>
-      <div class="flow-arrow">↓</div>
-      <div class="flow-box" style="border-top: 4px solid var(--blue-mid);">
-        <h3>Phase 2</h3>
-        <div class="phase-label">家計消費への<br>帰着分析</div>
-        <ul>
-          <li>費目別の価格転嫁率を推定（パネルOLS）</li>
-          <li>コストプッシュ vs デマンドプルを識別</li>
-          <li>五分位別の実効インフレ格差を推計</li>
-          <li>GDP消費への集計的影響を算出</li>
-        </ul>
-      </div>
-      <div class="flow-arrow">↓</div>
-      <div class="flow-box" style="border-top: 4px solid var(--blue-soft);">
-        <h3>Phase 3</h3>
-        <div class="phase-label">シミュレーション・<br>政策評価</div>
-        <ul>
-          <li>IO価格モデルを構築</li>
-          <li>五分位別マイクロシミュレーション</li>
-          <li>政策シナリオ（エネルギー補助・食料支援等）を評価</li>
-          <li>モデル自体が主要な成果物</li>
-        </ul>
-      </div>
-    </div>
+    <img src="assets/s09-framework-overview.png" alt="Phase 1〜3 データフロー統合図（入力 → 処理 → 出力）" class="slide-image slide-image-s09">
     <div class="note">各段階が独立した貢献を持つ積み上げ型設計。Phase 1が完成すれば最低限の貢献が確保される。</div>
   </div>
 
@@ -548,8 +792,46 @@
     </table>
     <ul class="bullets" style="margin-top:20px;">
       <li>分析期間: プラセボ期（2015-2019）/ ショック期（2021-2024）</li>
+      <li>2020年は CGPI 基準年（P_import≈100）として識別から除外</li>
       <li>主要データはすべて公的統計として入手可能</li>
     </ul>
+  </div>
+
+  <!-- 10b Expected Contribution -->
+  <div class="slide" id="s10b">
+    <div class="slide-header">
+      <div class="section-tag">Expected Contribution</div>
+      <h2>本研究の3つの貢献</h2>
+    </div>
+    <div class="contribution-grid">
+      <div class="contrib-card">
+        <div class="contrib-tag">Academic</div>
+        <div class="contrib-title">学術的貢献</div>
+        <div class="contrib-detail">
+          交易損失の <strong>家計レベル × 所得階層別分解</strong> と、<span class="nowrap">コストプッシュ</span>固有の <strong>逆進性識別</strong>。<br>
+          日本データを用いた <span class="nowrap">IO × マイクロシミュレーション</span> 統合モデルの構築。
+        </div>
+      </div>
+      <div class="contrib-card">
+        <div class="contrib-tag">Policy</div>
+        <div class="contrib-title">政策的貢献</div>
+        <div class="contrib-detail">
+          エネルギー補助・食料支援等の <strong>段階的政策評価</strong>。<br>
+          単体政策と複合政策の相互作用を含めた <span class="nowrap">所得階層別</span> の政策効果の異質性を可視化。
+        </div>
+      </div>
+      <div class="contrib-card">
+        <div class="contrib-tag">Deliverable</div>
+        <div class="contrib-title">モデル成果物</div>
+        <div class="contrib-detail">
+          パラメータ調整可能な <strong>構造化シミュレーションモデル</strong>。<br>
+          卒論提出後も他研究者・政策担当者が利用できる <span class="nowrap">継続資産</span>。
+        </div>
+      </div>
+    </div>
+    <div class="contribution-conclusion">
+      <span class="emp">所得流出 → 家計分配 → 政策評価</span> を一気通貫で扱える統合モデルの構築が本研究の中核。
+    </div>
   </div>
 
   <!-- 11 Schedule -->
@@ -575,7 +857,7 @@
         <div class="tl-content">データ整備・Phase 1（所得流出の定量化）</div>
       </div>
       <div class="tl-row">
-        <div class="tl-date">2026年7月</div>
+        <div class="tl-date">2026年7月（仮）</div>
         <div class="tl-dot"></div>
         <div class="tl-content">Phase 2（家計帰着分析）・<strong>ゼミ第2回発表</strong></div>
       </div>
@@ -585,7 +867,7 @@
         <div class="tl-content">Phase 3（シミュレーション・政策評価）・論文執筆</div>
       </div>
       <div class="tl-row">
-        <div class="tl-date">2026年秋</div>
+        <div class="tl-date">2026年秋（仮）</div>
         <div class="tl-dot"></div>
         <div class="tl-content"><strong>ゼミ第3回発表</strong>（論文ドラフト全体）</div>
       </div>
@@ -601,21 +883,21 @@
   <div class="slide" id="s12">
     <div class="slide-header">
       <div class="section-tag">References</div>
-      <h2>主要参考文献（調査中）</h2>
+      <h2>主要参考文献</h2>
     </div>
     <div class="refs">
       <p><strong>Amiti, M., Itskhoki, O. &amp; Konings, J. (2019)</strong>. International Shocks, Variable Markups, and Domestic Prices. <em>Review of Economic Studies</em>, 86(6).</p>
-      <p><strong>Amores, A. F. et al. (2025)</strong>. Inflation and income inequality: the role of fiscal policies. <em>ECB Working Paper</em>.</p>
+      <p><strong>Amores, A. F. et al. (2025)</strong>. Inflation, Fiscal Policy, and Inequality: The Impact of the Post-Pandemic Price Surge and Fiscal Measures on European Households. <em>Review of Income and Wealth</em>, 71, e12713.</p>
       <p><strong>Fajgelbaum, P. D. et al. (2020)</strong>. The Return to Protectionism. <em>Quarterly Journal of Economics</em>, 135(1).</p>
-      <p><strong>Kohli, U. (2004, 2023)</strong>. Real GDP, Real Domestic Income, and Terms-of-Trade Changes. <em>Journal of International Economics</em>.</p>
-      <p><strong>Minton, R. &amp; Somale, M. (2025)</strong>. Import exposure and consumer price inflation. <em>Review of Economics and Statistics</em>.</p>
-      <p><strong>Miwa, K. (2024)</strong>. Japan's current account structure and income balance. <em>Journal of Japanese Economy</em>.</p>
-      <p><strong>O'Donoghue, C. et al. (2025)</strong>. IO price models and microsimulation for distributional analysis. <em>Journal of Policy Analysis</em>.</p>
-      <p><strong>Sasaki, H. et al. (2022)</strong>. Pass-through of import prices to consumer prices in Japan. <em>Bank of Japan Working Paper</em>.</p>
-      <p><strong>Sato, H. (2024)</strong>. Industrial hollowing-out and import dependency in Japan. <em>Asian Economic Policy Review</em>.</p>
-      <p><strong>Thorbecke, W. (2024)</strong>. Japan's manufacturing trade structure. <em>RIETI Discussion Paper</em>.</p>
-      <p><strong>Yagi, M. et al. (2023)</strong>. Cost-push inflation and pass-through heterogeneity. <em>Japanese Economic Review</em>.</p>
-      <p><strong>齊藤誠（2022）</strong>「交易損失とGNI：日本経済の所得流出構造」、有斐閣.</p>
+      <p><strong>Kohli, U. (2004)</strong>. Real GDP, Real Domestic Income, and Terms-of-Trade Changes. <em>Journal of International Economics</em>, 62(1), 83–106.</p>
+      <p><strong>Kohli, U. (2023)</strong>. Trading Gains: Terms-of-Trade and Real Exchange Rate Effects. <em>Review of Income and Wealth</em>, 69(4), 857–882.</p>
+      <p><strong>Minton, R. &amp; Somale, M. (2025)</strong>. Detecting Tariff Effects on Consumer Prices in Real Time. <em>FEDS Notes</em>, Federal Reserve Board.</p>
+      <p><strong>Miwa, T. (2024)</strong>. Issues Surrounding Japan's Balance of Payments and the Impact. <em>Nomura Foundation Macro Economy Research Conference Paper</em>.</p>
+      <p><strong>O'Donoghue, C. et al. (2025)</strong>. The Distributional Impact of Inflation in Pakistan: A Case Study of PRICES. <em>International Journal of Microsimulation</em>, 18(1).</p>
+      <p><strong>Sasaki, Y., Yoshida, Y. &amp; Otsubo, P. K. (2022)</strong>. Exchange rate pass-through to Japanese prices: Import prices, producer prices, and the core CPI. <em>Journal of International Money and Finance</em>, 123.</p>
+      <p><strong>Thorbecke, W. (2024)</strong>. Investigating Japan's Machinery and Equipment Exports after the Global Financial Crisis. <em>RIETI Discussion Paper Series</em> 24-E-033.</p>
+      <p><strong>Yagi, M. et al. (2022)</strong>. Cost-push inflation and pass-through heterogeneity. <em>Bank of Japan Working Paper</em>.</p>
+      <p><strong>齊藤誠（2022）</strong>「交易条件の悪化と賃上げ — Worsening of the Terms of Trade: How Should Wages and Profits Respond?」、<em>日本経済研究センター コラム</em>.</p>
     </div>
   </div>
 
