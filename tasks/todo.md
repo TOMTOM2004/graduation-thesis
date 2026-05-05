@@ -1,77 +1,66 @@
 # TODO — 卒業論文（案B）
 
----
+_Last updated: 2026-05-03 00:22 / session: seminar1 スライド整備（A〜D 拡張・emphasis 色追加・文献正規化・Final Check）完了_
 
-## 解決済み
+## 🎯 Next action
+- What: 5/20 ゼミ発表前のリハーサル（実機 1200×675 で全 14 枚通し確認）
+- Where: `slides/20260520-seminar1-proposal.html`
+- Done when: 各スライドの可読性・画像コントラスト・視線フローを目視確認、必要なら微調整
 
-- [x] 研究質問の構造を決める → 積み上げ型3段階（構造定量化→家計帰着→シミュレーション）
-- [x] 「実態把握」と「因果推論」の混在を解消 → 因果推論に統一
-- [x] 「実消費」の操作的定義 → 実質消費/消費数量/消費構成等の具体概念に置換
-- [x] 「モデル」の定義 → IO価格モデル + マイクロシミュレーション
-- [x] 政策シミュレーションの位置づけ → 本論の一部（Phase 3）
-- [x] 案A→案B方針転換 → DEC-007
-- [x] 案Bの研究質問・スコープ確定 → DEC-008
-- [x] 先行研究の棚卸し → 76件（案A由来26件 + 案B追加50件）
-- [x] 輸入価格ショックの範囲 → 5グループ（エネルギー・金属・化学・食料・木材）
-- [x] 異質性の軸 → 財の分類（必需品/裁量品）× 所得階層
-- [x] 必需品/裁量品の分類方法 → データ駆動（Jaravel 2019型）
-- [x] 識別戦略 → 輸入含有率の差異でコストプッシュを識別
-- [x] シミュレーションモデルの種類 → IO価格モデル + マイクロシミュレーション
-- [x] 帰属家賃の扱い → 分析対象から除外（統計上の概念）
+## 📍 State snapshot
+- ✅ Done（今セッション）:
+  - slide-brushup スキル作成 + slide-context.yaml
+  - seminar1 deck を 14 枚構成に拡張（s1b Hook / s10b Contribution / s3 chart / s6 venn）
+  - 7 画像生成・差し込み（日本語ラベル版）
+  - DESIGN.md 原則拡張（emphasis 色 / Hook / Feasibility / Contribution / Pacing / Whitespace / Page Indicator）
+  - docs/feasibility.md / docs/contribution.md 新規
+  - 文献正規化（s12 References 12 件・docs/literature/ と完全照合）
+  - DESIGN.md Final Check 全 7 項目 PASS
+- 🟡 In progress: なし
+- 🔴 Blocked: なし
 
----
+## 🧠 Context not in code
+- 進捗判断: s11 Schedule は計画形維持（第1回は "まだやってない体" で口頭補足する戦略）
+- emphasis 色 muted crimson `#b03050` を新規追加（caution=orange と役割分離）
+- 第1回で Feasibility は出さない方針（seminar2 用に `docs/feasibility.md` 温存）
+- 任意未対応: #6 s10 の貿易統計（概況品別国別表）追加 — 第1回は省略
 
-## 次のステップ: データ取得・環境構築
+## ❌ Don't do (this task)
+- [trap] 学術スライドの第1回（テーマ・計画）で Feasibility や結果数値を出すと、第2回・第3回の議論を先取りして発表の意義が薄れる
+- [trap] DESIGN.md「余白で grouping」を機械的に中央寄せに適用すると、grouping を split して視線フローを破壊する（tail whitespace は OK / mid-flow whitespace は NG）
+- [mistake] HTML Edit 時、全角括弧（）と半角() の混在で old_string がマッチしない。不確実なら Read してからコピーするか、bash sed で範囲削除を使う
+- [mistake] ChatGPT Image2 の日本語ラベル指定で「Noto Sans JP / Hiragino Sans 風」「ラベルは exactly as specified」「garbled/fake-looking kanji 禁止」を明示しないと崩れる
 
-- [ ] Python環境のセットアップ
-- [ ] 産業連関表（2020年表）の取得・加工
-- [ ] 日銀CGPI輸入物価指数の取得
-- [ ] 財務省貿易統計の取得
-- [ ] 家計調査の所得五分位別×費目別データの取得
-  - [ ] 所得五分位の定義を精査（区切り方、勤労者世帯の範囲）
-- [ ] 全国家計構造調査（2019年）の取得
-- [ ] 消費者物価指数（費目別）の取得
+## ❓ Open questions for user
+- [ ] #6 s10 任意（貿易統計追加）は省略確定？
 
----
+## 📂 Key files
+- `slides/20260520-seminar1-proposal.html`
+- `slides/seminar1-brushup-plan.md`
+- `docs/DESIGN.md`
+- `docs/feasibility.md` / `docs/contribution.md`
+- `.claude/slide-context.yaml`
+- `.claude/skills/slide-brushup/SKILL.md`
 
-## Phase 1: 所得流出の構造定量化
-
-- [ ] IO表からレオンチェフ逆行列を計算
-- [ ] 5グループ別の輸入含有率を部門別に算出
-- [ ] 輸入価格ショックの規模を5グループ別に測定
-- [ ] グループ別の交易損失を推計
-- [ ] 既存推計値（齊藤 2022等）との照合
-
----
-
-## Phase 2: 家計消費への帰着
-
-### Step 2a: 財別分析
-- [ ] IO表と家計調査の接合（ブリッジ）
-- [ ] 消費費目別の輸入含有率を算出
-- [ ] 必需品/裁量品をデータ駆動で分類
-- [ ] コストプッシュの識別（線形・非線形を比較）
-- [ ] 費目別・財分類別の価格転嫁率を推定
-
-### Step 2b: 所得階層別分析
-- [ ] 所得五分位別の支出構成を把握
-- [ ] 階層別のコストプッシュ影響を推計
-- [ ] GDP消費への集計的影響を算出
+## ❌ Out of scope（今セッション）
+- seminar2/3/final 用スライドの作成（時期到来時に slide-brushup スキルで反復）
+- s11 Schedule の構造変更（計画形維持確定）
 
 ---
 
-## Phase 3: シミュレーションと政策評価
+## 残タスク
 
-- [ ] IO価格モデルの実装（Python）
-- [ ] マイクロシミュレーションの実装（Python）
-- [ ] モデルの妥当性検証
-- [ ] 政策シナリオの選定
-- [ ] 政策効果の段階的評価（単体→複合）
+### 執筆前準備
+- [ ] 非線形モデルの扱いを明確化（research-design.md に「線形・非線形を比較」と記載。結果は線形のみ → 非線形を試した結果を記録するか、未実施の理由を DEC に追記）
+- [ ] Koyck δ=0.55 の選定根拠を文書化（DEC-011 として decision-log.md に追記。先行研究由来 / データ駆動 / 感度分析ベースのいずれかを明記）
+- [ ] 先行研究との数値比較表を作成（β=0.431 vs Yagi et al. / Amiti-Itskhoki-Konings、交易損失 34.6 兆円 vs 齊藤 2022 / 内閣府推計。ロバストネス appendix 用）
+- [ ] 政策シナリオ選定の透明性確保（なぜエネルギー・食料補助であり、賃金補助・産業政策ではないのかをスコープ限定として論文内で明記）
 
----
+### スライド（任意・5/20 直前）
+- [ ] s10 に貿易統計（概況品別国別表）を追加（任意・第1回は省略）
+- [ ] 実機 1200×675 で全 14 枚リハーサル
 
-## 論文執筆
-
+### 論文執筆
 - [ ] 先行研究レビューの執筆
 - [ ] 方法論の執筆
 - [ ] 結果の記述
