@@ -9,7 +9,7 @@ The goal is not decorative presentation, but clear communication of:
 - how the research will be conducted
 - why the plan is feasible
 
-Slides should feel academic, calm, minimal, and logically ordered.
+Slides should feel academic, calm, refined, and logically ordered — with intentional visual hierarchy, not uniform flatness.
 
 ---
 
@@ -19,11 +19,12 @@ Slides should feel academic, calm, minimal, and logically ordered.
 - clean
 - minimal
 - academic
-- calm
-- high readability
+- refined and intentional
+- high readability with clear visual hierarchy
 - logic-first
 - low decoration
 - serious but not intimidating
+- **not monotonous** — visual rhythm is achieved through layout variation, not decoration
 
 ### Avoid
 - flashy startup pitch style
@@ -34,6 +35,7 @@ Slides should feel academic, calm, minimal, and logically ordered.
 - decorative charts without analytical value
 - too many colors
 - playful or casual visual tone
+- uniformly flat slides where everything looks equally important
 
 ---
 
@@ -48,14 +50,38 @@ Slides must prioritize:
 1. clarity
 2. logical flow
 3. feasibility
-4. readability
+4. readability (especially under screen-sharing conditions)
 
 ---
 
 ## Slide Philosophy
 
 ### One Slide, One Message
-Each slide must communicate only one main point.
+Each slide must communicate one primary message.
+
+State that message explicitly — either as the slide title or as a single prominent sentence at the top.
+Every bullet, table, or diagram on the slide must support that one message.
+If you find yourself adding content that belongs to a different point, create a new slide.
+
+Ask before building each slide: "What is the single thing the audience should remember from this slide?"
+If the answer is more than one thing, split the slide.
+
+### Three-Second Rule
+Each slide must deliver its primary message within 3 seconds of first glance.
+If the primary message is not immediately findable, the slide fails — regardless of how accurate the content is.
+
+### Visual Focal Point
+Every slide must have exactly one visual focal point.
+The focal point is the element that the eye lands on first.
+Everything else on the slide should be subordinate to that focal point.
+
+Focal point can be created by:
+- large font size relative to surrounding text
+- bold weight against light-weight context
+- generous whitespace isolating a single element
+- a single use of accent color in an otherwise neutral slide
+
+Never create two focal points on the same slide. If two elements seem equally important, one of them belongs on a different slide.
 
 ### Slides Are for Display, Not Full Script
 Slides should show key points only.
@@ -91,178 +117,159 @@ If a technical term is necessary, keep it concise and define it when first intro
 
 ### Base
 - background: white or near-white
-- text: dark gray or black
-- primary accent: navy / dark blue (`#1a2e4a`)
-- secondary accent: muted blue-gray (`#4a7fa5`)
-- **emphasis: muted crimson (`#b03050`)** — reserved for **key numbers, headline findings, and conclusion phrases** that must catch the eye in seconds. Use sparingly (typically 1–3 spots per slide).
-- caution / limitation / risk: muted orange (`#b85c1a`) — reserved for **warnings, risks, and limitations**. Do not use for emphasis.
-- positive emphasis (alternative): restrained blue, not vivid green
+- text: dark gray or black (`#1a1a2e` or similar dark ink)
+- primary accent: navy (`#1a237e` or similar)
+- secondary accent / muted background: very light blue-gray (`#f0f4ff` or `#eef2f8`)
+- caution / limitation / risk: muted orange (`#e65100` or similar, used sparingly)
+- positive emphasis: restrained blue, not vivid green
 
 ### Rules
-- use at most 3 main colors on one slide
-- avoid bright red unless absolutely necessary (muted crimson is acceptable as the dedicated emphasis color)
-- avoid rainbow palettes
-- use color for hierarchy, not decoration
-- **emphasis color (crimson) and caution color (orange) MUST NOT be used in the same role**; they are semantically distinct. Crimson signals "this number / finding matters." Orange signals "be careful here."
-- the emphasis color is also reserved for hook slides, headline figures in result slides, and the conclusion sentence in the contribution slide
+- Use at most 3 main colors on one slide
+- Avoid bright red unless absolutely necessary
+- Avoid rainbow palettes
+- **Use color for hierarchy, not decoration**
+- Accent color is reserved for anchor slides and the single most important element per slide
 
-### Emphasis Usage (per-slide rule)
+### Anchor Slide Color Privilege
+Anchor slides (Title, Research Gap, Research Question, Hypothesis, Analytical Framework) are the only slides that may use full-saturation accent color as a background or dominant element.
+All other slides use accent color for one element only — a single word, one border, one label.
 
-How `<strong>` and the emphasis color (`.emp` / crimson) interact across the deck:
+### What Color Is For
+Use color only for:
+- anchor slide backgrounds / dominant treatments
+- key terms in the research question or hypothesis
+- causal arrows or phase labels in diagrams
+- structural differentiation (e.g., phase colors in framework diagram)
 
-- **`<strong>`** = bold weight + default navy color. Use freely for sub-emphasis (sub-headings within a paragraph, contrasting words, etc.).
-- **`.emp` (crimson)** = the *headline* of a slide. Layered on top of `<strong>` only when a phrase is THE one thing the audience must remember from that slide.
-
-#### Rules
-1. **One `.emp` spot per slide** is the default.
-2. **Two `.emp` spots** are allowed only on contrast slides where symmetric emphasis on each side IS the design (e.g., cost-push vs demand-pull → one emp per column).
-3. A **"number + unit" pair** (e.g., `6%`, `34.6 兆円`) counts as ONE spot.
-4. **Never apply `.emp` to every `<strong>`** in a slide. If everything is emphasized, nothing is. The whole point of crimson is that the audience's eye jumps to it within a second.
-5. Slides whose entire layout is already a strong visual cue (navy-background RQ box, navy-background hypothesis conclusion, full-frame diagram) do NOT need additional `.emp` — the layout itself is the emphasis.
-6. Slides with existing semantic accent color (e.g., gap boxes with orange border) do NOT add `.emp` — color stacking dilutes both meanings.
-
-#### Pattern across the deck
-| Slide type | Default emphasis treatment |
-|------------|----------------------------|
-| Hook / number highlight | big number in navy (main), `.emp` on the comparison anchor (1–2 spots) |
-| Background fact | one `.emp` on the structural conclusion phrase |
-| Background number table | one `.emp` on the most important row's number |
-| Problem setting (contrast) | one `.emp` per column (the conclusion arrow of each side) |
-| Prior research / literature | no `.emp` (inventory slide; emphasis dilutes) |
-| Research gap | no `.emp` (gap boxes already carry orange accent) |
-| Research question | no `.emp` (RQ box's navy background IS the emphasis) |
-| Hypothesis | no `.emp` (conclusion box's navy background IS the emphasis) |
-| Framework / diagram | no `.emp` (full diagram carries the message) |
-| Data / methods | optional, only on the most decisive datasource or method choice |
-| Schedule | no `.emp` (current-position orange already strong) |
-| Contribution | one `.emp` on the contribution sentence's headline phrase |
-| References | no `.emp` |
+Do not use color on body text. Do not use color to decorate bullets or general explanatory content.
 
 ---
 
 ## Typography
 
 ### General
-- prioritize readability over personality
-- use a clean sans-serif font
-- keep font usage consistent across all slides
+- Prioritize readability over personality
+- Use a clean sans-serif font
+- Keep font usage consistent across all slides
 
-### Hierarchy
-- title: large and bold
-- section labels: medium, clearly separated
-- body text: medium size, readable from a distance
-- notes / references: smaller but still legible
+### Hierarchy (5 levels, clearly differentiated)
+
+| Level | Role | Size (px) | Notes |
+|-------|------|-----------|-------|
+| L1: Slide title | Topic + argument in short form | 26–28 | `h2` in slide header |
+| L2: Anchor claim | Primary message of anchor slides; key takeaway sentence | 22–30 | Focal point; RQ ≥ 24, title slide h1 ≥ 30 |
+| L3: Card heading / label | Section header within a slide, category name | 17–19 | `.gap-text h3`, `.fw-title`, phase labels |
+| L4: Body text | Bullets, explanatory content, card body | 15–17 | Minimum 15px in cards, 16px for standalone bullets |
+| L5: Note / source | Citations, footnotes, caveats | 14 | Never below 14px — no microtext |
+
+Additional elements:
+- Eyebrow / section tag: 12px, uppercase, letter-spaced (label-only, not readable content)
+- Primary message bar: 17px, font-weight 600
+- Conclusion emphasis (hypothesis conclusion, key takeaway): 18px, bold
+- Table body: 16px minimum; table header: 14px
+
+**The gap between L1 and L4 must be clearly visible. If all text looks the same size, the hierarchy has failed.**
 
 ### Rules
-- do not use many font sizes on one slide
-- do not mix multiple font families
-- do not use excessive bolding
-- do not use underlines for decoration
-- avoid italics except for citations or special notation
+- Do not use many font sizes on one slide — stick to 2–3 levels per slide
+- Do not mix multiple font families
+- Do not use excessive bolding — bold is for the single most important phrase per slide
+- Do not use underlines for decoration
+- Avoid italics except for citations or special notation
+- The primary claim must be visually dominant at screen-sharing distances
 
 ---
 
 ## Layout Rules
 
 ### Alignment
-- left alignment is default
-- avoid unnecessary center alignment
-- use consistent margins and spacing
+- Left alignment is default
+- Avoid unnecessary center alignment (center is reserved for title slide and single-conclusion anchor slides)
+- Use consistent margins and spacing
 
 ### Whitespace
-- generous whitespace is good
-- do not fill empty space just because it exists
-- spacing should clarify grouping, **not split a group apart**
-- when the natural reading flow is `A → B → conclusion`, the gap between B and the conclusion must be **smaller** than the surrounding whitespace. Otherwise the conclusion reads as an unrelated footnote.
-- if vertically centering a group of cards introduces a large gap between the cards and the conclusion that follows, **prefer top-aligning the cards** and leaving empty space below the conclusion as "tail whitespace". Tail whitespace is acceptable; mid-flow whitespace that splits a group is not.
+- Generous whitespace is good
+- Do not fill empty space just because it exists
+- Spacing should clarify grouping
+- Whitespace around the focal point is a design tool, not wasted space
 
 ### Structure
 Preferred slide structure:
-1. title
-2. core message / takeaway
-3. supporting bullets, figure, or table
+1. title (argument-bearing, not just a topic name)
+2. optional: short takeaway sentence directly below title
+3. core content (bullets, diagram, table, or takeaway statement)
 4. source / note if needed
 
 ### Density
-- keep each slide visually light
-- if content feels crowded, split into two slides
-- never force too much information into one page
+- Keep each slide visually light
+- If content feels crowded, split into two slides
+- Never force too much information into one page
+
+### Vertical Balance
+When a content block (card row, flow diagram, etc.) claims remaining slide height via `flex: 1`, it must be **vertically centered** within that space — not top-aligned.
+
+**Implementation rule: Use CSS Grid with `align-content: center`.**
+- The container gets `display: grid; flex: 1; align-content: center;`
+- Grid auto-row sizing gives all cards uniform height (= tallest card's max-content)
+- `align-content: center` centers the row vertically within the flex:1 space
+- `align-items: start` keeps individual cards sized to content (no inflation)
+
+Do NOT use `align-items: center` on flex containers for this purpose — it causes children with `align-self: stretch` to override back to inflation.
+
+Applies to: `.two-col`, `.hyp-chain`, `.framework-flow`, and any future horizontal card/flow layout.
+
+### Box and Card Sizing
+- **Box height and padding must be proportional to content.**
+- Do not use fixed large min-heights when the content is short — this creates "floating text in oversized boxes."
+- Short label + 1-line text: compact padding (e.g., `12px 16px`)
+- Normal card content: standard padding (e.g., `16px 20px`)
+- Anchor slide emphasized statements: generous padding is acceptable
+- **Parallel card sets** (e.g., 3 research gaps, 3 sub-questions, 3 phases): maintain visual parity by using consistent padding and min-height within the set — but that shared min-height should be the minimum needed for the shortest card, not inflated.
+- Avoid oversized cards where text is surrounded by unnecessary whitespace within the box.
 
 ---
 
 ## Text Rules
 
 ### Bullet Points
-- use bullets for most explanatory content
+- Use bullets for most explanatory content
 - 3 to 5 bullets is standard
 - 6 bullets is the upper limit
-- each bullet should ideally be one short phrase or one short sentence
+- Each bullet should ideally be one short phrase or one short sentence
 
 ### Paragraphs
-- avoid paragraphs
-- do not place long prose blocks on slides
-- if explanation is long, convert into bullet hierarchy
+- Avoid paragraphs
+- Do not place long prose blocks on slides
+- If explanation is long, convert into bullet hierarchy
+
+### Slide Titles
+- **Slide title is not just a topic label — it should carry an argument or purpose.**
+- A viewer should be able to understand the intent of the slide from the title alone.
+- Preferred forms: "X is insufficient because Y", "The gap is: [specific claim]", "Data covers [scope] for [reason]"
+- Avoid generic titles like "Background", "Method", "Data" with no further specificity.
+- A short takeaway sentence directly below the title is acceptable for supporting context.
 
 ### Emphasis
+
+Allowed emphasis methods:
+1. **size** — increase font size for the primary message only
+2. **weight** — bold for key terms or the core takeaway
+3. **whitespace** — isolate the most important element with surrounding space
+4. **accent color** — use the primary accent (navy) to draw the eye once per slide
+
+Rules:
+- Use at most 2 of the 4 methods on a single slide
+- Do not combine all four — it cancels the effect
+- Never bold more than 3 phrases per slide
+- Use accent color for one element only per slide
+- **Every slide must have exactly one visual focal point** — the intersection of all emphasis methods applied
+
 Use emphasis only for:
 - research question
 - gap
 - hypothesis
 - important finding expectation
 - key methodological choice
-
-Avoid emphasizing too many things at once.
-
----
-
-## Line Breaks Inside Boxes
-
-When text sits inside framed boxes (hypothesis steps, gap boxes, sub-RQ cards, flow boxes, etc.), the browser's automatic wrap frequently breaks lines at awkward positions — splitting compound words, technical terms, or proper nouns. This damages readability and looks unprofessional in academic presentations.
-
-### Rules
-- **Never let auto-wrap break a compound word or technical term.** Protect words like:
-  - 「コストプッシュインフレ」「デマンドプル」「裁量的支出」「輸入含有率」「実質消費」「価格転嫁率」
-- Insert explicit `<br>` at semantically meaningful break points:
-  - after a comma (`、`) or period (`。`) — clause boundary
-  - before a new subject or topic shift
-  - **never inside a noun phrase or proper noun**
-- Apply CSS safety net to box containers:
-  ```css
-  word-break: keep-all;       /* CJK: do not break inside a word block */
-  overflow-wrap: anywhere;    /* allow break only when unavoidable */
-  ```
-- For surgical protection of specific phrases, wrap them in `<span class="nowrap">…</span>` (with `.nowrap { white-space: nowrap; }` defined globally). Apply this only to the actual technical term, not the surrounding clause — overusing `nowrap` causes overflow.
-- Box width must comfortably fit the longest single phrase that must not break. If a phrase exceeds the box width, widen the box (reduce padding / arrow padding / inter-box gap) or rephrase shorter — do not let the browser decide.
-
-### Implementation menu (pick the lightest sufficient one)
-1. **Explicit `<br>`** at semantic boundaries — primary tool.
-2. **`<span class="nowrap">熟語</span>`** — for individual technical terms.
-3. **CSS `word-break: keep-all`** — global safety net on the box.
-4. **Reduce `.hyp-box` / `.hyp-arrow` padding** — gain a few pixels of content width across all boxes.
-5. **Rephrase shorter** — last resort if layout cannot be widened.
-
-### Workflow
-1. After authoring the slide, view it in the browser at the production size (e.g. 1200×675).
-2. Read every box. If a line breaks mid-word, fix it with `<br>` at the next sensible break point upstream.
-3. Re-check after any text edit, since changing a single character can shift wrapping.
-
----
-
-## Contrastive Information
-
-When a slide presents a binary contrast (e.g. 低所得層 vs 高所得層, コストプッシュ vs デマンドプル, ベースライン vs 介入後), do not pack both sides into a single paragraph or list.
-
-### Rules
-- Use **two `<p>` paragraphs within the same box** (with a small vertical gap), OR
-- Use **two adjacent boxes / columns** when the contrast is the central message of the slide.
-
-### Reasoning
-Contrastive structure parses faster when each side has its own visual block. A single run-on paragraph forces the reader to mentally segment the comparison and slows comprehension during a live presentation.
-
-### Examples
-- Q1 vs Q5 expenditure shares → two paragraphs in the hypothesis premise box
-- Cost-push vs demand-pull mechanism → two columns (current `s4` design)
-- Baseline vs policy intervention outcomes → two side-by-side mini-tables
 
 ---
 
@@ -271,6 +278,18 @@ Contrastive structure parses faster when each side has its own visual block. A s
 ### General Principle
 Every visual must have analytical purpose.
 Do not insert visuals only to make the slide look rich.
+
+### Diagram-First Preference
+For the following slide types, prefer diagrams over prose:
+- **Hypothesis**: Show as a logical flow chain (premises → arrow → conclusion), not prose bullets
+- **Analytical Framework**: Show as staged/phase diagram, not a list of steps
+- **Research Gap vs Prior Research**: Show as a "what exists → what is missing" two-part structure
+- **Variable or factor relationships**: Show as simple causal diagram
+
+Diagrams for these slides should be:
+- geometric and minimal (boxes, arrows, simple labels)
+- immediately interpretable without reading explanatory text
+- use phase/role differentiation through color labels or border styles, not decoration
 
 ### Charts
 Use charts when showing:
@@ -297,19 +316,9 @@ Avoid:
 Use tables only when exact values or structured comparison are necessary.
 
 Rules:
-- keep tables compact
-- avoid large dense tables
-- highlight only the important row / column if needed
-
-### Diagrams
-Use simple diagrams for:
-- research framework
-- variable relationships
-- causal assumptions
-- analytical flow
-- data processing flow
-
-Diagrams should be linear and interpretable at a glance.
+- Keep tables compact
+- Avoid large dense tables
+- Highlight only the important row / column if needed
 
 ---
 
@@ -364,55 +373,6 @@ If the deck is short, combine related items carefully:
 
 ---
 
-## Slide Deck Pacing
-
-A 10–15 slide academic deck should not be a uniform sequence of identical text-and-bullet pages. Build mild rhythm so the audience's eye does not glaze.
-
-### Rule of thumb
-- Every 4–5 slides should carry **one strong visual element** (chart, diagram, big-number layout, or framework figure).
-- Around the start of the deck, place **one or two "anchor" slides** that orient the audience to the scale and stakes of the problem.
-- Avoid back-to-back slides of the same visual structure.
-
-### Recommended structure (proposal deck)
-| # | Slide | Visual weight |
-|---|-------|---------------|
-| 1 | Title | calm |
-| 2 | Hook / Number highlight (optional) | **strong** |
-| 3–4 | Background / motivation | text + small chart |
-| 5 | Problem setting | diagram |
-| 6 | Prior research | grouped cards |
-| 7 | Research gap | text + venn / diagram |
-| 8 | Research question | **strong** (centered) |
-| 9 | Hypothesis | diagram |
-| 10 | Analytical framework | **strong** (full diagram) |
-| 11 | Data | table |
-| 12 | Method / Feasibility | text + evidence |
-| 13 | Expected contribution | structured cards |
-| 14 | Timeline | timeline |
-| 15 | References | text |
-
-If the deck is short, drop low-weight slides first; keep the visually strong ones to preserve rhythm.
-
----
-
-## Page Indicator
-
-Every slide should display its page index (e.g. `7 / 14`) — this helps the audience track progress and lets the presenter handle questions ("can you go back to slide 4?") cleanly.
-
-### Rules
-- **Position**: bottom center, **inside the slide's white frame** (not in the dark viewport background outside the slide). For a 1200×675 slide scaled-to-fit on a standard viewport, `bottom: 40–60px` is usually correct; `bottom: 18px` typically falls outside the white frame and gets visually clipped.
-- **Color**: very light gray (`#aaa` or similar) — must not compete with content
-- **Size**: 12–13 px, tabular-nums for stable digit width
-- **Letter-spacing**: slight (0.04–0.08em) for legibility
-- Keep it as a fixed UI element relative to the viewport, but verify visually that it lands inside the white frame at presentation resolution
-
-### Why bottom-center over bottom-right
-- bottom-center reads as "frame metadata" and stays out of the content's visual flow
-- on slides with content concentrated in the upper half (e.g. contribution slide with tail whitespace), the centered indicator gently fills the lower visual gap without competing for attention
-- bottom-right works too but tends to clash with content corners on dense slides
-
----
-
 ## Per-Slide Design Guidance
 
 ### Title Slide
@@ -422,49 +382,69 @@ Must include:
 - affiliation
 - date if needed
 
-Should feel clean and formal.
-
-### Hook Slide / Number Highlight (optional, used 0–2 times per deck)
-A slide built around a **single dominant number** so the audience grasps the scale of the problem within seconds.
-
-Use cases:
-- before the detailed background, to anchor the magnitude of the issue
-- after the framework, to emphasize an estimated headline effect
-
-Required elements:
-- **one large numeric figure** (90–140 px), in navy or muted blue
-- a **one-line caption** naming what the number represents (period, scope)
-- a **comparison anchor** (e.g. share of GDP / per household / vs prior estimate)
-- **source label** at the bottom
-
-Rules:
-- at most one hook per ~6 slides — overuse breaks academic tone
-- the number must come from a verified source or own estimate; mark "暫定" (provisional) if not finalized
-- no decorative backgrounds, gradients, or vivid colors — the number itself is the visual
-- horizontal centering, generous whitespace, no bullets
+Should feel clean and formal. The title is an anchor slide — it may use a full-width accent treatment or a strong typographic weight to establish visual presence.
 
 ### Background Slide
 Use:
 - 2 to 4 bullets
 - 1 chart or fact if useful
-- clear statement of social / economic / academic relevance
+- Clear statement of social / economic / academic relevance
 
 ### Prior Research Slide
 Show:
-- major streams only
-- no excessive literature listing
-- grouped comparison is preferred over random citation dump
+- Major streams only
+- No excessive literature listing
+- Grouped comparison is preferred over random citation dump
+- Consider a comparison structure (two columns or a table) to allow visual contrast between research traditions
 
 ### Research Gap Slide
-Must be explicit.
+**Anchor slide.** Treat this as a turning point in the narrative.
 This slide should answer:
 - what prior work has clarified
 - what remains unclear
 - why that unresolved part matters
 
+**Design treatment**: Use stronger visual weight than surrounding slides. Options:
+- Large numbered gap statements with significant size hierarchy
+- Distinct background treatment (e.g., navy background with white text)
+- Substantial whitespace around each gap item
+
+Do not bury the gap in a list of bullets — make it impossible to miss.
+Prefer a diagram-first or single-conclusion layout over a text-led layout.
+
 ### Research Question Slide
-This is a key slide.
-The research question should be visually prominent and written clearly.
+**Anchor slide.** This is the most important slide in the deck.
+The research question must be visually dominant — large, isolated, and immediately readable.
+Everything before this slide builds toward it. Everything after this slide follows from it.
+
+**Design treatment**:
+- The question text should be the largest and most prominent element on the slide
+- Use a bordered box or strong typographic weight to isolate the question
+- Do not place other content at the same visual weight as the research question itself
+- Use center or generous left-aligned layout with maximum surrounding whitespace
+
+### Hypothesis Slide
+**Anchor slide.**
+State the hypothesis as a clear, falsifiable claim.
+Show the logical chain that leads to it (premises → conclusion).
+
+**Design treatment**: Use a flow or stepped layout to make the reasoning structure visible.
+- Premises are shown as labeled steps
+- Conclusion is visually distinguished (e.g., filled background, distinct color)
+- Use arrows or connecting lines to show directional reasoning
+- Prefer diagram-first over prose-first
+
+### Analytical Framework Slide
+**Anchor slide.**
+Show the overall structure of the analysis as a diagram or staged flow.
+Each stage must be named and briefly described.
+The audience should be able to grasp the full research architecture from this one slide.
+
+**Design treatment**:
+- Use a phase-based diagram (3 phases = 3 boxes with connecting arrows)
+- Each phase box has a role label + 1-line description
+- Differentiate phases visually using border-top color or background shade
+- Do not use a prose list for a framework slide — it defeats the purpose
 
 ### Data Slide
 Must specify:
@@ -474,62 +454,19 @@ Must specify:
 - main variables
 - why the data is appropriate
 
+Use a compact table or structured card layout. Avoid long prose.
+
 ### Method Slide
 Must specify:
 - analytical method
 - why this method fits the question
 - assumptions or points of caution if relevant
 
-### Feasibility Slide (mid-stage and onward)
-A slide that demonstrates implementation viability by listing concrete progress already achieved.
-
-#### When to use
-- ❌ **Not** in the **first proposal seminar** (theme + plan stage). Showing concrete results (e.g. estimation outputs, identification placebos) at the planning stage breaks the academic pacing — it pre-empts the discussion that the second/third seminars are for, and it usurps the advisor's "advise the plan" role.
-- ✅ Mid-term seminars (after Phase 1 / Phase 2 completion), when the question becomes "is the rest of the plan still feasible given what we now know?"
-- ✅ Final pre-submission deck, as evidence that the ambitious scope was actually delivered.
-
-#### Why include it (when timing is right)
-- Ambitious proposals (especially undergraduate theses spanning identification + simulation) face skeptical reactions from advisors at later stages
-- Naming work already done converts "promises" into "completed steps"
-- Strengthens the credibility of the remaining schedule
-
-#### Structure
-- 4–6 concrete checkpoints, each one short phrase + tiny anchor (a number, a method name, or a key dataset)
-- ✓ check-mark list, navy text, no decorative icons
-- one conclusion sentence at the bottom: "Phase X risks substantially reduced"
-
-#### Rules
-- only show items actually completed or in measurable progress — do not pad
-- avoid placing headline result numbers here when the slide's purpose is feasibility (those belong on Hook / Result slides)
-- one `.emp` spot allowed on the conclusion sentence
-
-#### What goes in the first proposal deck instead
-For seminar 1, feasibility is communicated **implicitly** through:
-- the data slide (sources are public/already accessible)
-- the framework slide (each phase is methodologically grounded in cited prior work)
-- the schedule slide (timeline is realistic)
-There is no need for a dedicated "we already did it" slide at this stage.
-
 ### Contribution Slide
-
-Use a **3-axis structure** for thesis projects whose deliverables include both empirical findings and a reusable model/tool:
-
-1. **Academic contribution** — what the study adds to existing literature (a new identification, a new decomposition, a previously unstudied case).
-2. **Policy / practical contribution** — concrete policy implications, scenarios evaluated, decisions the work informs.
-3. **Deliverable / model contribution** — when applicable, the analytical artifact itself is part of the contribution (a parameterized simulation model, a public dataset, a reusable estimation pipeline).
-
-For purely empirical theses (no model artifact), drop axis 3 and use the original 2-axis split.
-
-#### Layout
-- 3 cards side by side, equal width
-- card header with axis label (Academic / Policy / Deliverable) and full-name title
-- short body (3–4 short lines) describing the specific contribution
-- one conclusion sentence below the cards summarizing the deck's takeaway; **one `.emp` spot allowed** on the headline phrase
-
-#### Rules
-- Each card must claim only what the study can actually deliver — do not list aspirational extensions
-- Keep the academic axis tight: the contribution should map directly to one or more research-gap items already shown in the gap slide
-- The conclusion sentence should not introduce a new claim — it should distill the three axes into one memorable phrase
+Separate:
+- academic contribution
+- practical / policy contribution
+when possible
 
 ### Timeline Slide
 Use a simple structured layout.
@@ -541,31 +478,139 @@ Use consistent citation style.
 
 ---
 
+## Visual Rhythm Across the Deck
+
+Monotony comes not from plain design, but from every slide using the same layout.
+Break monotony through rhythm — alternating slide types — not through more decoration or more color.
+
+### Four Slide Types
+
+| Type | When to use | Primary element |
+|------|-------------|-----------------|
+| **Text-led** | argument, background, limitation | bullets or short prose |
+| **Comparison** | prior research, two-sided problem, before/after, data structure | two-column or table |
+| **Diagram-led** | framework, causal flow, analytical structure, hypothesis reasoning | flow diagram or staged layout |
+| **Takeaway (single-conclusion)** | research question, hypothesis, key finding | one large statement, minimal surrounding content |
+
+### Rules
+- Do not use the same slide type more than 2 times in a row
+- Anchor slides (Research Gap, Research Question, Hypothesis, Framework) should use Takeaway or Diagram-led type
+- Background slides may use Text-led
+- Prior research and data slides may use Comparison or Table
+- At least every 3rd slide should differ in layout type from its neighbors
+
+---
+
 ## Visual Restraint Rules
 To preserve academic credibility:
-- no excessive animation assumptions
-- no trendy UI motifs
-- no oversized decorative shapes
-- no hero-image-heavy layouts
-- no marketing-style slogans
+- No excessive animation assumptions
+- No trendy UI motifs
+- No oversized decorative shapes
+- No hero-image-heavy layouts
+- No marketing-style slogans
+- No uniform flatness — intentional hierarchy is required
 
 This presentation is a research proposal, not a sales pitch.
+But it is also not a homogeneous wall of bullets — intentional visual variety is an academic communication tool.
+
+---
+
+## Online Presentation Constraints
+
+These slides are designed to be presented via screen sharing (HTML in browser) on a Mac display.
+Apply the following constraints at all times.
+
+### Readability at Distance
+- Body text minimum: 16px equivalent (no microtext)
+- Slide title: minimum 22–26px equivalent
+- Anchor claim / focal point text: minimum 20px, preferably larger
+- Avoid text that requires zooming or squinting
+- Every element must be readable at 70% of the original size
+
+### Screen Sharing Safety
+- Do not rely on subtle color differences — they wash out on shared screens
+- Ensure sufficient contrast between text and background (WCAG AA as a minimum target)
+- Avoid very thin font weights — they disappear on low-quality streams
+- Dark text on white/light background is strongly preferred for body content
+
+### No Speaker Notes Embedded in Slides
+- Do not add explanatory prose that belongs in spoken delivery
+- If a sentence exists only to explain the slide to a reader, remove it
+- Slides must stand alone visually without needing a caption
+
+### Layout Stability
+- Do not use layouts that break at different window sizes
+- Avoid absolute pixel positions that assume a fixed viewport
+- Test that the slide remains coherent when scaled down to 80%
+- Prefer CSS flexbox / grid over fixed-position layouts
+
+---
+
+## Japanese Typography Rules
+
+### Word Breaking
+Japanese text in narrow containers (cards, flow boxes) must not break compound words or katakana phrases mid-word.
+
+**CSS rule — apply to all card body text, card bullets, and card output labels:**
+```css
+word-break: keep-all;
+overflow-wrap: break-word;
+line-break: strict;
+```
+
+- `keep-all` prevents CJK line breaks between characters within a word boundary
+- `overflow-wrap: break-word` allows emergency breaks only when a single word exceeds the container width
+- `line-break: strict` enforces strict Japanese punctuation rules (no `。` or `、` at line start)
+
+### Semantic Line Breaks in Narrow Cards
+When card width is narrow (< 250px effective text width), long Japanese phrases will still wrap awkwardly even with `keep-all`. In these cases, insert explicit `<br>` tags at semantic boundaries:
+
+- Between a subject/topic and its predicate
+- Between a cause and its effect
+- Before a particle that introduces a new clause (「が」「は」「を」)
+- Between independent noun phrases joined by particles
+
+Example: `外的ショック → 国内物価上昇 →<br>実質所得の減少` instead of letting the browser decide.
+
+### Line Height for Japanese
+Japanese text requires more generous line-height than Latin text due to character density:
+- Card body: `line-height: 1.7` (minimum 1.6)
+- Bullets: `line-height: 1.55–1.6`
+- Conclusion / emphasis: `line-height: 1.55`
+
+---
+
+## Diagram Direction Rules
+
+### Arrow Direction Must Match Layout Direction
+- **Horizontal layouts** (side-by-side cards, flow diagrams): use `→` arrows
+- **Vertical layouts** (stacked items, top-to-bottom flow): use `↓` arrows
+- Never use `↓` in a horizontal flow or `→` in a vertical stack
+
+### Arrow Styling
+- Arrows between flow phases / hypothesis steps: accent color (`var(--blue-soft)` or similar), 22–24px
+- Arrows should be visually subordinate to the cards they connect — they are structural, not focal
+- Use `flex-shrink: 0` on arrow containers to prevent them from collapsing
 
 ---
 
 ## Default Generation Rules for AI
 When generating slides from notes or source materials, always follow these rules:
 
-1. one slide = one main idea
-2. convert long text into bullets
-3. shorten wording aggressively while preserving meaning
-4. prefer logical hierarchy over visual complexity
-5. define technical terms when first introduced
-6. create a smooth narrative from background to method
-7. split dense content into multiple slides
-8. include source labels when presenting factual data
-9. prefer simple diagrams over decorative layouts
-10. when unsure, choose the more conservative academic design
+1. One slide = one main idea
+2. Convert long text into bullets
+3. Shorten wording aggressively while preserving meaning
+4. Prefer logical hierarchy over visual complexity
+5. Define technical terms when first introduced
+6. Create a smooth narrative from background to method
+7. Split dense content into multiple slides
+8. Include source labels when presenting factual data
+9. **Prefer diagrams over prose for hypothesis, framework, and gap slides**
+10. When unsure, choose the more conservative academic design
+11. **Every slide must have one visual focal point** — identify it before placing content
+12. **Box/card padding and min-height must match content size** — do not inflate boxes with empty space
+13. **Slide titles must carry an argument, not just a topic label**
+14. **Vary layout type across slides** — check that no type repeats more than twice in a row
 
 ---
 
@@ -577,6 +622,8 @@ A good slide deck should feel:
 - structured
 - academically credible
 - easy to present verbally
+- **visually varied without being noisy**
+- **intentionally weighted — important slides look more important**
 
 A good deck should not feel:
 - crowded
@@ -585,47 +632,74 @@ A good deck should not feel:
 - vague
 - over-designed
 - visually noisy
+- **uniformly flat — where every slide looks as important as every other**
 
 ---
 
 ## Output Constraints
 When creating slides:
-- keep titles short
-- keep bullets short
-- avoid full sentences unless necessary
-- avoid text-heavy pages
-- prefer slide count increase over density increase
-- preserve consistent visual hierarchy across all slides
-
----
-
-## Image Workflow
-
-### 素材生成
-- スライドに必要な画像（概念図・フロー図・背景ビジュアル等）は **OpenAI Images2** で生成する
-- 生成した画像は `slides/assets/` に格納する（ファイル名: `s<スライド番号>-<内容>.png`）
-
-### ブラッシュアップ時の差し込み
-- 初回生成時はプレースホルダー（`<!-- [IMAGE: slides/assets/s09-framework.png] -->` 等）をスライド内に記述する
-- ブラッシュアップフェーズで実画像を `<img>` タグに差し替える
-- 画像は DESIGN.md の既存ルール（分析目的のあるビジュアルのみ、装飾的な画像は不可）に従う
-
-### 画像の品質基準
-- アカデミックなトーンに合致すること（派手・カジュアルな画像は不可）
-- スライドの配色（navy / blue-gray / white）と調和すること
-- 解像度: スライド表示に十分な品質（最低 1200×675px 推奨）
+- Keep titles short but argument-bearing
+- Keep bullets short
+- Avoid full sentences unless necessary
+- Avoid text-heavy pages
+- Prefer slide count increase over density increase
+- Preserve consistent visual hierarchy across all slides
+- **Compact boxes: size to content, not to a fixed template**
 
 ---
 
 ## Final Check
 Before finalizing any deck, verify:
 
-- Is each slide about one clear point?
+**Three-second test**
+- Does each slide deliver its primary message within 3 seconds of first glance?
+- Is the visual focal point immediately findable?
+
+**One message per slide**
+- Does each slide have a single identifiable primary message?
+- Is that message stated explicitly — in the title or as a prominent element?
+
+**Emphasis discipline**
+- Is emphasis used with at most 2 methods per slide?
+- Are there more than 3 bolded phrases on any single slide?
+- Is there exactly one visual focal point per slide?
+
+**Anchor slides**
+- Do Title, Research Gap, Research Question, Hypothesis, and Analytical Framework stand out visually from surrounding slides?
+- Is the research question the most visually dominant element in the deck?
+- Do hypothesis and framework use diagram-led or flow-based layouts?
+
+**Visual rhythm**
+- Does the deck alternate between text-led, comparison, diagram-led, and takeaway slide types?
+- Are there more than 2 consecutive slides of the same type?
+
+**Box and card sizing**
+- Are any boxes oversized relative to their content?
+- Is padding proportional to content in card/box elements?
+- Are parallel card sets (same role, same visual weight) consistent within the set?
+
+**Typography hierarchy**
+- Is the hierarchy between slide title, anchor claim, card heading, and body text clearly visible?
+- Does the primary claim appear at a size that stands out from surrounding body text?
+
+**Color discipline**
+- Is accent color used for at most one element per non-anchor slide?
+- Are anchor slides visually differentiated using color privilege?
+- Is color used structurally (hierarchy, role), not decoratively?
+
+**Diagram-first slides**
+- Are hypothesis, analytical framework, and research gap presented with diagrams rather than prose?
+- Can each diagram be interpreted without reading surrounding explanatory text?
+
+**Online readability**
+- Is every text element readable at 70% scale?
+- Are there any microtext elements (notes, labels) that disappear on a shared screen?
+- Does any slide contain prose that belongs in spoken delivery, not on the slide?
+- Is contrast sufficient for screen sharing conditions?
+
+**Overall**
 - Is the research gap explicit?
-- Is the research question visible and understandable?
-- Are data and method concrete enough?
-- Is the slide readable within a few seconds?
-- Is the visual tone academic and restrained?
 - Is the overall structure logically progressive?
+- Is the visual tone academic and restrained — but not uniformly flat?
 
 If not, revise.
