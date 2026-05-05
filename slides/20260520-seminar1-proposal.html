@@ -52,6 +52,14 @@
   }
   .slide.active { display: flex; }
 
+  /* §Japanese Typography Rules — apply CJK-aware breaking to all body text */
+  .slide p, .slide li, .slide td, .slide th,
+  .slide h2, .slide h3, .slide .phase-label, .slide .question, .slide .detail {
+    word-break: keep-all;
+    overflow-wrap: break-word;
+    line-break: strict;
+  }
+
   #counter {
     position: fixed;
     bottom: 50px;
@@ -180,12 +188,13 @@
     width: 100%;
   }
 
-  /* Two column */
+  /* §Layout / Vertical Balance — flex:1 grid must center vertically */
   .two-col {
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 28px;
     flex: 1;
+    align-content: center;
   }
   .col-box {
     background: var(--muted-bg);
@@ -224,7 +233,7 @@
   .flow-box h3 { font-size: 12px; font-weight: 700; color: var(--blue-mid); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 8px; }
   .flow-box .phase-label { font-size: 15px; font-weight: 700; color: var(--navy); margin-bottom: 12px; line-height: 1.35; }
   .flow-box ul { padding: 0; list-style: none; display: flex; flex-direction: column; gap: 8px; }
-  .flow-box ul li { font-size: 13px; color: var(--text-mid); line-height: 1.45; display: flex; align-items: flex-start; gap: 8px; }
+  .flow-box ul li { font-size: 13px; color: var(--text-mid); line-height: 1.55; display: flex; align-items: flex-start; gap: 8px; }
   .flow-box ul li::before { content: '·'; color: var(--blue-soft); flex-shrink: 0; font-weight: 700; }
   .flow-arrow { display: flex; align-items: center; padding: 0 10px; color: var(--blue-soft); font-size: 22px; flex-shrink: 0; }
 
@@ -238,7 +247,7 @@
     margin-bottom: 16px;
   }
   .gap-box h3 { font-size: 13px; font-weight: 700; color: var(--orange); margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.06em; }
-  .gap-box p { font-size: 15px; color: var(--text-mid); line-height: 1.6; }
+  .gap-box p { font-size: 15px; color: var(--text-mid); line-height: 1.7; }
 
   /* RQ */
   .rq-box {
@@ -250,11 +259,11 @@
   .rq-box .label { font-size: 12px; letter-spacing: 0.12em; color: #8ab4d4; text-transform: uppercase; margin-bottom: 10px; font-weight: 600; }
   .rq-box p { font-size: 17px; line-height: 1.7; color: var(--white); }
 
-  .sub-rq-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; flex: 1; }
+  .sub-rq-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; flex: 1; align-content: center; }
   .sub-rq-card { border: 1px solid var(--border); border-radius: 4px; padding: 18px 16px; }
   .sub-rq-card .num { font-size: 11px; font-weight: 700; color: var(--blue-soft); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 8px; }
   .sub-rq-card .question { font-size: 14px; font-weight: 700; color: var(--navy); line-height: 1.4; margin-bottom: 10px; }
-  .sub-rq-card .detail { font-size: 13px; color: var(--text-mid); line-height: 1.5; }
+  .sub-rq-card .detail { font-size: 13px; color: var(--text-mid); line-height: 1.6; }
 
   /* Hypothesis */
   .hyp-flow { display: flex; align-items: center; gap: 0; flex: 1; }
