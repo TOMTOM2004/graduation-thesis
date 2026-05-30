@@ -48,6 +48,7 @@ _Last updated: 2026-05-26 / session: seminar1 発表原稿（約15分・話し�
 ### 設計レビュー由来（`docs/design-review.md` / DEC-011・012）
 - ✅ G-2 家計調査 universe を二人以上に確定・cat02 明示フィルタ＋潜在バグ除去（DEC-011, 負担数値は不変）
 - ✅ G-1 交易損失を中心推計C（2015-19正常基準）に統一・中心~35兆／上限40.7兆（DEC-012）
+- [ ] **🔴最優先・別セッション】Phase 3 Koyck整合性の再生成（G-3+C-2+C-3）**: `io_price_model_output.csv` の `delta_cpi_koyck_pp` が全ショック年で `delta_cpi_empirical_pp`（瞬時値・δ=1相当）と一致＝**δ=0.55 の Koyck が cache に未適用**。headline（格差0.10/0.32/0.38/0.41・政策101.6%/123.8%・RMSE 9.744「δ=0.55」）が実質δ=1.0で計算されている。手順=①`run_io_price_model_all_years` 監査(stale or bug)→②δ=0.55・force再生成し koyck≠empirical 確認→③下流(microsim/policy_comparison/sensitivity)全再生成→④main/感度の41→10集約経路統一(D-4)→⑤headline再導出しdocs更新。**headlineが変わるため要承認**（design-review G-3 参照）
 - [ ] **【別セッション】Paasche/Fisher 化**: `trade_loss.py` を固定数量(Laspeyres, 2020輸入額固定)→実数量へ精緻化。前提＝**財務省貿易統計の数量データ取得**（現状 raw は衣類のみ）。`src/data/fetch_trade_stats.py` を拡張し5グループの品目別 数量×価額を取得 → 価格効果を q_t ベースで再計算
 - [ ] **【別セッション】G-4 エネルギー価格上昇率の表記ゆれ**: +203%（年平均集計・再現可）vs +213〜286%（research-design.md/slides・品目別ピーク?・リポジトリのデータで再現不能、286は集計月次ピーク268超）。品目別ピークの一次ソースを示すか +203%(年平均)/+268%(月次ピーク) に統一
 - [ ] **スライド運用ルールの策定**: 現状 `slides/` に HTML 直置きで命名規則・格納が未定。決めること = ①命名規則（`YYYYMMDD-<発表名>.html` 等・版管理）②格納構成（回ごとサブディレクトリ／`assets/` の配置）③proposal.html・script.md・brushup-plan.md の対応関係の規約化 ④**発表済スライドの凍結方針**（例: seminar1 の hook は提示記録として 34.6 のまま保持、35兆は seminar2 以降に適用）。規約は `docs/DESIGN.md` か `.claude/slide-context.yaml` に記録

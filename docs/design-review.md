@@ -218,7 +218,19 @@ raw（`household_quintile_2015_2024.csv`）には**2 universe**: cat02=3「二�
 - `sensitivity_delta.csv` δ=0.55 baseline 2022: gap=**0.274**, gdp_avg=**3.950**。
 - 同一（δ=0.55・baseline・2022）のはずが**別値**。δ感度は main と**別系統の計算**で走っている（share base か Koyck 適用か正規化が違う）。
 - 定性結論（Q1>Q5 が全δで成立）は保たれるが、**δ=0.55 のアンカーが headline 0.32 と一致しない**ため「感度で頑健」の主張が headline に紐付かない。
-- **修正方針**: sensitivity の δ=0.55 が main baseline（0.319/4.729）を再現するよう経路を統一。
+
+> **【真因・2026-05-31 追加調査】G-3 は単純な感度バグでなく Phase 3 全体の問題**:
+> `io_price_model_output.csv` の `delta_cpi_koyck_pp` が**全ショック年(2021-2024)で `delta_cpi_empirical_pp`（瞬時値・δ=1相当）と完全一致**（実測 `np.allclose`=True）。つまり**キャッシュの main 出力は δ=0.55 の Koyck を実際には適用していない**（瞬時値のまま）。
+> - 帰結: main の headline（コストプッシュ格差 0.10/0.32/0.38/0.41、政策解消 101.6%/123.8%、RMSE 9.744「δ=0.55」）は**実質 δ=1.0 相当で計算**されている。**C-2（RMSE 9.744 の出所）・C-3（δ=0.55 の根拠）と同一の根本問題**。
+> - 一方 `sensitivity_delta._build_koyck_cpi` は δ=0.55 を（不完全ながら）適用するため乖離。さらに main と感度で 41→10 の単純平均集約に渡す category 構造が異なり（D-4）二重に乖離。
+> - per-category 実測: 2022 電気代 main(koyck)=21.35 = empirical(瞬時) ≠ 正しい δ=0.55 full-carryover ≈13.95。
+
+- **修正方針（G-3 + C-2 + C-3 を束ねた Phase 3 再生成タスク）**:
+  1. `run_io_price_model_all_years` を監査（cache が stale か koyck 適用の bug か特定）。
+  2. `io_price_model_output.csv` を δ=0.55・force=True で再生成し **koyck ≠ empirical を確認**。
+  3. 下流（microsim_baseline_koyck / policy_comparison / sensitivity_delta）を全再生成し δ=0.55 で整合。
+  4. main と感度の microsim 集約経路（41→10 単純平均, D-4）を統一。
+  5. headline 数値（格差・政策%・RMSE）を再導出し docs 更新。**headline が変わる**ため要ユーザー承認。
 
 ### G-4. エネルギー価格上昇率 +203% vs +213〜286% [要確認 / 別基準の併存]
 
