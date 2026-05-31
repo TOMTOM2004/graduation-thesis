@@ -1,19 +1,16 @@
 # TODO — 卒業論文（案B）
 
-_Last updated: 2026-05-31 / session: 案2 を実データで検証し却下（DEC-013/A-5）→ 次は Phase 3 再較正_
+_Last updated: 2026-05-31 / session: 案2 却下（DEC-013）+ Phase 3 を定性・例示に降格（DEC-014）_
 
 ## 🎯 Next action（1つだけ、具体的に）
-- What: **③ Phase 3 を cost-push 成分に再較正（C-4）**。×β スケーリングを廃し Phase 2a の cost-push CPI に転嫁率＋動学を財/グループ別較正、Koyck δ=0.55 整合性(G-3)再生成も統合。**headline 変わるため要承認**
-- Where: `notebooks/04_phase3_simulation.ipynb` / `src/analysis/io_price_model.py` / `docs/design-review.md` C-2/C-4/G-3
-- Done when: koyck≠empirical（δ=0.55適用）確認→下流(microsim/policy/sensitivity)再生成→headline 再導出し docs 更新
+- What: **論文執筆に着手** — Phase 1（会計）/ Phase 2b（恒等式逆進性）を背骨に、Phase 2a（識別限界明記）と Phase 3（定性・例示 incidence accounting）を従に配置。まず先行研究レビューか方法論の章から
+- Where: 論文ドラフト（保存先未定・要決定）/ `docs/` の各設計ドキュメントを素材に
+- Done when: 章立て確定＋1章分の初稿。または指導教員フィードバック対応の準備
 
-## ✅ 直近完了（2026-05-31・このセッション）— 案2 を実データで検証し **却下**（DEC-013/A-5）
-- **両 estimand とも期間延長は識別を救わない**（実測）:
-  - 軸1 group-specific β_g: 5グループ共線性で pr_group 1.29→1.45 止まり＝分離不能
-  - 軸2 pooled β: CPI類別を2005まで延長（既存と完全一致・overlap差0）し直接再推定。決定的 spec=**FD-DV×Koyck δ=0.55・two-way FE・time-clustered で現行/延長の両窓とも非有意**（p 0.17/0.60、全δで非有意＝level-anchoring現象）。単一集計shifterでは time FE が時間変動を吸収し識別は IC(2020固定)依存→年を増やしても効かない
-- **commit前に2つの誤りを advisor catch で訂正**: ①最初は pr_group だけ測り誤却下しかけ ②pr_time増で「pooled救える」と書きかけたが FD-Koyck直接テストで null。さらに CPIフェッチが e-Stat の全 tab_code(指数/前年比%) を平均しCPI汚染→overlap照合で検出・tab_code==1で修正
-- 再現: `tasks/_an2_shock_independence.py`（2軸）, `tasks/_an2_pooled_fd.py`（FD-Koyck pooled）
-- 注: headline β=0.431 の頑健性そのものは案2より大きい別問題。本件は識別限界を鋭利化するのみ（spurious/robust と断じない）
+## ✅ 直近完了（2026-05-31・このセッション）
+- **案2 却下（DEC-013/A-5）**: 両 estimand とも期間延長は識別を救わない。①group-specific β_g は共線性で分離不能、②pooled β は CPI 2005延長で直接再推定→FD-Koyck δ=0.55・two-way FE で両窓非有意（level-anchoring・単一集計shifterは time FE が時間変動吸収し識別が IC固定依存）。途中2誤りを advisor catch で訂正（pr_group のみ測り誤却下しかけ／CPI を e-Stat 全 tab_code 平均で汚染→overlap照合 tab_code==1 で修正）。再現: `tasks/_an2_shock_independence.py`, `tasks/_an2_pooled_fd.py`
+- **Phase 3 を定性・例示に降格（DEC-014）**: G-3 は既に解消済（fresh再生成=cache 完全一致）。モデルが overshoot（cost-push 平均5.2pp > 実績~2.5%＝C-4 構造ミスマッチ・β=0.431 でも残る）、政策削減率が B-4 IC是正で ~101.6%→44.7% と IC依存で激変（β はキャンセルするが β-invariant≠robust）。**特定%・pp 絶対値は結論にせず incidence accounting/例示で appendix**。結論に残すのは符号レベル（Q1>Q5・energy 最大寄与・補助は方向として gap 縮小）。再現: `tasks/_phase3_recalib_check.py`
+- **重要な含意**: headline を支えていた Phase 2a(回帰)と Phase 3(IO sim)が想定より弱いと連続判明＝硬い背骨は Phase 1(会計)+Phase 2b(恒等式)。合意方針の正しさが裏付けられた
 
 ## 📍 State snapshot
 - ✅ Done（メインブランチ `claude/20260526-seminar1-script`・**origin push済**）:
@@ -21,7 +18,7 @@ _Last updated: 2026-05-31 / session: 案2 を実データで検証し却下（DE
 - ✅ Done（実験ブランチ `claude/20260531-a4-groupspecific-shiftshare`・**未push**・f9e9b21）:
   - B-4(IC>1是正・競争輸入型 μ^T(I-(I-M̂)A)^-1) + A-4(group-specific shift-share) + AKM SE(R `ShiftShareSE` を `~/.Rlib` にインストール済)
   - **結論: βの点推定は頑健(0.43・energy/food主導)だが AKM0 で有意性崩壊(p≈0.15)。根本=独立な輸入物価ショックが実質1つ(少数実効ショック)**
-- 🟡 In progress: なし（案2 却下済・次は ③ Phase 3 cost-push 再較正）
+- 🟡 In progress: なし（案2 却下・Phase 3 降格 済・次は論文執筆）
 - 🔴 Blocked: なし
 
 ## 🧠 Context not in code（次セッション必読）
@@ -59,8 +56,8 @@ _Last updated: 2026-05-31 / session: 案2 を実データで検証し却下（DE
 - ✅ B-4 輸入含有率 IC>1 是正（競争輸入型 μ^T(I-(I-M̂)A)^-1, `io_utils.py` 修正・IC>1解消）【実験ブランチ f9e9b21】
 - ✅ ② A-4 group-specific shift-share 実装（IC_{c,g}×P_{g,t}）+ AKM exposure-robust SE。**結論: energy/food はクリーン識別だが点推定のみ頑健、AKM0 で有意性崩壊(p≈0.15)＝少数実効ショック**【実験ブランチ・未push】
 - ❌ **案2: 識別の立て直し（期間延長）→ 却下（DEC-013/A-5・2026-05-31・実データ検証済）**。group-specific は共線性で分離不能、pooled は CPI 2005延長で直接再推定し FD-Koyck δ=0.55・two-way FE で両窓非有意。単一集計 shifter は time FE が時間変動を吸収し識別が IC(2020固定)依存→期間延長は効かない。IO表3版再構築(D-3)は識別改善せず不着手。再現: `tasks/_an2_shock_independence.py`, `tasks/_an2_pooled_fd.py`
-- [ ] **③ Phase 3 を cost-push 成分に再較正（C-4 根本変更）**: ×β スケーリングを廃し、Phase 2a が定義する cost-push CPI に対し転嫁率＋動学を**財/グループ別に較正**（日本2021-24 への calibration 許容）。総合CPIは追わない（需要モジュールは decouple・将来拡張）。Leontief 構造は維持。下の「Phase3 Koyck再生成」はこの一部に統合。ただし β の識別が弱いと判明したので較正の的の信頼性は案2の結果次第
-- [ ] **🔴・Phase 3 再構築の一部】Koyck整合性の再生成（G-3+C-2+C-3）**: `io_price_model_output.csv` の `delta_cpi_koyck_pp` が全ショック年で `delta_cpi_empirical_pp`（瞬時値・δ=1相当）と一致＝**δ=0.55 の Koyck が cache に未適用**。headline（格差0.10/0.32/0.38/0.41・政策101.6%/123.8%・RMSE 9.744「δ=0.55」）が実質δ=1.0で計算されている。手順=①`run_io_price_model_all_years` 監査(stale or bug)→②δ=0.55・force再生成し koyck≠empirical 確認→③下流(microsim/policy_comparison/sensitivity)全再生成→④main/感度の41→10集約経路統一(D-4)→⑤headline再導出しdocs更新。**headlineが変わるため要承認**（design-review G-3 参照）
+- ✅ **③ Phase 3 → 定性・例示に降格で完了（DEC-014）**。点較正/財別較正は A-5（β_g 識別不能）と循環性で却下。代わりに minimal-honest-fix（C-1 incidence accounting・C-4 β=1上限/×0.431例示・C-2 RMSE分解・C-3 δ calibration）＋数値降格。特定%・pp は結論にせず符号レベル(Q1>Q5・energy 最大寄与・補助は方向)のみ結論。再現: `tasks/_phase3_recalib_check.py`
+- ✅ **Koyck整合性（G-3+C-2+C-3）→ 既に解消済を確認（DEC-014）**。io cache を δ=0.55 で force 再生成→現 cache と完全一致(diff=0)・koyck≠empirical 確認。実験ブランチ f9e9b21 が既に正しく再生成済で design-review G-3 のテキストが stale だった。下流(policy/microsim) は coherent δ=0.55 で再生成済
 - [ ] **【別セッション】Paasche/Fisher 化**: `trade_loss.py` を固定数量(Laspeyres, 2020輸入額固定)→実数量へ精緻化。前提＝**財務省貿易統計の数量データ取得**（現状 raw は衣類のみ）。`src/data/fetch_trade_stats.py` を拡張し5グループの品目別 数量×価額を取得 → 価格効果を q_t ベースで再計算
 - [ ] **【別セッション】G-4 エネルギー価格上昇率の表記ゆれ**: +203%（年平均集計・再現可）vs +213〜286%（research-design.md/slides・品目別ピーク?・リポジトリのデータで再現不能、286は集計月次ピーク268超）。品目別ピークの一次ソースを示すか +203%(年平均)/+268%(月次ピーク) に統一
 - [ ] **スライド運用ルールの策定**: 現状 `slides/` に HTML 直置きで命名規則・格納が未定。決めること = ①命名規則（`YYYYMMDD-<発表名>.html` 等・版管理）②格納構成（回ごとサブディレクトリ／`assets/` の配置）③proposal.html・script.md・brushup-plan.md の対応関係の規約化 ④**発表済スライドの凍結方針**（例: seminar1 の hook は提示記録として 34.6 のまま保持、35兆は seminar2 以降に適用）。規約は `docs/DESIGN.md` か `.claude/slide-context.yaml` に記録

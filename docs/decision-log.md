@@ -110,3 +110,17 @@
 - **過剰解釈の禁止（合意）**: levels-vs-2020 β は期間延長で 0.53→−0.01 と崩壊するが、20年スパンの CPI−CPI_2020 は secular drift 累積・符号領域混在の悪い対象なので主証拠にしない（consistent with 止まり）。entity-only FE では β≈0.31 安定有意だが demand-pull 非統制の交絡パラメータで案2支持にならない。**headline β=0.431 の頑健性は案2より大きい別問題**で、既に Phase 2a 識別限界として誠実に扱済。本件は「headline は levels/累積で立つが annual-difference のクリーン spec では分離識別できず期間延長でも救えない」と識別限界を鋭利化するだけ（spurious とも robust とも断じない）。
 - **経緯**: design-review A-3（few-shocks）→ A-4（group-specific 実装・AKM0 p≈0.15）→ A-5（案2 検証・却下）。データ可用性自体は良好（輸入価格1975-・CPI類別2005-連結・家計五分位2000-・IO表2005/2011/2015公表）だが識別が改善しないため不使用。
 - **次**: ③ Phase 3 cost-push 再較正（C-4）。Phase 2a の framing は据え置き（cost-push と整合的だがクリーン識別は限界）。
+
+### DEC-014: Phase 3（IO シミュレーション・政策評価）を定性・例示に降格
+- **決定**: ③ を当初の「cost-push 成分に再較正（点較正）」でなく **minimal-honest-fix + Phase 3 の数値降格**で完了。IO 価格モデルの政策評価は **incidence accounting（事前会計・行動反応なし）かつ例示**として appendix に置き、**特定の削減%・pp 絶対値を結論（headline）にしない**。重心は Phase 1（会計）/ Phase 2b（恒等式）。
+- **理由（実装で判明した3点）**:
+  1. **G-3 は既に解消済**: io cache を δ=0.55 で force 再生成したら現 cache と完全一致（diff=0）。koyck≠empirical（max 21.7）。design-review G-3 のテキストが stale（実験ブランチ f9e9b21 が正しく再生成済）。
+  2. **モデルが overshoot**: coherent δ=0.55 で baseline cost-push 平均 5.2pp（実績CPI総合 ~2.5%）。energy 直接値（電気代+14/ガス代+27/他の光熱+41pp）は実績整合だが、Leontief が中間投入経由でサービス等に過剰伝播＝C-4 構造ミスマッチ（β=0.431 でも残る）。一時回避でなく構造的。
+  3. **政策削減率が IC 依存で激変**: エネ補助50% 削減率が B-4 IC是正で ~101.6%→44.7%、複合 ~123.8%→57.7%（2022）。β はキャンセル（実測: β スケール2.3倍で gap_pp は2.3倍・gap_reduction_pct は不変）だが、率は IC/Leontief 構築に依存し overshoot で上方バイアス。**β-invariant ≠ robust**（advisor）。
+- **採否**: 「点較正/財別較正」は A-5（β_g 識別不能）と循環性（cost-push/demand-pull のクリーン分離が非識別）で却下。「数値据え置き reframe」は信頼できない数値を看板に出すため却下。「ambitious recalibration」は弱い β に数日積む無駄で却下。
+- **帰結（C項目の処理）**:
+  - C-1（CRITICAL）: 政策評価→incidence accounting に reframe。「モデル化 cost-push（実績を overshoot）の下で energy は機械的 Q1-Q5 gap の約45%を占める＝会計分解、較正済の因果的政策効果でない」。
+  - C-4: β=1 Leontief=構造的上限、×0.431=例示的スケーリング（構造パラメータと称さない）。pp 絶対値は較正済推定でない。
+  - C-2: RMSE 9.744 を「検証達成」でなく「誤差=demand-pull 残差の分解」。C-3: δ=0.55 は calibration（半減期≈10.4mo・RMSE 平坦・厳密最小≈0.60）。
+- **真に頑健で結論に残すもの（符号レベル）**: Q1>Q5（全ショック年）、energy が最大寄与、補助は方向として gap 縮小、δ感度で方向不変。
+- **再現**: `tasks/_phase3_recalib_check.py`（β-invariance 実測・overshoot・新数値）。下流 cache は coherent δ=0.55 で再生成済（data/processed/simulation-params/）。
