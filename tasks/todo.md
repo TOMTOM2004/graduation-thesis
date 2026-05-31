@@ -1,11 +1,19 @@
 # TODO — 卒業論文（案B）
 
-_Last updated: 2026-05-31 / session: 設計レビュー＋G-1/G-2/framing修正＋A-4実験（β有意性のAKM検証）_
+_Last updated: 2026-05-31 / session: 案2 を実データで検証し却下（DEC-013/A-5）→ 次は Phase 3 再較正_
 
 ## 🎯 Next action（1つだけ、具体的に）
-- What: 案2（識別の立て直し）の **feasibility 確認** — 古いCGPI長期連結・2005/2011/2015 IO表・家計調査の**遡及取得可否**を調べる。取得できれば期間延長で独立ショック(2008原油/2011福島/2014-16暴落/2008-12円高)を ~1→~3-4 に増やせる
-- Where: `estat-search` skill / `src/data/` fetch スクリプト / `docs/design-review.md` A-3,A-4
-- Done when: 古いデータの取得可否・粒度が判明し、案2に本格着手するか別方針かを判断できる
+- What: **③ Phase 3 を cost-push 成分に再較正（C-4）**。×β スケーリングを廃し Phase 2a の cost-push CPI に転嫁率＋動学を財/グループ別較正、Koyck δ=0.55 整合性(G-3)再生成も統合。**headline 変わるため要承認**
+- Where: `notebooks/04_phase3_simulation.ipynb` / `src/analysis/io_price_model.py` / `docs/design-review.md` C-2/C-4/G-3
+- Done when: koyck≠empirical（δ=0.55適用）確認→下流(microsim/policy/sensitivity)再生成→headline 再導出し docs 更新
+
+## ✅ 直近完了（2026-05-31・このセッション）— 案2 を実データで検証し **却下**（DEC-013/A-5）
+- **両 estimand とも期間延長は識別を救わない**（実測）:
+  - 軸1 group-specific β_g: 5グループ共線性で pr_group 1.29→1.45 止まり＝分離不能
+  - 軸2 pooled β: CPI類別を2005まで延長（既存と完全一致・overlap差0）し直接再推定。決定的 spec=**FD-DV×Koyck δ=0.55・two-way FE・time-clustered で現行/延長の両窓とも非有意**（p 0.17/0.60、全δで非有意＝level-anchoring現象）。単一集計shifterでは time FE が時間変動を吸収し識別は IC(2020固定)依存→年を増やしても効かない
+- **commit前に2つの誤りを advisor catch で訂正**: ①最初は pr_group だけ測り誤却下しかけ ②pr_time増で「pooled救える」と書きかけたが FD-Koyck直接テストで null。さらに CPIフェッチが e-Stat の全 tab_code(指数/前年比%) を平均しCPI汚染→overlap照合で検出・tab_code==1で修正
+- 再現: `tasks/_an2_shock_independence.py`（2軸）, `tasks/_an2_pooled_fd.py`（FD-Koyck pooled）
+- 注: headline β=0.431 の頑健性そのものは案2より大きい別問題。本件は識別限界を鋭利化するのみ（spurious/robust と断じない）
 
 ## 📍 State snapshot
 - ✅ Done（メインブランチ `claude/20260526-seminar1-script`・**origin push済**）:
@@ -13,28 +21,27 @@ _Last updated: 2026-05-31 / session: 設計レビュー＋G-1/G-2/framing修正�
 - ✅ Done（実験ブランチ `claude/20260531-a4-groupspecific-shiftshare`・**未push**・f9e9b21）:
   - B-4(IC>1是正・競争輸入型 μ^T(I-(I-M̂)A)^-1) + A-4(group-specific shift-share) + AKM SE(R `ShiftShareSE` を `~/.Rlib` にインストール済)
   - **結論: βの点推定は頑健(0.43・energy/food主導)だが AKM0 で有意性崩壊(p≈0.15)。根本=独立な輸入物価ショックが実質1つ(少数実効ショック)**
-- 🟡 In progress: 案2（期間延長で独立ショック増）の検討。feasibility 未確認
+- 🟡 In progress: なし（案2 却下済・次は ③ Phase 3 cost-push 再較正）
 - 🔴 Blocked: なし
 
 ## 🧠 Context not in code（次セッション必読）
 - **βの正体**: 年・費目FEで二元除去後の**単一スロープ**（IC/P_importは単独で入らず交差項のみ）。β=転嫁率。有意取れない根本は計算でなく「独立ショックが実質1つ(2021-24サージ)」＝**設定に内在・別の回帰では直らない**。
 - **立っているもの（β/回帰に非依存・無傷）**: Phase 2b(Q1-Q5 +1.42pp逆進性＝実績CPI×実シェアの恒等式)、Phase 1(~35兆＝会計)。**卒論の実証背骨はこれ**。
 - **方針合意**: 重心を Phase 2b(記述・堅い)に、Phase 2a は識別限界を正直に明記、Phase 3 は較正して例示的に。「レベル下げ」でなく誠実で高度な構成。
-- **案2の核心**: n増≠識別改善。独立ショック事象増だけが効く。期間を~2005-08へ延ばすと複数独立事象を取り込め実効ショック~3-4。前提=①IC時間不変悪化→期間対応IO表で時変IC化(D-3も是正)②β安定性(構造変化跨ぎ)③データ整備。非有意でも「複数独立ショックでなお非有意＝効果は頑健に不確実」はより強い結論。
+- **案2 は却下（DEC-013・実データ検証済）**: ①group-specific β_g は共線性で分離不能。②pooled β を CPI 2005延長で直接再推定→FD-Koyck δ=0.55・two-way FE で両窓非有意（level-anchoring現象）。単一集計 shifter は time FE が時間変動を吸収し識別が IC(2020固定)依存のため、期間延長は効かない。重心は Phase 2b（恒等式・β非依存）/Phase 1（会計）。Phase 2a は識別限界を鋭利化して明記。
 
 ## ❌ Don't do (this task)
 - [trap] 有意性回復のため「月次化・費目増で母数(n)を増やす」のは無効（観測非独立、AKM0が織り込み済）。効くのは独立ショック事象を増やすことだけ
 - [trap] Phase 2a の β を「因果的に実証/有意に識別」と書かない（exposure-robust推論では非有意）。「cost-pushと整合的な点推定」に留める
 
 ## ❓ Open questions for user
-- [ ] 案2（期間延長＋時変IC）に投資するか。まず feasibility 確認でよいか
-- [ ] 実験ブランチ `claude/20260531-...` を push/PR するか（B-4 は main系マージ価値あり）
-- [ ] Phase 3 再較正(🔴)と 案2 のどちらを先に着手するか
+- [ ] 実験ブランチ `claude/20260531-...` を push/PR するか（B-4 IC是正 + A-4 + 案2 feasibility 判定は main系マージ価値あり。group-specific 異質性の負の結果と 2軸 feasibility は論文の識別限界節の根拠として残す）
+- [x] 案2 を進めるか → 実データで検証し **却下**（DEC-013）。次は ③ Phase 3 再較正(C-4)
 
 ## 📂 Key files
-- `docs/design-review.md`（全監査）/ `docs/decision-log.md`（DEC-011/012）
+- `docs/design-review.md`（全監査・A-5案2判定）/ `docs/decision-log.md`（DEC-011/012/013）
 - `src/utils/io_utils.py`（B-4 IC是正・実験ブランチ）/ `src/analysis/cost_push_panel.py`（β回帰）
-- `tasks/_a4_groupspec.py` `tasks/_a4_akm.R`（A-4・AKM再現）
+- `tasks/_a4_groupspec.py` `tasks/_a4_akm.R`（A-4・AKM再現）/ `tasks/_an2_shock_independence.py`（案2ショック独立性検証）
 - `docs/literature/papers/{moreno-louzada-etal-2025,borusyak-hull-jaravel-2024,bhattarai...,cicero...}`（P077-P080）
 
 ## ❌ Out of scope（当面）
@@ -51,7 +58,7 @@ _Last updated: 2026-05-31 / session: 設計レビュー＋G-1/G-2/framing修正�
 - ✅ ① Phase 2a 識別の framing 整理（因果→整合的関連、プラセボ supported 撤回→年次相関主証拠、goods-services 交絡明記）。research-design.md に「識別の到達点と限界」節を新設し INDEX/overview/contribution/feasibility/CLAUDE/decision-log を統一
 - ✅ B-4 輸入含有率 IC>1 是正（競争輸入型 μ^T(I-(I-M̂)A)^-1, `io_utils.py` 修正・IC>1解消）【実験ブランチ f9e9b21】
 - ✅ ② A-4 group-specific shift-share 実装（IC_{c,g}×P_{g,t}）+ AKM exposure-robust SE。**結論: energy/food はクリーン識別だが点推定のみ頑健、AKM0 で有意性崩壊(p≈0.15)＝少数実効ショック**【実験ブランチ・未push】
-- [ ] **🌟 案2: 識別の立て直し（期間延長＋時変IC）** ← 次の主戦場。対象期間を~2005-08へ延長し独立ショック事象(2008原油/2011福島/2014-16暴落/2008-12円高=2022逆符号)を取込み実効ショック~1→~3-4。前提=①期間対応IO表(2005/2011/2015/2020)で時変IC化(D-3是正)②β安定性検証③古いCGPI/IO/家計調査の取得。**まず feasibility 確認から**（Next action 参照）。世界価格vs為替の分解(案1)は案2と組んで初めて効く
+- ❌ **案2: 識別の立て直し（期間延長）→ 却下（DEC-013/A-5・2026-05-31・実データ検証済）**。group-specific は共線性で分離不能、pooled は CPI 2005延長で直接再推定し FD-Koyck δ=0.55・two-way FE で両窓非有意。単一集計 shifter は time FE が時間変動を吸収し識別が IC(2020固定)依存→期間延長は効かない。IO表3版再構築(D-3)は識別改善せず不着手。再現: `tasks/_an2_shock_independence.py`, `tasks/_an2_pooled_fd.py`
 - [ ] **③ Phase 3 を cost-push 成分に再較正（C-4 根本変更）**: ×β スケーリングを廃し、Phase 2a が定義する cost-push CPI に対し転嫁率＋動学を**財/グループ別に較正**（日本2021-24 への calibration 許容）。総合CPIは追わない（需要モジュールは decouple・将来拡張）。Leontief 構造は維持。下の「Phase3 Koyck再生成」はこの一部に統合。ただし β の識別が弱いと判明したので較正の的の信頼性は案2の結果次第
 - [ ] **🔴・Phase 3 再構築の一部】Koyck整合性の再生成（G-3+C-2+C-3）**: `io_price_model_output.csv` の `delta_cpi_koyck_pp` が全ショック年で `delta_cpi_empirical_pp`（瞬時値・δ=1相当）と一致＝**δ=0.55 の Koyck が cache に未適用**。headline（格差0.10/0.32/0.38/0.41・政策101.6%/123.8%・RMSE 9.744「δ=0.55」）が実質δ=1.0で計算されている。手順=①`run_io_price_model_all_years` 監査(stale or bug)→②δ=0.55・force再生成し koyck≠empirical 確認→③下流(microsim/policy_comparison/sensitivity)全再生成→④main/感度の41→10集約経路統一(D-4)→⑤headline再導出しdocs更新。**headlineが変わるため要承認**（design-review G-3 参照）
 - [ ] **【別セッション】Paasche/Fisher 化**: `trade_loss.py` を固定数量(Laspeyres, 2020輸入額固定)→実数量へ精緻化。前提＝**財務省貿易統計の数量データ取得**（現状 raw は衣類のみ）。`src/data/fetch_trade_stats.py` を拡張し5グループの品目別 数量×価額を取得 → 価格効果を q_t ベースで再計算

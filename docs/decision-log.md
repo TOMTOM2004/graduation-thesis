@@ -97,3 +97,16 @@
   - `trade_loss.py` に3系列（C中心/A上限/B net）＋ `compute_baseline_sensitivity()`（単年・3年平均の感度表で恣意性なしを証明）。中心時系列: 2022=35.3 / 2023=28.4 / 2024=29.1兆。
   - docs の headline を「中心~35兆（上限40.7兆）」に統一。**seminar1（2026-05-20, 発表済）のスライド・原稿は提示記録として 34.6兆（旧NET値）のまま凍結**。35兆は seminar2 以降に適用（発表済スライド凍結方針は todo「スライド運用ルール」で正式化予定）。
   - **残課題（G-1とは別）**: 固定数量（Laspeyres）→ Paasche/Fisher 化は財務省貿易統計の数量データ取得後の精緻化（未実施）。エネルギー価格上昇率の表記ゆれ（+203% vs +213〜286%, G-4）も別途。
+
+### DEC-013: 案2（期間延長による識別の立て直し）を却下 — 両 estimand とも期間延長は識別を救わない
+- **決定**: 案2（対象期間を ~2005 へ延長し独立ショック事象を増やして β を識別強化）を**却下**。group-specific・pooled の両 estimand で期間延長は識別を改善しないことを実データで確認。次の主戦場は ③ Phase 3 cost-push 再較正（C-4）。重心は Phase 2b（恒等式・β非依存）/ Phase 1（会計）。
+- **判定の根拠（2軸を実測）**:
+  - **① group-specific β_g（A-4 の異質性の売り）**: 5グループ価格の強い共線性（mean pairwise corr ≈0.78・共通の円為替因子＋商品スーパーサイクル）で **pr_group は期間延長でも 1.29→1.45 止まり ＝ β_g 分離不能・却下**。再現: `tasks/_an2_shock_independence.py`。
+  - **② pooled 単一β を直接再推定**: CPI類別を2005まで延長（2020基準連結・既存パイプライン完全再現〔overlap 差=0〕）、集計輸入価格を2005までsplice、IC 2020固定。決定的 spec = **FD-DV × Koyck shifter S_t(δ)・two-way FE（集計インフレ＝demand-pull を統制）・time-clustered**。較正値 **δ=0.55 で β は現行(2016-24)・延長(2006-24)の両窓とも非有意**（p_time=0.17 / 0.60）。現行窓では全 δ で非有意（**magic δ は無い＝level-anchoring 現象で distributed-lag でない**）。再現: `tasks/_an2_pooled_fd.py`。
+- **構造的理由**: 単一の集計 shifter では two-way FE の time FE が時間変動を丸ごと吸収し、識別は cross-sectional な IC（2020固定）だけに依存する。よって独立ショック事象（pr_time 1.88→6.35）が増えても**クリーンな識別は改善しない**。
+- **当初の誤り2件と訂正（advisor catch・記録）**:
+  1. 最初の診断はグループ間相関（pr_group）のみ測り「却下」としかけたが、案2 の本来の主張は時間方向の独立ショック事象増だった → pr_time を測り pooled を直接テストする方針へ訂正。
+  2. pr_time(=FD量)が増えるから「pooled β は救える」と書きかけたが、headline は levels-on-2020。FD-Koyck で直接テストすると δ=0.55 で両窓 null。さらに当初 CPIフェッチが e-Stat の tab_code=1(指数)/2(前年比%)/3 を**全タブ取り込み平均**しCPIを汚染（overlap 照合で検出・tab_code==1 フィルタで修正、overlap 差=0 を確認）→ 結論を訂正。
+- **過剰解釈の禁止（合意）**: levels-vs-2020 β は期間延長で 0.53→−0.01 と崩壊するが、20年スパンの CPI−CPI_2020 は secular drift 累積・符号領域混在の悪い対象なので主証拠にしない（consistent with 止まり）。entity-only FE では β≈0.31 安定有意だが demand-pull 非統制の交絡パラメータで案2支持にならない。**headline β=0.431 の頑健性は案2より大きい別問題**で、既に Phase 2a 識別限界として誠実に扱済。本件は「headline は levels/累積で立つが annual-difference のクリーン spec では分離識別できず期間延長でも救えない」と識別限界を鋭利化するだけ（spurious とも robust とも断じない）。
+- **経緯**: design-review A-3（few-shocks）→ A-4（group-specific 実装・AKM0 p≈0.15）→ A-5（案2 検証・却下）。データ可用性自体は良好（輸入価格1975-・CPI類別2005-連結・家計五分位2000-・IO表2005/2011/2015公表）だが識別が改善しないため不使用。
+- **次**: ③ Phase 3 cost-push 再較正（C-4）。Phase 2a の framing は据え置き（cost-push と整合的だがクリーン識別は限界）。
