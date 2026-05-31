@@ -23,6 +23,10 @@
 | P005 | Goldsmith-Pinkham et al. | 2020 | Bartik IV分解 | シェア外生性で識別、Rotemberg weights | High |
 | P006 | Adão, Kolesár, Morales | 2019 | Shift-share推論理論 | 通常SEで最大55%過剰棄却 | High |
 | P013 | Autor, Dorn, Hanson | 2013 | Shift-share IV応用 | China shockの地域別労働市場効果 | Medium |
+| P077 | Moreno-Louzada, Figueira, Picchetti | 2025 | 価格エクスポージャー設計の微視的基礎 | 相関 shifter では群別係数の分離識別が一般に不成立・few-shock 推論の警告 | High |
+| P078 | Bhattarai, Chatterjee, Udupa | 2025 | IV（グローバル需要除去）×コモディティ価格 | food/oil 2 ショックを分離推定、food は単調逆進・oil は両裾（印度家計パネル） | High |
+| P079 | Cícero, Heras-Recuero | 2025 | Shift-share IV応用（China shock×ブラジル地域） | 貿易ショックの消費・輸入側、格差拡大→奢侈輸入増 | Medium |
+| P080 | Borusyak, Hull, Jaravel | 2024 | Shift-share IV 実務ガイド（JEP） | many-shifts vs many-shares の2経路チェックリスト・exposure-robust SE は Stata 実装 | High |
 
 ## Phase 2 関連（シミュレーションモデル）
 
