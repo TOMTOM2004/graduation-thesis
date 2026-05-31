@@ -201,36 +201,44 @@ def compute_leontief_inverse(A: pd.DataFrame) -> pd.DataFrame:
 
 def compute_import_content(io_data: dict) -> pd.Series:
     """
-    Compute import content ratio by sector.
+    Compute import content ratio by sector (competitive-import formulation).
 
-    Method: Use the import ratio (imports / total supply) as a proxy for
-    import dependence per unit of domestic demand. Then apply Leontief inverse
-    to capture indirect import dependence through supply chains.
+    日本の産業連関表は競争輸入型で、中間投入行列 Z は国産＋輸入を含む。総合投入係数
+    A=Z/x の (I−A)^{-1} をそのまま使うと、輸入中間投入を国内生産ラウンドとして
+    二重計上し import content が 1 を超える（B-4: 旧実装は sector 061/231/271 で IC>1）。
 
-    Import content of sector j = sum_i (m_i * L_ij)
-    where m_i = |imports_i| / (output_i + |imports_i|) is the import penetration ratio
-    and L is the Leontief inverse.
+    正しくは輸入分を除いた国内投入係数で国内レオンチェフを構成する:
+        μ_i  = |imports_i| / (output_i + |imports_i|)        … 輸入浸透率
+        A^d  = (I − M̂) A ,  M̂ = diag(μ)                     … 国内投入係数
+        L^d  = (I − A^d)^{-1}                                … 国内レオンチェフ
+        IC_j = Σ_i μ_i · L^d_ij = (μ^T L^d)_j                … 直接＋間接の輸入含有率
+
+    μ_j≈1（ほぼ全量輸入の一次産品, 例: 原油・天然ガス）では L^d の対角>1 により僅かに
+    1 を超えうるため [0,1] にクリップする（経済的には「ほぼ全量輸入」を意味）。
 
     Returns
     -------
-    pd.Series — import content ratio for each sector (0 to 1)
+    pd.Series — import content ratio for each sector (0..1)
     """
     A = compute_input_coefficients(io_data)
-    L = compute_leontief_inverse(A)
     x = io_data["output"]
     imports = io_data["imports"]
 
     if imports is None:
         raise ValueError("Import data not found in IO table")
 
-    # Import penetration ratio: |imports| / (output + |imports|)
-    # This gives the share of imports in total supply for each sector
+    # 輸入浸透率 μ = |imports| / (output + |imports|)
     abs_imports = imports.abs()
     total_supply = x + abs_imports
-    import_ratio = abs_imports / total_supply.replace(0, np.inf)
+    mu = (abs_imports / total_supply.replace(0, np.inf)).fillna(0.0)
 
-    # Total import content per unit of final demand:
-    # For each sector j, sum over all sectors i of (import_ratio_i * L_ij)
-    import_content = import_ratio.values @ L.values
+    # 国内投入係数 A^d=(I−M̂)A の国内レオンチェフ L^d=(I−A^d)^{-1}
+    n = A.shape[0]
+    M_hat = np.diag(mu.values)
+    A_d = (np.eye(n) - M_hat) @ A.values
+    L_d = np.linalg.inv(np.eye(n) - A_d)
+
+    import_content = mu.values @ L_d
+    import_content = np.clip(import_content, 0.0, 1.0)
 
     return pd.Series(import_content, index=io_data["sector_codes"], name="import_content")
