@@ -11,6 +11,7 @@ _Last updated: 2026-05-31 / session: 案2 却下（DEC-013）+ Phase 3 を定性
 - **案2 却下（DEC-013/A-5）**: 両 estimand とも期間延長は識別を救わない。①group-specific β_g は共線性で分離不能、②pooled β は CPI 2005延長で直接再推定→FD-Koyck δ=0.55・two-way FE で両窓非有意（level-anchoring・単一集計shifterは time FE が時間変動吸収し識別が IC固定依存）。途中2誤りを advisor catch で訂正（pr_group のみ測り誤却下しかけ／CPI を e-Stat 全 tab_code 平均で汚染→overlap照合 tab_code==1 で修正）。再現: `tasks/_an2_shock_independence.py`, `tasks/_an2_pooled_fd.py`
 - **Phase 3 を定性・例示に降格（DEC-014）**: G-3 は既に解消済（fresh再生成=cache 完全一致）。モデルが overshoot（cost-push 平均5.2pp > 実績~2.5%＝C-4 構造ミスマッチ・β=0.431 でも残る）、政策削減率が B-4 IC是正で ~101.6%→44.7% と IC依存で激変（β はキャンセルするが β-invariant≠robust）。**特定%・pp 絶対値は結論にせず incidence accounting/例示で appendix**。結論に残すのは符号レベル（Q1>Q5・energy 最大寄与・補助は方向として gap 縮小）。再現: `tasks/_phase3_recalib_check.py`
 - **重要な含意**: headline を支えていた Phase 2a(回帰)と Phase 3(IO sim)が想定より弱いと連続判明＝硬い背骨は Phase 1(会計)+Phase 2b(恒等式)。合意方針の正しさが裏付けられた
+- **貢献を再定義（DEC-015）**: DEC-008 が掲げた「コストプッシュ/デマンドプル識別」は本設計・データで不可能と判明→**失敗でなく識別限界の方法論的提示という貢献に転化**。再定義した4貢献=①交易損失の会計的定量化②逆進性の恒等式記述(背骨)③識別限界の方法論的提示(exposure-robust shift-share+期間延長テスト)④統合シミュレーション(例示)。overview/research-design/decision-log 更新済。**project `.claude/CLAUDE.md` Phase2 サマリーの更新は self-modification 判定で保留＝ユーザー承認待ち**
 
 ## 📍 State snapshot
 - ✅ Done（メインブランチ `claude/20260526-seminar1-script`・**origin push済**）:

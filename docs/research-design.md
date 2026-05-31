@@ -83,8 +83,11 @@ CPI 中分類 41カテゴリー × 2021-2024年、n=164
 - **pooled プラセボ回帰は無情報**（旧「β≈0 → 識別 supported」は撤回）: メイン仕様と同一（競争的輸入財除外）でプラセボ期を推定すると β=0.540（SE=0.387, p=0.165）で、95%CI が 0 も 0.431 も含む。「非有意＝ゼロ」は absence of evidence の誤読。加えて 2015-19 は P_import が ~20pp 変動した期間で「無ショック」ではなく、pooled プラセボは falsification として ill-posed。
 - **最大の脅威は goods-vs-services 交絡**: IC は財/サービス区分と機械的に相関し（輸入の大半は財）、コロナ後の財需要急増という category 別トレンドは time/entity FE で吸収されない。年次相関コントラストにもこの交絡は効くため「cost-push 固有」とは断定不可。
 - **推論の限界**: 識別変動は単一の集計輸入物価 × IC で実質「ショック1本」。entity-cluster SE は exposure-robust（Borusyak-Hull-Jaravel / Adão-Kolesár-Morales）でなく、p 値は楽観的な可能性。n=164 は独立情報を過大表示。
-- **改善方向**: グループ別 shift-share（A-4）で識別変動を増やし、Phase 2a と Phase 3（IO のグループ構造）の cost-push 定義を一致させる。輸入含有率の構成（IC>1, B-4）も要是正。
-- 詳細は `docs/design-review.md` A-1〜A-3, B-4。
+- **識別改善の試みと結論（実施済・DEC-013/A-5）**: 改善策を2つ実装・検証し、いずれも識別を救わないことを**積極的に確認**した。これは本研究の**方法論的貢献**（DEC-015）。
+  - **グループ別 shift-share（A-4）**: IC を5グループ別に分解し独立 shifter を増やす試み。だが5グループ価格は共通の円為替因子＋商品スーパーサイクルで強く共変（mean pairwise corr ≈0.78）し participation ratio は 1.3〜1.5 止まり＝**グループ別 β_g 分離不能**、AKM で有意性崩壊（p≈0.15）。
+  - **期間延長（案2）**: CPI類別を2005まで遡及（2020基準連結・既存パイプライン完全再現）し pooled β を直接再推定。決定的 spec＝FD-DV × Koyck S_t(δ=0.55) × two-way FE（demand-pull 統制）× shock(年)-clustered で**両窓とも非有意**（p=0.17 / 0.60、全δで非有意＝level-anchoring）。単一の集計 shifter では time FE が時間変動を吸収し識別が IC(2020固定)依存のため、独立ショック事象を増やしても清浄な識別は改善しない。
+  - **結論**: 単一マクロ事象からコストプッシュをデマンドプルから清浄に分離することは本設計・データで不可能。効果は「cost-push と整合的な点推定だが頑健に不確実」。B-4（IC>1 是正）実施済。
+- 詳細は `docs/design-review.md` A-1〜A-5, B-4 / `docs/decision-log.md` DEC-013/014/015 / 再現 `tasks/_an2_shock_independence.py`, `tasks/_an2_pooled_fd.py`。
 
 ---
 
