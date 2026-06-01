@@ -27,6 +27,10 @@
 | P078 | Bhattarai, Chatterjee, Udupa | 2025 | IV（グローバル需要除去）×コモディティ価格 | food/oil 2 ショックを分離推定、food は単調逆進・oil は両裾（印度家計パネル） | High |
 | P079 | Cícero, Heras-Recuero | 2025 | Shift-share IV応用（China shock×ブラジル地域） | 貿易ショックの消費・輸入側、格差拡大→奢侈輸入増 | Medium |
 | P080 | Borusyak, Hull, Jaravel | 2024 | Shift-share IV 実務ガイド（JEP） | many-shifts vs many-shares の2経路チェックリスト・exposure-robust SE は Stata 実装 | High |
+| P081 | Shapiro | 2024 | 価格-数量共変動による供給/需要分解（符号制約・per-category） | 清浄 control 不要で集計インフレを供給/需要に分解。set-identified（magnitude不能）。軽量・再実装可 | High |
+| P082 | Bernanke & Blanchard | 2023 | 構造的賃金-物価連立動学+historical decomposition | 外生供給ショック系列を直接投入し供給寄与を識別（control群不要）。重量級benchmark | High |
+| P083 | di Giovanni et al. | 2022 | 多国多部門生産ネットワークGE | コストプッシュ/供給制約をセクター分解。外国ショック+ボトルネックが支配的（ユーロ圏）。重量級benchmark | Medium |
+| P084 | Borusyak & Hull | 2023 | recentered instrument（design-based） | エクスポージャー非ランダム性を反実仮想分布で recenter。share外生性軸 | High |
 
 ## Phase 2 関連（シミュレーションモデル）
 

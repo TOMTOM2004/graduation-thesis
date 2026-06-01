@@ -2,7 +2,7 @@
 
 ## 概要
 
-本研究に関連する先行研究の管理。論文サマリーは `papers/` 以下に1論文1ファイルで格納。計76件。
+本研究に関連する先行研究の管理。論文サマリーは `papers/` 以下に1論文1ファイルで格納。計84件。
 
 ---
 
@@ -75,6 +75,10 @@
 - [P078 Bhattarai, Chatterjee, Udupa (2025)](papers/bhattarai-chatterjee-udupa-2025-food-fuel-distributional.md) — 【A-4 applied 最良例】food/oil 2 ショックの所得階層別分配効果を分離推定
 - [P079 Cícero, Heras-Recuero (2025)](papers/cicero-heras-recuero-2025-consumption-trade-shocks-luxury.md) — Shift-share IV応用：貿易ショックの消費・輸入側と格差（ブラジル）
 - [P080 Borusyak, Hull, Jaravel (2024)](papers/borusyak-hull-jaravel-2024-practical-guide-shift-share.md) — 【実務ガイド+実装】many-shifts vs many-shares チェックリスト・exposure-robust SE は Stata
+- [P081 Shapiro (2024)](papers/shapiro-2024-supply-demand-driven-inflation.md) — 【Q1+Q4核心・採用候補】価格-数量共変動の符号制約で供給/需要分解。清浄control不要・軽量再実装可。set-identified（magnitude不能）
+- [P082 Bernanke & Blanchard (2023)](papers/bernanke-blanchard-2023-pandemic-era-inflation.md) — 【Q1+Q4 benchmark】外生供給ショック系列+構造連立動学で供給寄与を識別。重量級・引用用途
+- [P083 di Giovanni et al. (2022)](papers/digiovanni-etal-2022-supply-chain-pressures-inflation.md) — 【Q1 benchmark】多国多部門GEでコストプッシュをセクター分解。重量級・引用用途
+- [P084 Borusyak & Hull (2023)](papers/borusyak-hull-2023-nonrandom-exposure.md) — 【Q2 share外生性軸】recentered instrument：エクスポージャー非ランダム性を反実仮想で除去（Econometrica）
 
 ### 国際収支制約と成長（理論・実証）
 - [P064 Thirlwall (1979)](papers/thirlwall-1979-bop-constraint-growth.md) — 国際収支制約による成長率格差の説明（Thirlwall's Law）
