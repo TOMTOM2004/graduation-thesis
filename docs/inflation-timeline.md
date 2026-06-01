@@ -120,6 +120,18 @@ make-or-break＝「小麦集約品目が同時にエネルギー集約的なら 
    - **treated 品目数が少ない**: event-study で pre-trend を確認し、品目を増やす（菓子・調理食品・外食の小麦分）。
    - 識別するのは**ウクライナ小麦ショックの LATE**（存在証明）であって一般 β でない（DEC-015 の bounds と役割分担）。
 
+## 4.6 ウクライナ event-study の結果 — **KEEP（narrow LATE 有効）**（2026-06-01）
+
+pre-trend を見たら米 control は非平行（米は2021供給過剰で下落）。だが advisor 指摘通り**問題は control(米)で treatment(小麦)の pre は flat** → 米を主軸にせず**小麦自身の flat pre-trend に乗る ITS/event-study**で判定。**事前コミットしたルール（結果を見る前に固定）**: 小麦 pre-trend が flat＋2022/2 に鋭い break なら KEEP、pre が trend なら DEAD。再現: `tasks/_ukraine_eventstudy.py`。
+
+- **ITS（小麦・item+月FE・time-cluster SE）**: pre-trend 傾き **+0.037%/月（≈+0.44%/年, p=0.064）**＝経済的に無視可能（post-trend の ~1/18）。**2022-02 に level break +4.62%（p<0.001）**、post 傾き変化 +0.66%/月（p<0.001）。
+- **小麦のみ event-study（ref=直前pre）**: pre bins −1.9/−1.2/−2.4%（event に向かう加速なし＝flat）→ post bins **+4.2%→+10.8%→+13.7%→+17.8%**（単調上昇）。教科書的な「flat pre＋鋭い break＋単調 post」。
+- **判定（ルール適用）**: pre-trend は borderline 有意（p=0.064）だが magnitude が treatment(+17.8%)に対し negligible ＝ ルールの「|傾き|小」で **KEEP**。**ウクライナ小麦ショックのコストプッシュ転嫁（食パン・麺・小麦粉への ~+15〜18%）は存在証明として成立**。
+- **caveat**: 米 control は非平行のため DiD でなく ITS で識別（counterfactual=小麦自身の pre 外挿）。円安も寄与（=import cost-push で識別対象として可）。一般 β でなくこの1ショックの LATE。
+- **副産物（記述的 finding・本研究の核を支持）**: 部分被治療（豆腐/卵/牛乳）も大幅上昇（2023に小麦超）＝**cost-push は食料・必需品全般に広い**。清浄 control が乏しい事実は「単一マクロ事象では clean 識別が難しい」DEC-015 を3つ目の経路で実証。
+
+**識別の到達点（3経路で同一の壁＝DEC-015 の実証）**: ①few-shocks（A-3）→②期間延長で救えず（案2/DEC-013）→③自然実験でも清浄 control なし（本節）。だが**存在証明の LATE は KEEP**でき、背骨（Phase 1 会計＋Phase 2b 恒等式＋aggregate の bounds）は別途立つ。識別ハントはここで**自然な停止点**。
+
 ## 5. 未取得（タイムライン強化に追加可能）
 
 - 円ドル為替（月次）: 為替 vs 世界価格の分解を定量化（契約通貨ベース輸入物価は cgpilink1 に2019まで・recent は `cgpi_m_jp.zip` から抽出可能）
