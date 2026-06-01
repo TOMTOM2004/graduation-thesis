@@ -1,6 +1,6 @@
 # TODO — 卒業論文（案B）
 
-_Last updated: 2026-06-01 / session: 案2却下(DEC-013)→Phase3降格(DEC-014)→貢献再定義(DEC-015)→ウクライナLATE(KEEP)→時系列整理→Shapiro採用(DEC-016)_
+_Last updated: 2026-06-01 17:32 / session: 案2却下(DEC-013)→Phase3降格(DEC-014)→貢献再定義(DEC-015)→ウクライナLATE(KEEP)→時系列整理→Shapiro採用(DEC-016)_
 
 ## 🎯 Next action（1つだけ、具体的に）
 - What: **層1 Shapiro 実装（national 月次・標準ベンチマーク）** — 品目別 価格(CPI)×数量(家計調査)パネル構築→各品目の期待成分を残差化→残差符号で supply(P↑Q↓)/demand(P↑Q↑)分類→集計し national 供給主導(≒cost-push)シェア。**推定前に Shapiro の残差化・価格ソース(CPI vs unit-value)・品目crosswalk の設計を advisor で pressure-test**
