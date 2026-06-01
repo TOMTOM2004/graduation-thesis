@@ -3,9 +3,13 @@
 _Last updated: 2026-06-01 17:32 / session: 案2却下(DEC-013)→Phase3降格(DEC-014)→貢献再定義(DEC-015)→ウクライナLATE(KEEP)→時系列整理→Shapiro採用(DEC-016)_
 
 ## 🎯 Next action（1つだけ、具体的に）
-- What: **層2 Shapiro（五分位・年次・group-specific＝novel 貢献）** — 五分位×品目数量 `0003348236`(年次・2007-24・216品目) で層1と同型の符号分解を group別に。低/高所得層が直面する supply駆動インフレの差。**年次18点＝残差化余地ほぼ無し→ exploratory/suggestive と明記**（novel が最薄データに乗る点を正直に）。spec詳細は層1の `shapiro_decomp.py` を再利用
-- Where: 数量 `0003348236`(五分位年次) + 既存 `src/analysis/shapiro_decomp.py` 拡張 / 根拠 DEC-016 層2
-- Done when: 五分位別 supply駆動インフレ(or share)が出て、Q1<Q5 等の方向性が示せる（exploratory）
+- What: **論文執筆に着手**（Shapiro 層1/層2 完了・実証3本柱が揃った）。優先＝Phase 2b（背骨）+ Phase 1（会計）+ Shapiro 層1（三角測量）を結果章に統合。層2 は inconclusive として識別限界節に正直に配置
+- Where: 論文ドラフト（執筆場所未定・要決定）/ 結果サマリーは `.claude/CLAUDE.md` 主要結果 + `docs/shapiro-decomposition.md`
+- Done when: 結果章の骨子（3本柱＋層1三角測量＋層2 null の正直な扱い）が outline 化される
+- 別線: 実験ブランチ push/PR 判断（下記 Open questions）
+
+## ✅ 直近完了（2026-06-01・このセッション・層2 Shapiro）
+- **層2 group-specific 実装完了（DEC-016 層2・`src/analysis/shapiro_quintile.py`）**: ν^p 共通を GATE assert で確認（設計 crux 成立）。**判定=INCONCLUSIVE**: pre-registered 仮説 Q1>Q5 は per-year で 2/4 shock years のみ成立（2022-23 コア cost-push 年で逆転）、pooled +0.043 は 2021+2024 由来。年次×五分位の粗さで数量応答マージン解像不能＝誠実な null。**Phase 2b（実効インフレ gap・ウェイトベース）は無傷**。crux framing: 「Q1 がより収縮的消費応答」も robust に言えず（≠ cost-push exposure・ν^p 共通）
 
 ## ✅ 直近完了（2026-06-01・このセッション・層1 Shapiro）
 - **層1 Shapiro 実装完了（DEC-016 層1・詳細 `docs/shapiro-decomposition.md`）**: `src/analysis/shapiro_decomp.py`。crosswalk 116品目・VAR残差化+月連続性マスク・**インフレ寄与加重**集計（Shapiro P081）。バスケット=116 物理数量 食料+家庭用エネルギー品目。**headline=supply-driven SHARE**: 2021 0.41(需要主導)→2022 0.70(供給surge)→2024 0.83。**2021需要→2022供給転換が Shapiro米国・timeline と整合**、月次で侵攻(2022/2)から跳ね上がり。2022 supply 寄与 broad(top5=43%・筆頭ガソリン/鶏肉/さけ)。5 spec・balanced 105(0.42→0.72)・生鮮除外(0.42→0.76)で robust。

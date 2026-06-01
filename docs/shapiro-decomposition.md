@@ -60,5 +60,39 @@ covered basket の年平均 YoY は**公式 食料CPI を tracking しない（�
 - `data/processed/shapiro/supply_share_primary.csv` — primary 月次系列（supply_infl/total_infl/share/near-zero）
 - `data/processed/shapiro/supply_share_{VAR,AR}_lag{3,12}.csv` — robustness grid
 
-## 次（層2・novel）
-五分位×品目数量（`0003348236`・年次・2007–24）で **group-specific** に同型分解。Shapiro 含む P081-083 のどれも income-group に届かず＝独自貢献。ただし年次18点＝残差化余地ほぼ無し→ **exploratory/suggestive** と明記（novel が最薄データに乗る点を正直に）。同じ（正しくスコープした）機構を継承し、basket 定義を再 litigate しない。
+---
+
+# 層2 — group-specific（五分位・年次・novel）★INCONCLUSIVE
+
+_実装: `src/analysis/shapiro_quintile.py` / 出力: `data/processed/shapiro/quintile_*.csv` / 根拠: DEC-016 層2 pre-registration_
+
+## 設計の crux（framing knife-edge・advisor）
+P=national CPI は**全 quintile 共通**→ ν^p は全 group 同一系列（コードで assert・GATE OK）、group 差は **sign(ν^q_g)＝数量応答の差のみ**。∴測るのは「共通価格ショックを数量削減で吸収するか消費拡大で吸収するか」＝**差別的消費応答**。
+- ✅「Q1 の共通価格ショックへの消費応答がより収縮的/不本意(supply-like)、Q5 は維持/拡大(demand-like)」
+- ❌「Q1 はより供給駆動/cost-push インフレに直面」（誤り・価格共通）
+- 位置づけ: Phase 2b 背骨（Q1 実効インフレ+1.42pp）の**メカニズム**を探る三角測量。
+
+## spec（exploratory・1 spec のみ）
+五分位数量 `0003348236`（年次2000-2024=25点・crosswalk 116品目再利用）×national CPI 年次。残差化=**(group,item)別 YoY demean のみ**（VAR は24点で不可）。ウェイト=五分位金額 `0003348240`。headline=**shock years 2021-24 pooled の group別 supply share**。
+
+## 結果・判定 ★pre-registered 仮説は robust に支持されず＝INCONCLUSIVE
+pooled supply share: Q1 0.573 / Q2 **0.666** / Q3 0.509 / Q4 0.501 / Q5 0.530（Q1−Q5=+0.043・**非単調**）。
+
+per-year で Q1>Q5 は **2/4 shock years のみ**:
+
+| 年 | Q1 | Q5 | Q1>Q5 |
+|----|----|----|----|
+| 2021 | 0.61 | 0.47 | ✅ |
+| 2022 | 0.66 | 0.71 | ❌（コア cost-push 年で逆転） |
+| 2023 | 0.55 | 0.62 | ❌（同上） |
+| 2024 | 0.58 | 0.49 | ✅ |
+
+- **pooled の正(+0.043)は 2021+2024 由来のアーティファクト**。2022-23 で逆転＝方向が robust でない
+- **全 group が ~0.50-0.67 に clustering ＝層1で noise と診断した flat-~0.5 署名と同じ**（層2 は P 共通ゆえ寄与加重で group 差別化できず fraction-base 不可避＝metric エラーでなく「五分位×年次で符号分類がほぼランダム」を意味）。∴ null は wishy-washy な「weak support」でなく **decisive**
+- **null の第一診断＝識別限界**（coarse data/noise だけでない・advisor）: 符号法は高 ν^p 年に数量を多く削った group を supply ラベルするが、**不本意な収縮（Q1 squeezed）と裁量的柔軟性（Q5 が trade-down/代替）を区別できない**。むしろ後者が優勢になり得る（裕福層ほど任意品目で削れる数量が多い／Q1 は必需品で subsistence 近く数量を削れない＝厚生損失は大きいのに数量応答は小さい）。2022-23 の Q5>Q1 は**符号法が誤読する実信号かもしれず**、単なる noise でない。DEC-015「識別限界の方法論的提示」frame と整合
+- **a-priori sign は曖昧**（pre-registered Q1>Q5 は richer-household substitutability が反対に効くため断定不可）。「Q1 がより収縮的消費応答」も robust には言えない（✅ branch 内の第2 knife-edge）
+- **Phase 2b は無傷**: 実効インフレ gap はウェイトベースで robust。層2 は別マージン（数量応答）を探り解像/識別不能と判明しただけ。五分位は1/5ずつ＝標本サイズ可比なので gap 不在は標本数アーティファクトでない
+- **rescue しない**: elasticity 回帰（Δlog Q_g on Δlog P × group）は better-powered な「真の object」だが別手法＝done-line での scope creep。本セッションの誠実 posture を保ち exploratory Shapiro null を as-is で残す
+
+## 出力（層2）
+- `quintile_quantity.csv` `quintile_expenditure.csv`（五分位 年次 raw）/ `quintile_labels.csv`（item-year ラベル）/ `quintile_supply_share.csv`（pooled）

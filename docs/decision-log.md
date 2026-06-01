@@ -159,3 +159,20 @@
 - **重要な framing 訂正（advisor reconcile・一次ソース突合）**: ①当初「price-YoY が食料CPIと一致」は**誤り**（不均衡116品目の buggy calc 由来）→撤回。covered basket は公式食料CPIを**構造上 tracking しない**（2023 公式+8.06%ピーク vs basket+3.99%）＝物理数量品目のみで外食/調理/加工を欠き、エネを含む。②**この乖離は feature**＝同じ輸入ショックの外食/調理/加工への**ラグ付き転嫁**＝cost-push と整合。③主張スコープ厳守:「basket 内で 2022 供給圧力 surge」は ship、「食料インフレの X% が供給駆動」は書かない。④pp 寄与は Dec-to-Dec モメンタム＝内部denominator（年次インフレでない）。headline は share。
 - **実装中の2修正**: ①集計を寄与加重に ②支出表 `0003343671` は area=53地域→`cdArea=00000` 必須。
 - **次**: 層2（五分位 `0003348236`・年次・group-specific＝novel・exploratory 明記・同機構継承）。
+
+#### DEC-016 層2 pre-registration（2026-06-01・advisor 後・実装前に固定）
+- **データ**: 五分位数量 `0003348236`（年次・**2000-2024=25点**・code は層1と同スキーム→crosswalk 116品目再利用）、ウェイト=五分位金額 `0003348240`。cat03: 01-05=Q1-Q5。
+- **設計の crux（framing knife-edge）**: P=national CPI は**全 group 共通**→ ν^p は全 group 同一系列、group 差は **sign(ν^q_g)＝数量応答の差のみ**。∴測っているのは「共通価格ショックを数量削減で吸収するか消費拡大で吸収するか」＝**差別的消費応答**であって differential cost-push exposure ではない。
+  - ✅「Q1 の共通価格ショックへの消費応答がより収縮的/不本意(supply-like)、Q5 は維持/拡大(demand-like)」
+  - ❌「Q1 はより供給駆動/cost-push インフレに直面」（誤り・価格共通）
+- **コード検証義務**: sign(ν^p) が全 group 同一であることを assert（group 数量を価格残差化に混ぜれば econometrically wrong かつ24点で不可能）。
+- **spec**: 残差化=**(group,item)別 YoY demean のみ**（VAR cross-lag は24点で不可・AR(1)も省略）。使えない品目（narrow×1/5標本）は層1同様 coverage discipline で drop+log。
+- **pre-registered 仮説・統計**: Q1 supply-share > Q5。headline = **shock years 2021-2024 pooled の group別 supply share**（per-year は noisy）。五分位は1/5ずつ＝標本サイズ可比→gap は標本数アーティファクトでない。
+- **位置づけ**: Phase 2b 背骨（Q1 実効インフレ+1.42pp）の**メカニズム**（Q1 は不本意な数量削減で吸収）＝三角測量。free-standing novelty でなく背骨の補強。**exploratory**＝1 spec・方向のみ・noise caveat 前面、層1の全 battery は再現しない。
+
+#### DEC-016 層2 結果（2026-06-01・実装完了・`src/analysis/shapiro_quintile.py`）
+- **GATE OK**: コード assert で ν^p が全 quintile 同一を確認（group数量を価格残差化に混ぜていない）。設計の crux が成立。
+- **結果（pooled 2021-24 supply share）**: Q1 0.573 / Q2 0.666 / Q3 0.509 / Q4 0.501 / Q5 0.530。Q1−Q5=+0.043 だが**非単調（Q2最高）**。
+- **判定: pre-registered 仮説 Q1>Q5 は robust に支持されない＝INCONCLUSIVE（decisive null）**。per-year で Q1>Q5 は **2/4 shock years のみ（2021・2024）、2022・2023＝コア cost-push 年で逆転**。pooled の正は 2021+2024 由来。全 group が ~0.50-0.67 に clustering＝層1で noise と診断した flat-~0.5 署名と同じ＝五分位×年次で符号分類がほぼランダム＝null は「weak support」でなく decisive。
+- **null の第一診断＝識別限界（advisor・coarse data だけでない）**: 符号法は不本意な収縮（Q1 squeezed）と裁量的柔軟性（Q5 trade-down/代替）を区別できず、むしろ後者が優勢になり得る（裕福層ほど削れる数量多／Q1 は必需品 subsistence 近で数量削れず厚生損失は大）。2022-23 の Q5>Q1 は符号法が誤読する実信号かも＝単なる noise でない。a-priori sign は曖昧（substitutability が Q1>Q5 に反対）。DEC-015 識別限界 frame と整合。
+- **Phase 2b は無傷**（実効インフレ gap＝ウェイトベース・robust）。「Q1 がより cost-push に直面」は元々不可（ν^p 共通）、「Q1 がより収縮的応答」も robust に言えない。**rescue しない**（elasticity 回帰＝別手法・scope creep）。
