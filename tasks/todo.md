@@ -1,11 +1,20 @@
 # TODO — 卒業論文（案B）
 
-_Last updated: 2026-05-31 / session: 案2 却下（DEC-013）+ Phase 3 を定性・例示に降格（DEC-014）_
+_Last updated: 2026-06-01 / session: 案2却下(DEC-013)→Phase3降格(DEC-014)→貢献再定義(DEC-015)→ウクライナLATE(KEEP)→時系列整理→Shapiro採用(DEC-016)_
 
 ## 🎯 Next action（1つだけ、具体的に）
-- What: **論文執筆に着手** — Phase 1（会計）/ Phase 2b（恒等式逆進性）を背骨に、Phase 2a（識別限界明記）と Phase 3（定性・例示 incidence accounting）を従に配置。まず先行研究レビューか方法論の章から
-- Where: 論文ドラフト（保存先未定・要決定）/ `docs/` の各設計ドキュメントを素材に
-- Done when: 章立て確定＋1章分の初稿。または指導教員フィードバック対応の準備
+- What: **層1 Shapiro 実装（national 月次・標準ベンチマーク）** — 品目別 価格(CPI)×数量(家計調査)パネル構築→各品目の期待成分を残差化→残差符号で supply(P↑Q↓)/demand(P↑Q↑)分類→集計し national 供給主導(≒cost-push)シェア。**推定前に Shapiro の残差化・価格ソース(CPI vs unit-value)・品目crosswalk の設計を advisor で pressure-test**
+- Where: 数量 `0003343670`(月次総数) + CPI `0003427113` / 新規 `src/analysis/shapiro_decomp.py` / 設計根拠 DEC-016
+- Done when: national 供給主導シェアの月次系列(2020-24)が出て、層2(五分位・年次・novel)へ拡張する目処が立つ
+- 動いたら層2: 五分位×品目数量 `0003348236`(年次)で group-specific 分類＝novel 貢献
+
+## ✅ 直近完了（2026-05-31〜06-01・このセッション・実験ブランチ未push）
+- **案2 却下（DEC-013/A-5）**: 両 estimand とも期間延長は識別を救わない。FD-Koyck δ=0.55 two-way FE で両窓非有意。再現: `tasks/_an2_shock_independence.py`, `_an2_pooled_fd.py`
+- **Phase 3 降格（DEC-014）**: overshoot(5.2pp>実績2.5%)・政策率 IC依存(101.6%→44.7%)・β-invariant≠robust → 定性/例示。符号レベルのみ結論。再現: `tasks/_phase3_recalib_check.py`
+- **貢献を再定義（DEC-015）**: cost-push/demand-pull 識別は不可能と判明→識別限界の方法論的提示を貢献に転化。4貢献に再定義。docs統一・CLAUDE.md Phase2 反映済(承認済)
+- **ウクライナ小麦 LATE（KEEP）**: 事前ルールで判定。ITS で小麦 pre-trend flat(+0.037%/月)＋2022/2 break +4.62%＋post単調→ 存在証明成立。米controlは非平行ゆえ ITS。副産物=cost-push 食料全般に広い。再現: `tasks/_ukraine_eventstudy.py`, `_ukraine_wheat_scope.py`
+- **インフレ時系列整理**（`docs/inflation-timeline.md`）: 日本は2020-21デマンドプル不在(財vsサービス・実質賃金3年連続マイナス・需給ギャップ)＝cost-push主導。エネは2021先行・2023補助で抑制
+- **Shapiro 採用（DEC-016）**: 文献(P081-084)で cost/demand 分離は Shapiro で清浄control不要と判明→採用。2層(national月次/quintile年次=novel)。データ表ID特定・構造検証済
 
 ## ✅ 直近完了（2026-05-31・このセッション）
 - **案2 却下（DEC-013/A-5）**: 両 estimand とも期間延長は識別を救わない。①group-specific β_g は共線性で分離不能、②pooled β は CPI 2005延長で直接再推定→FD-Koyck δ=0.55・two-way FE で両窓非有意（level-anchoring・単一集計shifterは time FE が時間変動吸収し識別が IC固定依存）。途中2誤りを advisor catch で訂正（pr_group のみ測り誤却下しかけ／CPI を e-Stat 全 tab_code 平均で汚染→overlap照合 tab_code==1 で修正）。再現: `tasks/_an2_shock_independence.py`, `tasks/_an2_pooled_fd.py`
