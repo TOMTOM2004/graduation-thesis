@@ -145,3 +145,17 @@
 - **制約（正直に明記）**: (i) 五分位×数量は**年次のみ**（月次なし）→ 層2 は年次 YoY comovement（月次より粗いが2007-24の18年で comovement 推定可）。(ii) 数量は物理単位で測れる品目（**食料中心**）に偏る→サービス等は実質支出=金額/CPI で代替。食料中心は本研究（必需品の逆進的負担）と整合。(iii) Shapiro は set-identified＝ラベルのみで magnitude は出さない（補完であって因果 β の代替でない）。(iv) 層2は national ラベル×バスケットの「曝露」でなく**五分位データで直接分類**するため真の group-specific（ただし五分位の少標本に注意）。
 - **位置づけ**: Phase 1（会計）/Phase 2b（恒等式）の背骨に、Shapiro 層1（national 供給主導シェア）と層2（group-specific＝novel）を追加。Phase 2a の弱識別 β に依存しない第3の柱。
 - **次**: 層1 実装（価格×数量パネル構築→残差化→sign 分類→集計）。推定前に Shapiro の年次/月次適応・残差化・品目 crosswalk の設計を advisor で pressure-test。
+
+#### DEC-016 補遺: 層1 実装の pre-registration（2026-06-01・advisor pressure-test 後・split を見る前に固定）
+- **価格ソース（最大の分岐・事後変更不可）**: **CPI を主**（分解対象＝公式CPIインフレ／P=CPI品目指数 `0003427113`・Q=家計調査物理数量 `0003343670`）。**unit-value（金額/数量・同一ソース）は robustness run**。両者でラベルが乖離したら「bug でなく informative measurement」として報告。
+- **残差化 spec（方向のみ固定・詳細は実装時 advisor）**: 層1=**月次 AR+季節**で期待成分除去→残差 ν^p, ν^q 符号で分類（同符号=demand・逆符号=supply）。**層2（五分位・年次18点）は残差化余地ほぼ無し→ exploratory/suggestive と明記**（novel 貢献が最薄データに乗る点を正直に）。AR次数・季節調整方式は系列特性を見て advisor で確定。
+- **データ取得範囲**: `0003343670` は **全期間（2000–2024 月次）** を取得（残差化安定のため60ヶ月では脆弱・24年で十分）。
+- **framing ガードレール（advisor 指摘・全 docs 共通）**: 「供給駆動」≠「輸入コストプッシュ」。Shapiro の supply ラベルは国内労働・天候等の全供給ショックを含む広い対象→**三角測量/補強**として位置づけ、"X%が輸入cost-push" に drift させない。
+
+#### DEC-016 層1 結果（2026-06-01・実装完了・詳細 `docs/shapiro-decomposition.md`）
+- **実装**: `src/analysis/shapiro_decomp.py`。crosswalk 116/192品目（exact名称・未マッチ記録）、VAR cross-lag+月ダミー残差化＋月連続性マスク、**インフレ寄与加重**集計（Shapiro P081 の定義。品目割合metricは noise で≈0.5フラットになり棄却）。バスケット=**116 物理数量 食料+家庭用エネルギー品目**。
+- **headline = supply-driven SHARE（within-basket・Shapiro 本来の出力）primary VAR6**: 2021 **0.41**(需要主導) → 2022 **0.70**(供給surge) → 2024 0.83。**2021需要→2022供給の転換が Shapiro米国・inflation-timeline.md と整合**、月次で侵攻(2022/2)から supply share 跳ね上がり。2022 supply 寄与は broad（top5=43%・筆頭 ガソリン/鶏肉/さけ/プロパンガス）＝輸入cost-push チャネル。
+- **Robustness（share）**: 5 spec で 2022>2021 上昇頑健、balanced 105品目（0.42→0.72）・生鮮除外（0.42→0.76）でも保持。near-zero ν^p は 2022 supply 寄与の 5.5%(0.1%閾値) のみ＝sticky-CPI 非問題。
+- **重要な framing 訂正（advisor reconcile・一次ソース突合）**: ①当初「price-YoY が食料CPIと一致」は**誤り**（不均衡116品目の buggy calc 由来）→撤回。covered basket は公式食料CPIを**構造上 tracking しない**（2023 公式+8.06%ピーク vs basket+3.99%）＝物理数量品目のみで外食/調理/加工を欠き、エネを含む。②**この乖離は feature**＝同じ輸入ショックの外食/調理/加工への**ラグ付き転嫁**＝cost-push と整合。③主張スコープ厳守:「basket 内で 2022 供給圧力 surge」は ship、「食料インフレの X% が供給駆動」は書かない。④pp 寄与は Dec-to-Dec モメンタム＝内部denominator（年次インフレでない）。headline は share。
+- **実装中の2修正**: ①集計を寄与加重に ②支出表 `0003343671` は area=53地域→`cdArea=00000` 必須。
+- **次**: 層2（五分位 `0003348236`・年次・group-specific＝novel・exploratory 明記・同機構継承）。

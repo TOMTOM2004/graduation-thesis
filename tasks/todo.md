@@ -3,10 +3,14 @@
 _Last updated: 2026-06-01 17:32 / session: 案2却下(DEC-013)→Phase3降格(DEC-014)→貢献再定義(DEC-015)→ウクライナLATE(KEEP)→時系列整理→Shapiro採用(DEC-016)_
 
 ## 🎯 Next action（1つだけ、具体的に）
-- What: **層1 Shapiro 実装（national 月次・標準ベンチマーク）** — 品目別 価格(CPI)×数量(家計調査)パネル構築→各品目の期待成分を残差化→残差符号で supply(P↑Q↓)/demand(P↑Q↑)分類→集計し national 供給主導(≒cost-push)シェア。**推定前に Shapiro の残差化・価格ソース(CPI vs unit-value)・品目crosswalk の設計を advisor で pressure-test**
-- Where: 数量 `0003343670`(月次総数) + CPI `0003427113` / 新規 `src/analysis/shapiro_decomp.py` / 設計根拠 DEC-016
-- Done when: national 供給主導シェアの月次系列(2020-24)が出て、層2(五分位・年次・novel)へ拡張する目処が立つ
-- 動いたら層2: 五分位×品目数量 `0003348236`(年次)で group-specific 分類＝novel 貢献
+- What: **層2 Shapiro（五分位・年次・group-specific＝novel 貢献）** — 五分位×品目数量 `0003348236`(年次・2007-24・216品目) で層1と同型の符号分解を group別に。低/高所得層が直面する supply駆動インフレの差。**年次18点＝残差化余地ほぼ無し→ exploratory/suggestive と明記**（novel が最薄データに乗る点を正直に）。spec詳細は層1の `shapiro_decomp.py` を再利用
+- Where: 数量 `0003348236`(五分位年次) + 既存 `src/analysis/shapiro_decomp.py` 拡張 / 根拠 DEC-016 層2
+- Done when: 五分位別 supply駆動インフレ(or share)が出て、Q1<Q5 等の方向性が示せる（exploratory）
+
+## ✅ 直近完了（2026-06-01・このセッション・層1 Shapiro）
+- **層1 Shapiro 実装完了（DEC-016 層1・詳細 `docs/shapiro-decomposition.md`）**: `src/analysis/shapiro_decomp.py`。crosswalk 116品目・VAR残差化+月連続性マスク・**インフレ寄与加重**集計（Shapiro P081）。バスケット=116 物理数量 食料+家庭用エネルギー品目。**headline=supply-driven SHARE**: 2021 0.41(需要主導)→2022 0.70(供給surge)→2024 0.83。**2021需要→2022供給転換が Shapiro米国・timeline と整合**、月次で侵攻(2022/2)から跳ね上がり。2022 supply 寄与 broad(top5=43%・筆頭ガソリン/鶏肉/さけ)。5 spec・balanced 105(0.42→0.72)・生鮮除外(0.42→0.76)で robust。
+- **framing 訂正（advisor reconcile）**: 当初「price-YoY が食料CPI一致」は buggy calc 由来で**撤回**。basket は公式食料CPIを構造上 tracking しない（2023 公式+8.06 vs basket+3.99）＝外食/調理/加工欠落・エネ含む。**乖離は feature**＝ラグ付き転嫁＝cost-push 整合。スコープ厳守:「basket 内 2022 供給surge」ship／「食料インフレ X% 供給駆動」書かない。pp 寄与=内部denominator(Dec-to-Dec)。
+- **pre-registration 記録（DEC-016 補遺）**: 価格=CPI主/unit-value頑健性、残差化=月次VAR+季節（advisor で AR→VAR 精緻化）、framing「供給駆動≠輸入cost-push」。split を見る前に固定
 
 ## ✅ 直近完了（2026-05-31〜06-01・このセッション・実験ブランチ未push）
 - **案2 却下（DEC-013/A-5）**: 両 estimand とも期間延長は識別を救わない。FD-Koyck δ=0.55 two-way FE で両窓非有意。再現: `tasks/_an2_shock_independence.py`, `_an2_pooled_fd.py`
