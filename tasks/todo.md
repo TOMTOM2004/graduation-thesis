@@ -8,6 +8,11 @@ _Last updated: 2026-06-01 17:32 / session: 案2却下(DEC-013)→Phase3降格(DE
 - Done when: 結果章の骨子（3本柱＋層1三角測量＋層2 null の正直な扱い）が outline 化される
 - 別線: 実験ブランチ push/PR 判断（下記 Open questions）
 
+## ✅ 直近完了（2026-06-03・仮説×証拠 監査→クレーム階層化）
+- **DEC-017 provable 優先のクレーム階層化（ユーザー承認）**: 全クレームを証拠ステータスで監査し2層化。**Tier 1（背骨・全て repo 証明済・回帰/消費応答識別に非依存）**: 交易損失~35兆（会計）→ H1/H2 必需品=高輸入含有（食料 Q1-Q5 +8.3pp・光熱 +4.8pp・**今回 repo 実測**）→ +1.42pp 実現インフレ逆進性（恒等式）→ Shapiro 層1 供給主導(0.70)。**Tier 2（誠実な副次）**: 識別限界(2a/層2 null=貢献③)、統合シミュ(Phase3=④)。
+- **doc 整合済**: decision-log DEC-017 / overview「貢献の核」に Tier1 連鎖 / research-design 仮説節に H1-H4 ステータス＋repo 証拠 / contribution.md 空白②再文言＋冒頭バナー（β=0.431 を Tier2 に降格明示）。
+- **要点**: +1.42pp は**実現インフレ逆進性**（最頑健）であって cost-push 単離でない（不可能・DEC-013）。H2＋層1 で cost-push へ三角測量的に橋渡し。heterogeneity の核は +1.42pp 1本依存＝意識的決定。
+
 ## ✅ 直近完了（2026-06-01・このセッション・層2 Shapiro）
 - **層2 group-specific 実装完了（DEC-016 層2・`src/analysis/shapiro_quintile.py`）**: ν^p 共通を GATE assert で確認（設計 crux 成立）。**判定=INCONCLUSIVE**: pre-registered 仮説 Q1>Q5 は per-year で 2/4 shock years のみ成立（2022-23 コア cost-push 年で逆転）、pooled +0.043 は 2021+2024 由来。年次×五分位の粗さで数量応答マージン解像不能＝誠実な null。**Phase 2b（実効インフレ gap・ウェイトベース）は無傷**。crux framing: 「Q1 がより収縮的消費応答」も robust に言えず（≠ cost-push exposure・ν^p 共通）
 
