@@ -1,6 +1,6 @@
 # TODO — 卒業論文（案B）
 
-_Last updated: 2026-06-01 17:32 / session: 案2却下(DEC-013)→Phase3降格(DEC-014)→貢献再定義(DEC-015)→ウクライナLATE(KEEP)→時系列整理→Shapiro採用(DEC-016)_
+_Last updated: 2026-06-03 / session: Shapiro 層1実装(provable第3の柱)→層2実装(誠実null)→仮説×証拠監査→DEC-017 クレーム階層化(Tier1背骨/Tier2副次)_
 
 ## 🎯 Next action（1つだけ、具体的に）
 - What: **論文執筆に着手**（Shapiro 層1/層2 完了・実証3本柱が揃った）。優先＝Phase 2b（背骨）+ Phase 1（会計）+ Shapiro 層1（三角測量）を結果章に統合。層2 は inconclusive として識別限界節に正直に配置
