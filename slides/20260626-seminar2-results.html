@@ -222,7 +222,7 @@
   .tri-arrow { padding: 0 8px; color: var(--blue-soft); font-size: 22px; flex-shrink: 0; }
 
   /* ── Pivot (before → finding → survives) ── */
-  .pivot-flow { display: flex; align-items: center; gap: 0; flex: 1; }
+  .pivot-flow { display: flex; align-items: center; gap: 0; flex: 0 0 auto; margin-top: auto; }
   .pivot-col { flex: 1; padding: 18px 18px; display: flex; flex-direction: column; gap: 10px; border: 1px solid var(--border); border-radius: 6px; }
   .pivot-col .plabel { font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; }
   .pivot-col .ptitle { font-size: 16px; font-weight: 700; line-height: 1.4; }
@@ -238,7 +238,7 @@
   .pivot-col.survives .ptitle { color: var(--navy); }
   .pivot-arrow { display: flex; align-items: center; justify-content: center; color: var(--blue-soft); font-size: 26px; flex-shrink: 0; padding: 0 10px; }
   .pivot-contrib {
-    margin-top: 18px; background: var(--muted-bg); border-left: 4px solid var(--blue-mid);
+    margin-top: 22px; margin-bottom: auto; background: var(--muted-bg); border-left: 4px solid var(--blue-mid);
     padding: 14px 20px; font-size: 15px; color: var(--text-mid); line-height: 1.6;
   }
   .pivot-contrib strong { color: var(--navy); }
