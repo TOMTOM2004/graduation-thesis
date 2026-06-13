@@ -1,12 +1,19 @@
 # TODO — 卒業論文（案B）
 
-_Last updated: 2026-06-03 / session: Shapiro 層1実装(provable第3の柱)→層2実装(誠実null)→仮説×証拠監査→DEC-017 クレーム階層化(Tier1背骨/Tier2副次)_
+_Last updated: 2026-06-13 14:30 / session: 第2回スライド+原稿作成(6/26発表)→s7/s8レイアウト修正→第3回ドラフト(15枚)+第4回骨格(13枚)作成_
 
 ## 🎯 Next action（1つだけ、具体的に）
-- What: **論文執筆に着手**（Shapiro 層1/層2 完了・実証3本柱が揃った）。優先＝Phase 2b（背骨）+ Phase 1（会計）+ Shapiro 層1（三角測量）を結果章に統合。層2 は inconclusive として識別限界節に正直に配置
-- Where: 論文ドラフト（執筆場所未定・要決定）/ 結果サマリーは `.claude/CLAUDE.md` 主要結果 + `docs/shapiro-decomposition.md`
-- Done when: 結果章の骨子（3本柱＋層1三角測量＋層2 null の正直な扱い）が outline 化される
-- 別線: 実験ブランチ push/PR 判断（下記 Open questions）
+- What: **第2回発表(6/26)のリハーサル**（実機 1200×675 で通し・時間計測〜15分）。または並行で **論文執筆に着手**（実証3本柱を結果章に統合）
+- Where: スライド `slides/20260626-seminar2-results.html` + 原稿 `slides/20260626-seminar2-script.md` / 論文執筆場所は未定（要決定）
+- Done when: 6/26 発表の準備完了（通しリハ済）
+- 別線: ① 第3回/第4回の発表原稿(script.md)作成判断 ② スライド作業ブランチ `claude/20260613-seminar2-slides` の push/PR 判断 ③ 実験ブランチ push/PR 判断（下記 Open questions）
+
+## ✅ 直近完了（2026-06-13・このセッション・3回分のスライド草案）
+- **第2回ゼミ発表スライド完成（6/26発表・〜15分）**: `slides/20260626-seminar2-results.html`（10枚）+ `slides/20260626-seminar2-script.md`（原稿・Q&A準備込み）。DEC-017 Tier1/Tier2 を背骨に「3本の硬い柱＋正直なピボット」を構成。advisor の框A/B/C を反映（①ピボットを正面から所有 ②+1.42pp=実効インフレ逆進性≠cost-push単独 ③「識別でなく三角測量」明示）。headless Chrome で全枚描画検証。s7/s8 のレイアウト修正（3カラム枠統一・ブロック縦中央化）も実施
+- **第3回ドラフト作成（論文ドラフト全体・15枚）**: `slides/20261101-seminar3-draft.html`（日程未定で日付暫定）。章構造（背景→RQ→方法→結果→考察→限界→結論）で seminar2 と差別化。ADD=考察・先行研究数値比較(placeholder)・ロバストネス・限界形式化・未解決点提示。トーン「完成形だが wet」
+- **第4回骨格作成（最終・結論・13枚）**: `slides/20270115-seminar4-final.html`（骨格＋placeholder）。ナラティブの弧「約束→ピボット→届けた答え」を背骨に、4貢献確定・政策含意・結論。第3回フィードバック応答は placeholder スライドで枠だけ。未確定数値は ph バッジ
+- **全3デッキ共通の framing**: RQ は DEC-015 再定義版（clean識別を前提にしない）で統一。seminar2 CSS フレームワーク流用
+- **重要**: 全作業がブランチ `claude/20260613-seminar2-slides` に集約・**未push**。seminar1 hook 34.6 は提示記録として保持、35兆は seminar2 以降に適用（凍結方針通り）
 
 ## ✅ 直近完了（2026-06-03・仮説×証拠 監査→クレーム階層化）
 - **DEC-017 provable 優先のクレーム階層化（ユーザー承認）**: 全クレームを証拠ステータスで監査し2層化。**Tier 1（背骨・全て repo 証明済・回帰/消費応答識別に非依存）**: 交易損失~35兆（会計）→ H1/H2 必需品=高輸入含有（食料 Q1-Q5 +8.3pp・光熱 +4.8pp・**今回 repo 実測**）→ +1.42pp 実現インフレ逆進性（恒等式）→ Shapiro 層1 供給主導(0.70)。**Tier 2（誠実な副次）**: 識別限界(2a/層2 null=貢献③)、統合シミュ(Phase3=④)。
