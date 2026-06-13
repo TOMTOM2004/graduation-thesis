@@ -223,18 +223,20 @@
 
   /* ── Pivot (before → finding → survives) ── */
   .pivot-flow { display: flex; align-items: center; gap: 0; flex: 1; }
-  .pivot-col { flex: 1; padding: 20px 20px; display: flex; flex-direction: column; gap: 10px; }
+  .pivot-col { flex: 1; padding: 18px 18px; display: flex; flex-direction: column; gap: 10px; border: 1px solid var(--border); border-radius: 6px; }
   .pivot-col .plabel { font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; }
   .pivot-col .ptitle { font-size: 16px; font-weight: 700; line-height: 1.4; }
   .pivot-col p { font-size: 13.5px; color: var(--text-mid); line-height: 1.6; }
+  .pivot-col.before { background: var(--muted-bg); }
   .pivot-col.before .plabel { color: var(--text-light); }
   .pivot-col.before .ptitle { color: var(--text-mid); }
-  .pivot-col.finding { background: #fff8f2; border-radius: 6px; }
+  .pivot-col.finding { background: #fff8f2; border-color: #e8c4a0; }
   .pivot-col.finding .plabel { color: var(--orange); }
   .pivot-col.finding .ptitle { color: var(--orange); }
+  .pivot-col.survives { background: var(--muted-bg); }
   .pivot-col.survives .plabel { color: var(--blue-mid); }
   .pivot-col.survives .ptitle { color: var(--navy); }
-  .pivot-arrow { display: flex; align-items: center; justify-content: center; color: var(--blue-soft); font-size: 26px; flex-shrink: 0; }
+  .pivot-arrow { display: flex; align-items: center; justify-content: center; color: var(--blue-soft); font-size: 26px; flex-shrink: 0; padding: 0 10px; }
   .pivot-contrib {
     margin-top: 18px; background: var(--muted-bg); border-left: 4px solid var(--blue-mid);
     padding: 14px 20px; font-size: 15px; color: var(--text-mid); line-height: 1.6;
