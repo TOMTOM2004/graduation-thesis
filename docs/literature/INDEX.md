@@ -2,7 +2,7 @@
 
 ## 概要
 
-本研究に関連する先行研究の管理。論文サマリーは `papers/` 以下に1論文1ファイルで格納。計84件。
+本研究に関連する先行研究の管理。論文サマリーは `papers/` 以下に1論文1ファイルで格納。計86件。
 
 ---
 
@@ -127,6 +127,10 @@
 ### 人口・雇用・構造変化（背景）
 - [P037 Muto, Oda, Sudo (2016)](papers/muto-oda-sudo-2016-population-aging-japan.md) — 人口高齢化のマクロ経済影響（OLGモデル）
 - [P038 Kambayashi & Kiyota (2015)](papers/kambayashi-kiyota-2015-fdi-disemployment.md) — FDIと国内雇用喪失（資本-労働代替）
+
+### COVID-19 所得ショック・家計異質性（背景・所得階層次元の正当化）
+- [P085 Kikuchi, Kitao, Mikoshiba (2021)](papers/kikuchi-kitao-mikoshiba-2021-covid-labor-heterogeneity-japan.md) — 産業/職業エクスポージャー差が所得階層別ショック格差に直結（日本・ESS+JCB消費NOW）。※扱う衝撃は労働市場所得ショックでcost-push帰着ではない
+- [P086 Kaneda, Kubota, Tanaka (2021)](papers/kaneda-kubota-tanaka-2021-stimulus-payment-japan.md) — 定額給付金MPCの所得階層/流動性制約による異質性（日本・家計簿アプリ）
 
 ---
 
