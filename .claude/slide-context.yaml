@@ -1,0 +1,89 @@
+# slide-context.yaml
+# スライド生成・監査時に固定で参照する静的事実。
+# 数値結果（β=0.431・34.6兆円 等）は docs/ 側が一次ソース。ここには入れない（DRY）。
+# `<TBD>` は実値で埋める。
+
+author:
+  name: 石田友典
+  affiliation: 専修大学経済学部
+  department: 経済学部
+  advisor: <TBD>                # 指導教員名（必要時）
+
+project:
+  thesis_title_main: 輸入価格ショックによる実質所得の海外流出と家計消費への異質な影響
+  thesis_title_sub: 財の分類・所得階層別の分解と政策評価
+  one_line_summary: >
+    外的要因による輸入価格ショックが日本の実質所得を海外に流出させる構造を定量化し、
+    財の特性と所得階層の異質性を加味して家計消費への影響を分解し、
+    シミュレーションモデルによる政策評価を行う研究。
+
+phase_status:
+  # 内部の進捗（CLAUDE.md と同期）。第1回ゼミは「計画」スタンスで提示。
+  phase1: completed
+  phase2: completed
+  phase3: completed
+  current_stage: 論文執筆 + ゼミ発表スライド作成
+
+# 5輸入グループの正規順序（research-design.md 由来）
+import_groups_order:
+  - エネルギー
+  - 木材
+  - 金属
+  - 化学
+  - 食料
+
+presentations:
+  - id: seminar1
+    date: 2026-05-20
+    role: 研究テーマ・計画
+    file: slides/20260520-seminar1-proposal.html
+    audience: 指導教員・ゼミ生
+    duration_minutes: <TBD>
+  - id: seminar2
+    date: 2026-07-<TBD>
+    role: Phase 1〜2 結果ドラフト
+    file: <TBD>
+  - id: seminar3
+    date: 2026-秋
+    role: 論文ドラフト全体
+    file: <TBD>
+  - id: seminar_final
+    date: 2027-01-末
+    role: 最終発表（提出前）
+    file: <TBD>
+
+design:
+  reference: docs/DESIGN.md
+  palette:
+    navy: '#1a2e4a'
+    blue_mid: '#2c5282'
+    blue_soft: '#4a7fa5'
+    muted_bg: '#f5f7fa'
+    crimson: '#b03050'        # emphasis: 主要数字・結論強調
+    orange: '#b85c1a'         # caution: 警告・リスク・限界
+    background: '#ffffff'
+    text_dark: '#1a1a2e'
+  slide_size_px: 1200x675
+  fonts:
+    - Hiragino Sans
+    - Noto Sans JP
+    - Yu Gothic UI
+
+image_workflow:
+  generator: ChatGPT Image2 (OpenAI Images)
+  output_dir: slides/assets/
+  filename_pattern: s<番号>-<内容>.png
+  min_resolution_px: 1200x675
+  style_constraints:
+    - clean
+    - minimal
+    - academic
+    - calm
+    - low decoration
+  forbidden:
+    - photorealistic textures
+    - cartoon style
+    - flashy gradients
+    - marketing tone
+    - bright reds
+    - 3D charts
