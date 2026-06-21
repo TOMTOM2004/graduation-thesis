@@ -124,6 +124,10 @@ _origin: Slack #todo 2026-06-19 / 着手 2026-06-21_
 ### 副産物: 本論（主機構）はむしろ補強される
 - 日本は典型例: 製造業シェア19.8% + 超高エネルギー輸入依存(eimp=89.97) + 交易条件 **-17.85%（悪化幅は標本中最大級）** + 損失3.28%GDP。
 - 「製造業大国ほど輸入エネルギーへの曝露で所得流出が大きい」は本論の「輸入依存→所得流出」機構と整合し、日本の位置づけを国際比較で補強できる素材。本論の考察・国際比較節で引用可能。
+- **本論用に図表化済み（`src/analysis/deindustrialization_fig.py`）**:
+  - `data/processed/deindustrialization/fig_tot_loss_ranking.png` — 46ヶ国交易損失ランキング（日本9位/46をハイライト）
+  - `data/processed/deindustrialization/fig_energy_tot_loss.png` — エネ輸入依存→交易損失 散布図（R²=0.64、日本注記）
+  - `data/processed/deindustrialization/japan_intl_comparison.md` — 国際比較表（日本: 9位、交易条件-17.9%は標本中最大級）
 
 ## 9. スコープ確認
 
