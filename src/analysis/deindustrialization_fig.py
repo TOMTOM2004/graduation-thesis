@@ -31,6 +31,26 @@ C_GAIN = "#27ae60"     # 利得
 C_JP = "#1f4e79"       # 日本ハイライト
 C_FIT = "#b03050"      # 回帰線(emphasis)
 
+JP_NAME = {
+    "USA": "米国", "CAN": "カナダ", "MEX": "メキシコ", "GBR": "英国",
+    "DEU": "ドイツ", "FRA": "フランス", "ITA": "イタリア", "ESP": "スペイン",
+    "NLD": "オランダ", "BEL": "ベルギー", "AUT": "オーストリア", "CHE": "スイス",
+    "SWE": "スウェーデン", "NOR": "ノルウェー", "DNK": "デンマーク",
+    "FIN": "フィンランド", "PRT": "ポルトガル", "IRL": "アイルランド",
+    "GRC": "ギリシャ", "POL": "ポーランド", "CZE": "チェコ", "HUN": "ハンガリー",
+    "SVK": "スロバキア", "SVN": "スロベニア", "EST": "エストニア",
+    "LVA": "ラトビア", "LTU": "リトアニア", "LUX": "ルクセンブルク",
+    "ISL": "アイスランド", "JPN": "日本", "KOR": "韓国", "AUS": "オーストラリア",
+    "NZL": "ニュージーランド", "TUR": "トルコ", "ISR": "イスラエル",
+    "CHL": "チリ", "COL": "コロンビア", "CRI": "コスタリカ", "CHN": "中国",
+    "IND": "インド", "BRA": "ブラジル", "IDN": "インドネシア",
+    "ZAF": "南アフリカ", "SAU": "サウジアラビア", "THA": "タイ", "MYS": "マレーシア",
+}
+
+
+def jname(iso, fallback=""):
+    return JP_NAME.get(iso, fallback)
+
 
 def load() -> pd.DataFrame:
     df = pd.read_csv(OUT / "xc_2022.csv", index_col=0)
@@ -45,7 +65,7 @@ def fig_ranking(df: pd.DataFrame):
     y = np.arange(len(d))
     ax.barh(y, d["tot_loss_2022"], color=colors, alpha=0.85)
     ax.set_yticks(y)
-    labels = [f"{c}" + ("  ◀ 日本" if i == "JPN" else "")
+    labels = [jname(i, c) + ("  ◀" if i == "JPN" else "")
               for i, c in zip(d.index, d["country"])]
     ax.set_yticklabels(labels, fontsize=8)
     for t, i in zip(ax.get_yticklabels(), d.index):
@@ -87,7 +107,7 @@ def fig_scatter(df: pd.DataFrame):
     for iso in ["DEU", "USA", "NOR", "SAU", "AUS"]:
         if iso in d.index:
             r = d.loc[iso]
-            ax.annotate(r["country"], (r["eimp"], r["tot_loss_2022"]),
+            ax.annotate(jname(iso, r["country"]), (r["eimp"], r["tot_loss_2022"]),
                         fontsize=8.5, xytext=(4, -10), textcoords="offset points",
                         color="#444")
     # 日本は矢印付きで空きスペースへ
@@ -131,7 +151,7 @@ def table_md(df: pd.DataFrame, m):
         if iso in d.index:
             r = d.loc[iso]
             mark = " **(日本)**" if iso == "JPN" else ""
-            lines.append(f"| {r['country']}{mark} | {r['tot_loss_2022']:.2f} | "
+            lines.append(f"| {jname(iso, r['country'])}{mark} | {r['tot_loss_2022']:.2f} | "
                          f"{r['dln_tot']:.1f} | {r['mfgva']:.1f} | {r['eimp']:.0f} |")
     p = OUT / "japan_intl_comparison.md"
     p.write_text("\n".join(lines) + "\n", encoding="utf-8")
