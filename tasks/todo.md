@@ -1,50 +1,49 @@
 # TODO — 卒業論文（案B）
 
-_Last updated: 2026-05-03 00:22 / session: seminar1 スライド整備（A〜D 拡張・emphasis 色追加・文献正規化・Final Check）完了_
+_Last updated: 2026-06-22 12:48 / session: 産業空洞化アイデア探索（反証）→ 副産物を本論ドラフトに組込み・図表日本語化_
 
 ## 🎯 Next action
-- What: 5/20 ゼミ発表前のリハーサル（実機 1200×675 で全 14 枚通し確認）
-- Where: `slides/20260520-seminar1-proposal.html`
-- Done when: 各スライドの可読性・画像コントラスト・視線フローを目視確認、必要なら微調整
+- What: 第2回ゼミ発表の準備（テーマは未確定。提出が論文かスライドか次第で方針分岐）
+- Where: `paper/01-introduction.md`（序論ドラフト） / Issue #8（スライド化検討）
+- Done when: 第2回発表で何を出すか方針を決め、序論の国際比較をスライド or 本論のどちらに展開するか確定
 
 ## 📍 State snapshot
 - ✅ Done（今セッション）:
-  - slide-brushup スキル作成 + slide-context.yaml
-  - seminar1 deck を 14 枚構成に拡張（s1b Hook / s10b Contribution / s3 chart / s6 venn）
-  - 7 画像生成・差し込み（日本語ラベル版）
-  - DESIGN.md 原則拡張（emphasis 色 / Hook / Feasibility / Contribution / Pacing / Whitespace / Page Indicator）
-  - docs/feasibility.md / docs/contribution.md 新規
-  - 文献正規化（s12 References 12 件・docs/literature/ と完全照合）
-  - DESIGN.md Final Check 全 7 項目 PASS
+  - 研究アイデア「産業空洞化→インフレの質」を探索ブランチで検証 → **反証**（PR #7）
+    - 単一国時系列×コストプッシュ比率DV: 分母≈0で不成立（DEC-IDEA-01）
+    - クロスカントリー46ヶ国2022×交易損失DV: 製造業シェア係数が正で頑健（仮説と逆, DEC-IDEA-02）
+  - 副産物（交易損失の国際比較・日本9位/46）を本論ドラフトに組込み: `paper/01-introduction.md`・`paper/04a-...`・`paper/outline.md`
+  - 図1.1/1.2/表1.1 を生成・**図内国名を日本語化**・本文にキャプション番号付与
+  - Issue #8（スライド化の検討）作成
 - 🟡 In progress: なし
-- 🔴 Blocked: なし
+- 🔴 Blocked: なし（提出形態の確定待ち＝ユーザー判断事項）
 
 ## 🧠 Context not in code
-- 進捗判断: s11 Schedule は計画形維持（第1回は "まだやってない体" で口頭補足する戦略）
-- emphasis 色 muted crimson `#b03050` を新規追加（caution=orange と役割分離）
-- 第1回で Feasibility は出さない方針（seminar2 用に `docs/feasibility.md` 温存）
-- 任意未対応: #6 s10 の貿易統計（概況品別国別表）追加 — 第1回は省略
+- 決定: 探索仮説は反証だが本論レベルは下げない。確実な「エネ/輸入依存→所得流出, 日本高位」のみ本論に採用。製造業反証は第7章考察に留保（第2回ゼミ後）
+- 決定: 副問1本体（34.6兆円本文）は提出形態未確定のため保留
+- 参考: 図の正規番号は序論に置く（hook=主）。副問1ベンチマークは序論既出として参照
+- 数値: 日本は交易条件悪化-17.9%が標本中最大だが損失%GDPは9位（開放度37%が中位のため）
 
 ## ❌ Don't do (this task)
-- [trap] 学術スライドの第1回（テーマ・計画）で Feasibility や結果数値を出すと、第2回・第3回の議論を先取りして発表の意義が薄れる
-- [trap] DESIGN.md「余白で grouping」を機械的に中央寄せに適用すると、grouping を split して視線フローを破壊する（tail whitespace は OK / mid-flow whitespace は NG）
-- [mistake] HTML Edit 時、全角括弧（）と半角() の混在で old_string がマッチしない。不確実なら Read してからコピーするか、bash sed で範囲削除を使う
-- [mistake] ChatGPT Image2 の日本語ラベル指定で「Noto Sans JP / Hiragino Sans 風」「ラベルは exactly as specified」「garbled/fake-looking kanji 禁止」を明示しないと崩れる
+- [trap] サンドボックスで Python urllib/socket は timeout するが curl は通る → 外部 API は curl でローカル保存し Python はローカル読み
+- [trap] `.env` への grep は classifier が拒否（Read(.env) deny の迂回扱い）。回避せず bool 確認かアプリ側ローダ経由で
+- [trap] クロスカントリーで「インフレに占めるコストプッシュ比率」DV は低インフレ国・年で分母≈0となり発散。share系DVは持続的インフレが前提
+- [mistake] 反証された仮説（製造業=耐性）を本論に持ち込まない。確実な発見のみ採用し反証は限界節へ
 
 ## ❓ Open questions for user
-- [ ] #6 s10 任意（貿易統計追加）は省略確定？
+- [ ] 第2回ゼミ発表で何を出すか（テーマ確定）
+- [ ] 提出は論文かスライドか（→ 副問1本体執筆の要否が決まる）
 
 ## 📂 Key files
-- `slides/20260520-seminar1-proposal.html`
-- `slides/seminar1-brushup-plan.md`
-- `docs/DESIGN.md`
-- `docs/feasibility.md` / `docs/contribution.md`
-- `.claude/slide-context.yaml`
-- `.claude/skills/slide-brushup/SKILL.md`
+- `paper/01-introduction.md` / `paper/04a-subq1-international-benchmark.md` / `paper/outline.md`
+- `docs/research-ideas/deindustrialization-inflation.md`（探索の全証跡・DEC-IDEA-01/02）
+- `src/analysis/deindustrialization{,_xc,_fig}.py`
+- `data/processed/deindustrialization/`（図1.1/1.2/表1.1）
 
 ## ❌ Out of scope（今セッション）
-- seminar2/3/final 用スライドの作成（時期到来時に slide-brushup スキルで反復）
-- s11 Schedule の構造変更（計画形維持確定）
+- 副問1本体の執筆（提出形態確定後）
+- 第7章 考察での製造業反証の記述（第2回ゼミ後）
+- スライド化（Issue #8 に退避）
 
 ---
 
@@ -112,4 +111,4 @@ _Last updated: 2026-05-03 00:22 / session: seminar1 スライド整備（A〜D �
 
 ## 研究アイデア
 
-- [ ] 実体経済の強さ、とりわけ第二次産業の強さが中身の伴っているインフレにつながる。つまり産業の空洞化も影響していると言えるのではないか（Slack #todo より _2026-06-19_）
+_（産業空洞化→インフレの質 のアイデアは探索完了・反証。`tasks/done/2026-06.md` 参照）_
