@@ -1,11 +1,11 @@
 # TODO — 卒業論文（案B）
 
-_Last updated: 2026-06-22 12:48 / session: 産業空洞化アイデア探索（反証）→ 副産物を本論ドラフトに組込み・図表日本語化_
+_Last updated: 2026-06-25 / session: Issue #8 解消（問題意識セクションのスライド化・第2回ゼミ向け4枚）_
 
 ## 🎯 Next action
-- What: 第2回ゼミ発表の準備（テーマは未確定。提出が論文かスライドか次第で方針分岐）
-- Where: `paper/01-introduction.md`（序論ドラフト） / Issue #8（スライド化検討）
-- Done when: 第2回発表で何を出すか方針を決め、序論の国際比較をスライド or 本論のどちらに展開するか確定
+- What: 第2回ゼミ発表の準備（問題意識セクションは完成。本体テーマ＝Phase1〜3の成果提示の構成を詰める）
+- Where: `slides/20260625-seminar2-problem-awareness.html`（問題意識4枚・完成） / `paper/01-introduction.md`
+- Done when: 第2回発表全体の構成（問題意識→Phase1〜3成果）を確定し、問題意識セクションを本体デッキに統合
 
 ## 📍 State snapshot
 - ✅ Done（今セッション）:
@@ -15,6 +15,7 @@ _Last updated: 2026-06-22 12:48 / session: 産業空洞化アイデア探索（�
   - 副産物（交易損失の国際比較・日本9位/46）を本論ドラフトに組込み: `paper/01-introduction.md`・`paper/04a-...`・`paper/outline.md`
   - 図1.1/1.2/表1.1 を生成・**図内国名を日本語化**・本文にキャプション番号付与
   - Issue #8（スライド化の検討）作成
+  - **Issue #8 解消**: 問題意識セクションを第2回ゼミ向け4枚スライドに（`slides/20260625-seminar2-problem-awareness.html`）→ closed
 - 🟡 In progress: なし
 - 🔴 Blocked: なし（提出形態の確定待ち＝ユーザー判断事項）
 
@@ -112,3 +113,7 @@ _Last updated: 2026-06-22 12:48 / session: 産業空洞化アイデア探索（�
 ## 研究アイデア
 
 _（産業空洞化→インフレの質 のアイデアは探索完了・反証。`tasks/done/2026-06.md` 参照）_
+
+- [ ] # claude-brain
+情報の引き出し方が上手くできてるかの調査とアップデート
+RAGにおける先行研究の調査も併用する。（Slack #todo より _2026-06-23_）

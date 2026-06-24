@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>問題意識：国際比較からみた日本の所得流出 — 第2回ゼミ発表</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --navy:      #1a2e4a;
+    --blue-mid:  #2c5282;
+    --blue-soft: #4a7fa5;
+    --muted-bg:  #f5f7fa;
+    --border:    #d0d8e4;
+    --text-dark: #1a1a2e;
+    --text-mid:  #3a4a5c;
+    --text-light:#6b7c93;
+    --orange:    #b85c1a;
+    --crimson:   #b03050;
+    --white:     #ffffff;
+    --slide-w:   1200px;
+    --slide-h:   675px;
+  }
+
+  html, body {
+    width: 100%; height: 100%;
+    background: #2a2a2a;
+    font-family: 'Hiragino Sans', 'Noto Sans JP', 'Yu Gothic UI', 'Helvetica Neue', Arial, sans-serif;
+    color: var(--text-dark);
+    overflow: hidden;
+  }
+
+  #deck {
+    width: var(--slide-w);
+    height: var(--slide-h);
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    transform-origin: center center;
+  }
+
+  .slide {
+    display: none;
+    width: var(--slide-w);
+    height: var(--slide-h);
+    background: var(--white);
+    position: absolute;
+    top: 0; left: 0;
+    padding: 52px 68px 44px;
+    flex-direction: column;
+  }
+  .slide.active { display: flex; }
+
+  /* §Japanese Typography Rules — CJK-aware breaking */
+  .slide p, .slide li, .slide td, .slide th,
+  .slide h2, .slide h3 {
+    word-break: keep-all;
+    overflow-wrap: break-word;
+    line-break: strict;
+  }
+
+  #counter {
+    position: fixed; bottom: 50px; left: 50%;
+    transform: translateX(-50%);
+    color: #aaa; font-size: 13px;
+    font-variant-numeric: tabular-nums;
+    letter-spacing: 0.06em; z-index: 100;
+  }
+  #hint { position: fixed; bottom: 18px; left: 26px; color: #888; font-size: 12px; z-index: 100; }
+
+  .slide-header {
+    border-left: 5px solid var(--navy);
+    padding-left: 18px;
+    margin-bottom: 28px;
+  }
+  .slide-header h2 { font-size: 26px; font-weight: 700; color: var(--navy); line-height: 1.3; }
+  .slide-header .section-tag {
+    font-size: 12px; font-weight: 600; color: var(--blue-soft);
+    text-transform: uppercase; letter-spacing: 0.12em; margin-bottom: 6px;
+  }
+
+  .key-message {
+    background: var(--muted-bg);
+    border-left: 4px solid var(--blue-mid);
+    padding: 14px 20px;
+    margin-bottom: 24px;
+    font-size: 16px; color: var(--text-mid); line-height: 1.6;
+  }
+  .key-message strong { color: var(--navy); font-weight: 700; }
+
+  ul.bullets { list-style: none; padding: 0; display: flex; flex-direction: column; gap: 16px; }
+  ul.bullets li {
+    display: flex; align-items: flex-start; gap: 12px;
+    font-size: 16px; line-height: 1.6; color: var(--text-mid);
+  }
+  ul.bullets li::before { content: '—'; color: var(--blue-soft); flex-shrink: 0; margin-top: 1px; font-weight: 700; }
+  ul.bullets li strong { color: var(--navy); font-weight: 700; }
+
+  .note {
+    margin-top: auto; font-size: 14px; color: var(--text-light);
+    border-top: 1px solid var(--border); padding-top: 10px;
+  }
+
+  /* Two-column: bullets + figure */
+  .split { display: grid; gap: 32px; flex: 1; align-items: center; }
+  .split-rank { grid-template-columns: 5fr 4fr; }
+  .split-scatter { grid-template-columns: 4fr 6fr; }
+  .fig-wrap { display: flex; align-items: center; justify-content: center; height: 100%; }
+  .fig-rank { max-width: 100%; max-height: 480px; width: auto; height: auto; object-fit: contain; }
+  .fig-scatter { max-width: 100%; max-height: 440px; width: auto; height: auto; object-fit: contain; border: 1px solid var(--border); border-radius: 4px; }
+
+  /* Hook figure (exposure slide) */
+  .exposure { display: flex; flex-direction: column; flex: 1; align-content: center; justify-content: center; gap: 26px; }
+  .hook-figure { display: flex; align-items: baseline; justify-content: center; gap: 14px; }
+  .hook-number { font-size: 120px; font-weight: 800; color: var(--crimson); line-height: 1; letter-spacing: -0.02em; font-variant-numeric: tabular-nums; }
+  .hook-unit { font-size: 22px; font-weight: 600; color: var(--text-mid); max-width: 220px; line-height: 1.4; }
+  .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 28px; }
+  .col-box { background: var(--muted-bg); border-radius: 4px; padding: 18px 22px; }
+  .col-box h3 {
+    font-size: 13px; font-weight: 700; color: var(--navy); margin-bottom: 10px;
+    padding-bottom: 8px; border-bottom: 2px solid var(--border);
+    text-transform: uppercase; letter-spacing: 0.06em;
+  }
+  .col-box p { font-size: 16px; color: var(--text-mid); line-height: 1.65; }
+  .col-box p strong { color: var(--navy); font-weight: 700; }
+
+  /* Takeaway (closing) */
+  .slide-takeaway { justify-content: center; }
+  .takeaway-box {
+    background: var(--navy); border-radius: 4px;
+    padding: 34px 40px; margin-bottom: 26px;
+  }
+  .takeaway-box .label { font-size: 12px; letter-spacing: 0.12em; color: #8ab4d4; text-transform: uppercase; margin-bottom: 14px; font-weight: 600; }
+  .takeaway-box p { font-size: 22px; line-height: 1.6; color: var(--white); font-weight: 600; }
+  .takeaway-box p em { color: #9ec6e8; font-style: normal; }
+  .takeaway-lead { font-size: 17px; color: var(--text-mid); line-height: 1.7; text-align: left; }
+  .takeaway-lead strong { color: var(--navy); font-weight: 700; }
+
+  .nowrap { white-space: nowrap; }
+  .emp { color: var(--crimson); font-weight: 700; }
+</style>
+</head>
+<body>
+
+<div id="deck">
+
+  <!-- 1 Ranking -->
+  <div class="slide active" id="p1">
+    <div class="slide-header">
+      <div class="section-tag">Problem Setting / 問題意識</div>
+      <h2>日本は46ヶ国中9位の所得流出（対GDP比 3.28%）</h2>
+    </div>
+    <div class="key-message">
+      輸入価格ショックによる実質所得の海外流出は日本に固有ではない。<strong>しかし日本はその影響の大きさで流出側の上位に位置する。</strong>
+    </div>
+    <div class="split split-rank">
+      <ul class="bullets">
+        <li>2022年、世界の多くの国が<span class="nowrap">交易条件</span>の悪化に直面</li>
+        <li>日本は流出側の上位 — <strong>9位 / 46ヶ国・対GDP比 3.28%</strong></li>
+        <li>流出を免れたのは<span class="nowrap">エネルギー輸出国</span>（ノルウェー・サウジ・豪・加）</li>
+      </ul>
+      <div class="fig-wrap">
+        <img src="assets/s2b-tot-loss-ranking.png" alt="2022年 交易損失（対GDP比）国際比較ランキング。日本をハイライト。" class="fig-rank">
+      </div>
+    </div>
+    <div class="note">図1.1　2022年の交易損失（対GDP比、46ヶ国）。正＝海外流出、負＝交易利得（エネ輸出国）。出所: 筆者作成（World Bank）。</div>
+  </div>
+
+  <!-- 2 Exposure -->
+  <div class="slide" id="p2">
+    <div class="slide-header">
+      <div class="section-tag">Problem Setting / 問題意識</div>
+      <h2>曝露の大きさは順位以上：交易条件悪化は標本中最大級</h2>
+    </div>
+    <div class="key-message">
+      対GDP比の損失順位（9位）は日本の曝露を<strong>過小評価する</strong>。価格ショックそのものの大きさは標本中で際立っている。
+    </div>
+    <div class="exposure">
+      <div class="hook-figure">
+        <div class="hook-number">−17.9%</div>
+        <div class="hook-unit">交易条件変化<br>（2021→2022年）</div>
+      </div>
+      <div class="two-col">
+        <div class="col-box">
+          <h3>価格ショックそのもの</h3>
+          <p>交易条件の悪化幅 <strong>−17.9%</strong> は<br>標本46ヶ国中で<strong>最大級</strong>。</p>
+        </div>
+        <div class="col-box">
+          <h3>なぜ対GDP比は9位か</h3>
+          <p>貿易開放度（貿易額／GDP ≒ <strong>37%</strong>）が<span class="nowrap">中位</span>のため、対GDP比でみた損失順位はやや下がる。</p>
+        </div>
+      </div>
+    </div>
+    <div class="note">交易条件＝輸出価格／輸入価格。対GDP比損失は交易条件変化を貿易規模で評価したもの。出所: 筆者作成（World Bank データより）。</div>
+  </div>
+
+  <!-- 3 Scatter -->
+  <div class="slide" id="p3">
+    <div class="slide-header">
+      <div class="section-tag">Problem Setting / 問題意識</div>
+      <h2>所得流出の主因はエネルギー輸入依存（R²=0.64）</h2>
+    </div>
+    <div class="key-message">
+      純エネルギー輸入の度合いは、2022年の交易損失の国間ばらつきの<strong>約6割</strong>を説明する。
+    </div>
+    <div class="split split-scatter">
+      <ul class="bullets">
+        <li><span class="nowrap">エネルギー</span>を輸入に依存する国ほど、大きな所得流出を被った</li>
+        <li>交易利得を得たのは<span class="nowrap">エネルギー輸出国</span>（ノルウェー等）</li>
+        <li>日本はエネルギー使用の<strong>約9割</strong>を純輸入に依存 — 脆弱性の典型例</li>
+      </ul>
+      <div class="fig-wrap">
+        <img src="assets/s2b-energy-scatter.png" alt="純エネルギー輸入依存と2022年交易損失の散布図。回帰のR²=0.64。" class="fig-scatter">
+      </div>
+    </div>
+    <div class="note">図1.2　純エネルギー輸入依存と2022年交易損失（46ヶ国）。横軸: 正＝輸入依存・負＝輸出国。出所: 筆者作成（World Bank）。</div>
+  </div>
+
+  <!-- 4 Takeaway -->
+  <div class="slide slide-takeaway" id="p4">
+    <div class="slide-header">
+      <div class="section-tag">Problem Setting / 小括</div>
+      <h2>日本の所得流出は偶発でなく構造に根ざす</h2>
+    </div>
+    <div class="takeaway-box">
+      <div class="label">本研究の問い</div>
+      <p>エネルギーを中心とする<em>輸入依存という構造</em>の上で、輸入価格ショックが<em>どの経路を通じ・どの規模で・誰の負担として</em>実質所得を流出させているか。</p>
+    </div>
+    <p class="takeaway-lead">
+      国際比較は、本研究が捉える脆弱性が<strong>日本において特に深刻</strong>であることを裏づける。次章以降は、この構造を <strong>①所得流出の規模 → ②家計・所得階層への帰着 → ③政策評価</strong> の順で国内データから定量化する。
+    </p>
+  </div>
+
+</div>
+
+<div id="counter"></div>
+<div id="hint">← → キーまたはタップで移動</div>
+
+<script>
+  const slides = document.querySelectorAll('.slide');
+  let cur = 0;
+  const total = slides.length;
+
+  function show(n) {
+    slides[cur].classList.remove('active');
+    cur = (n + total) % total;
+    slides[cur].classList.add('active');
+    document.getElementById('counter').textContent = (cur + 1) + ' / ' + total;
+  }
+  function scale() {
+    const sw = 1200, sh = 675;
+    const s = Math.min(window.innerWidth / sw, window.innerHeight / sh) * 0.96;
+    document.getElementById('deck').style.transform = `translate(-50%, -50%) scale(${s})`;
+  }
+  document.addEventListener('keydown', e => {
+    if (['ArrowRight', 'ArrowDown', ' '].includes(e.key)) { e.preventDefault(); show(cur + 1); }
+    if (['ArrowLeft', 'ArrowUp'].includes(e.key))         { e.preventDefault(); show(cur - 1); }
+  });
+  document.getElementById('deck').addEventListener('click', e => {
+    (e.clientX / window.innerWidth > 0.5) ? show(cur + 1) : show(cur - 1);
+  });
+  window.addEventListener('resize', scale);
+  scale();
+  show(0);
+</script>
+</body>
+</html>
