@@ -70,7 +70,7 @@ def main():
         ax.set_yticks(y)
         labels = [f"{rank[i]}. {jname(i, c)}"
                   for i, c in zip(seg.index, seg["country"])]
-        ax.set_yticklabels(labels, fontsize=12)
+        ax.set_yticklabels(labels, fontsize=12, ha="left")
         for t, i in zip(ax.get_yticklabels(), seg.index):
             if i == "JPN":
                 t.set_color(C_JP); t.set_fontweight("bold")
@@ -90,6 +90,16 @@ def main():
     fig.suptitle("輸入価格ショックによる実質所得流出の国際比較（2022年・46ヶ国）　"
                  "赤＝流出／緑＝利得（エネルギー輸出国）",
                  fontsize=13, fontweight="bold", y=0.99)
+
+    # 左揃えラベルがプロットへ食い込まないよう、最長ラベル幅ぶんの pad を実測設定
+    fig.canvas.draw()
+    renderer = fig.canvas.get_renderer()
+    maxw = max(t.get_window_extent(renderer=renderer).width
+               for ax in axes for t in ax.get_yticklabels())
+    pad_pts = maxw * 72.0 / fig.dpi + 6
+    for ax in axes:
+        ax.tick_params(axis="y", pad=pad_pts, length=0)
+
     plt.tight_layout(rect=(0, 0, 1, 0.96))
     ASSETS.mkdir(parents=True, exist_ok=True)
     p = ASSETS / "s2b-tot-loss-ranking.png"
