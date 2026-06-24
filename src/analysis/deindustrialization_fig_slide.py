@@ -68,16 +68,22 @@ def main():
                   for i, v in zip(seg.index, seg["tot_loss_2022"])]
         ax.barh(y, seg["tot_loss_2022"], color=colors, alpha=0.88)
         ax.set_yticks(y)
-        labels = []
-        for i, c in zip(seg.index, seg["country"]):
-            base = f"{rank[i]}. {jname(i, c)}"
-            labels.append(base + ("  ◀ 3.28%GDP" if i == "JPN" else ""))
+        labels = [f"{rank[i]}. {jname(i, c)}"
+                  for i, c in zip(seg.index, seg["country"])]
         ax.set_yticklabels(labels, fontsize=12)
         for t, i in zip(ax.get_yticklabels(), seg.index):
             if i == "JPN":
                 t.set_color(C_JP); t.set_fontweight("bold")
         ax.axvline(0, color="#333", lw=0.9)
         ax.set_xlim(xmin - pad, xmax + pad)
+        # 日本は棒の位置に矢印付きで注記
+        if "JPN" in seg.index:
+            jy = list(seg.index).index("JPN")
+            jv = seg.loc["JPN", "tot_loss_2022"]
+            ax.annotate(f"◀ 日本 {jv:.2f}%GDP", xy=(jv, jy),
+                        xytext=(jv + 3.6, jy),
+                        fontsize=11.5, color=C_JP, fontweight="bold", va="center",
+                        arrowprops=dict(arrowstyle="->", color=C_JP, lw=1.4))
         ax.set_xlabel("交易損失（％GDP、正＝海外流出）", fontsize=11)
         ax.grid(axis="x", alpha=0.3)
         ax.tick_params(axis="x", labelsize=10)
