@@ -103,17 +103,19 @@
   }
 
   /* Two-column: bullets + figure */
-  .split { display: grid; gap: 32px; flex: 1; align-items: center; }
-  .split-rank { grid-template-columns: 5fr 4fr; }
+  .split { display: grid; gap: 32px; flex: 1; align-items: center; min-height: 0; }
+  /* rank: stretch so the figure is bounded by the available flex height (no bottom overflow) */
+  .split-rank { grid-template-columns: 5fr 4fr; align-items: stretch; }
+  .split-rank > ul.bullets { align-self: center; }
   .split-scatter { grid-template-columns: 4fr 6fr; }
-  .fig-wrap { display: flex; align-items: center; justify-content: center; height: 100%; }
-  .fig-rank { max-width: 100%; max-height: 480px; width: auto; height: auto; object-fit: contain; }
+  .fig-wrap { display: flex; align-items: center; justify-content: center; height: 100%; min-height: 0; }
+  .fig-rank { max-width: 100%; max-height: 100%; width: auto; height: auto; object-fit: contain; }
   .fig-scatter { max-width: 100%; max-height: 440px; width: auto; height: auto; object-fit: contain; border: 1px solid var(--border); border-radius: 4px; }
 
   /* Hook figure (exposure slide) */
   .exposure { display: flex; flex-direction: column; flex: 1; align-content: center; justify-content: center; gap: 26px; }
   .hook-figure { display: flex; align-items: baseline; justify-content: center; gap: 14px; }
-  .hook-number { font-size: 120px; font-weight: 800; color: var(--crimson); line-height: 1; letter-spacing: -0.02em; font-variant-numeric: tabular-nums; }
+  .hook-number { font-size: 100px; font-weight: 800; color: var(--crimson); line-height: 1; letter-spacing: -0.04em; }
   .hook-unit { font-size: 22px; font-weight: 600; color: var(--text-mid); max-width: 220px; line-height: 1.4; }
   .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 28px; }
   .col-box { background: var(--muted-bg); border-radius: 4px; padding: 18px 22px; }
@@ -152,7 +154,7 @@
       <h2>日本は46ヶ国中9位の所得流出（対GDP比 3.28%）</h2>
     </div>
     <div class="key-message">
-      輸入価格ショックによる実質所得の海外流出は日本に固有ではない。<strong>しかし日本はその影響の大きさで流出側の上位に位置する。</strong>
+      輸入価格ショックによる実質所得の海外流出は日本に固有ではない。<br><strong>しかし日本はその影響の大きさで流出側の上位に位置する。</strong>
     </div>
     <div class="split split-rank">
       <ul class="bullets">
