@@ -102,14 +102,14 @@
     border-top: 1px solid var(--border); padding-top: 10px;
   }
 
-  /* Two-column: bullets + figure */
+  /* Full-width figure (rank slide) — fills the remaining height, labels readable */
+  .fig-full { flex: 1; min-height: 0; display: flex; align-items: center; justify-content: center; }
+  .fig-rank-wide { max-width: 100%; max-height: 100%; width: auto; height: auto; object-fit: contain; }
+
+  /* Two-column: bullets + figure (scatter slide) */
   .split { display: grid; gap: 32px; flex: 1; align-items: center; min-height: 0; }
-  /* rank: stretch so the figure is bounded by the available flex height (no bottom overflow) */
-  .split-rank { grid-template-columns: 5fr 4fr; align-items: stretch; }
-  .split-rank > ul.bullets { align-self: center; }
   .split-scatter { grid-template-columns: 4fr 6fr; }
   .fig-wrap { display: flex; align-items: center; justify-content: center; height: 100%; min-height: 0; }
-  .fig-rank { max-width: 100%; max-height: 100%; width: auto; height: auto; object-fit: contain; }
   .fig-scatter { max-width: 100%; max-height: 440px; width: auto; height: auto; object-fit: contain; border: 1px solid var(--border); border-radius: 4px; }
 
   /* Hook figure (exposure slide) */
@@ -156,15 +156,8 @@
     <div class="key-message">
       輸入価格ショックによる実質所得の海外流出は日本に固有ではない。<br><strong>しかし日本はその影響の大きさで流出側の上位に位置する。</strong>
     </div>
-    <div class="split split-rank">
-      <ul class="bullets">
-        <li>2022年、世界の多くの国が<span class="nowrap">交易条件</span>の悪化に直面</li>
-        <li>日本は流出側の上位 — <strong>9位 / 46ヶ国・対GDP比 3.28%</strong></li>
-        <li>流出を免れたのは<span class="nowrap">エネルギー輸出国</span>（ノルウェー・サウジ・豪・加）</li>
-      </ul>
-      <div class="fig-wrap">
-        <img src="assets/s2b-tot-loss-ranking.png" alt="2022年 交易損失（対GDP比）国際比較ランキング。日本をハイライト。" class="fig-rank">
-      </div>
+    <div class="fig-full">
+      <img src="assets/s2b-tot-loss-ranking.png" alt="2022年 交易損失（対GDP比）国際比較ランキング（46ヶ国・2カラム）。日本9位をハイライト。" class="fig-rank-wide">
     </div>
     <div class="note">図1.1　2022年の交易損失（対GDP比、46ヶ国）。正＝海外流出、負＝交易利得（エネ輸出国）。出所: 筆者作成（World Bank）。</div>
   </div>
