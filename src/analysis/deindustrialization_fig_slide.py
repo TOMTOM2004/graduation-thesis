@@ -80,10 +80,9 @@ def main():
         if "JPN" in seg.index:
             jy = list(seg.index).index("JPN")
             jv = seg.loc["JPN", "tot_loss_2022"]
-            ax.annotate(f"◀ 日本 {jv:.2f}%GDP", xy=(jv, jy),
-                        xytext=(jv + 3.6, jy),
-                        fontsize=11.5, color=C_JP, fontweight="bold", va="center",
-                        arrowprops=dict(arrowstyle="->", color=C_JP, lw=1.4))
+            ax.text(jv + 0.6, jy, f"◀ 日本 {jv:.2f}%GDP",
+                    fontsize=11.5, color=C_JP, fontweight="bold",
+                    va="center", ha="left")
         ax.set_xlabel("交易損失（％GDP、正＝海外流出）", fontsize=11)
         ax.grid(axis="x", alpha=0.3)
         ax.tick_params(axis="x", labelsize=10)
