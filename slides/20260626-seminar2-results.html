@@ -254,6 +254,21 @@
   .refs { columns: 2; gap: 32px; flex: 1; }
   .refs p { font-size: 12px; color: var(--text-mid); line-height: 1.6; margin-bottom: 8px; break-inside: avoid; }
   .refs p strong { color: var(--navy); }
+
+  /* ── 問題意識（国際比較・移植 from 20260625） ── */
+  .key-message strong { color: var(--navy); font-weight: 700; }
+  ul.bullets li strong { color: var(--navy); font-weight: 700; }
+  .fig-full { flex: 1; min-height: 0; display: flex; align-items: center; justify-content: center; }
+  .fig-rank-wide { max-width: 100%; max-height: 100%; width: auto; height: auto; object-fit: contain; }
+  .split { display: grid; gap: 32px; flex: 1; align-items: center; min-height: 0; }
+  .split-scatter { grid-template-columns: 4fr 6fr; }
+  .fig-wrap { display: flex; align-items: center; justify-content: center; height: 100%; min-height: 0; }
+  .fig-scatter { max-width: 100%; max-height: 440px; width: auto; height: auto; object-fit: contain; border: 1px solid var(--border); border-radius: 4px; }
+  .bridge { margin-top: 14px; font-size: 15px; color: var(--text-mid); line-height: 1.6; }
+  .bridge strong { color: var(--navy); font-weight: 700; }
+  .exposure { display: flex; flex-direction: column; flex: 1; align-content: center; justify-content: center; gap: 26px; }
+  .col-box p { font-size: 16px; color: var(--text-mid); line-height: 1.65; }
+  .col-box p strong { color: var(--navy); font-weight: 700; }
 </style>
 </head>
 <body>
@@ -277,6 +292,46 @@
         <div class="pstep partial"><span class="pnum">PHASE 3</span> 統合シミュレーション<br><span class="pstate">例示に降格</span></div>
       </div>
     </div>
+  </div>
+
+  <!-- 01b 問題意識 1/2: 国際比較ランキング（動機づけ） -->
+  <div class="slide" id="p1">
+    <div class="slide-header">
+      <div class="section-tag">問題意識　1 / 2</div>
+      <h2>日本は46ヶ国中9位の所得流出（対GDP比 3.28%）</h2>
+    </div>
+    <div class="key-message">
+      輸入価格ショックによる実質所得の海外流出は日本に固有ではない。<br><strong>しかし日本はその影響の大きさで流出側の上位に位置する。</strong>
+    </div>
+    <div class="fig-full">
+      <img src="assets/s2b-tot-loss-ranking.png" alt="2022年 交易損失（対GDP比）国際比較ランキング（46ヶ国・2カラム）。日本9位をハイライト。" class="fig-rank-wide">
+    </div>
+    <div class="note">2022年の交易損失（対GDP比、46ヶ国）。正＝海外流出、負＝交易利得（エネ輸出国）。出所: 筆者作成（World Bank）。</div>
+  </div>
+
+  <!-- 01c 問題意識 2/2: エネルギー依存散布図 + 橋渡し -->
+  <div class="slide" id="p2">
+    <div class="slide-header">
+      <div class="section-tag">問題意識　2 / 2</div>
+      <h2>所得流出の主因はエネルギー輸入依存（R²=0.64）</h2>
+    </div>
+    <div class="key-message">
+      純エネルギー輸入の度合いは、2022年の交易損失の国間ばらつきの<strong>約6割</strong>を説明する。
+    </div>
+    <div class="split split-scatter">
+      <div>
+        <ul class="bullets">
+          <li><span class="nowrap">エネルギー</span>を輸入に依存する国ほど、大きな所得流出を被った</li>
+          <li>交易利得を得たのは<span class="nowrap">エネルギー輸出国</span>（ノルウェー等）</li>
+          <li>日本はエネルギー使用の<strong>約9割</strong>を純輸入に依存 — 脆弱性の典型例</li>
+        </ul>
+        <p class="bridge">→ この<strong>輸入依存という構造</strong>の上で、所得流出が <strong>①どの規模で → ②誰の負担として → ③どう抑制できるか</strong> を、本日の中間結果（国内データ）で示す。</p>
+      </div>
+      <div class="fig-wrap">
+        <img src="assets/s2b-energy-scatter.png" alt="純エネルギー輸入依存と2022年交易損失の散布図。回帰のR²=0.64。" class="fig-scatter">
+      </div>
+    </div>
+    <div class="note">純エネルギー輸入依存と2022年交易損失（46ヶ国）。横軸: 正＝輸入依存・負＝輸出国。出所: 筆者作成（World Bank）。</div>
   </div>
 
   <!-- 02 Recap + refined hook -->
@@ -503,6 +558,34 @@
       <p><strong>Yagi, M. et al. (2022)</strong>. Cost-push inflation and pass-through heterogeneity. <em>Bank of Japan Working Paper</em>.</p>
       <p><strong>齊藤誠（2022）</strong>「交易条件の悪化と賃上げ」<em>日本経済研究センター コラム</em>.</p>
     </div>
+  </div>
+
+  <!-- B1 補足: 曝露の大きさ(-17.9%) — 質疑用 -->
+  <div class="slide" id="b1">
+    <div class="slide-header">
+      <div class="section-tag">補足 / Backup</div>
+      <h2>曝露の大きさは順位以上：交易条件悪化は標本中最大級</h2>
+    </div>
+    <div class="key-message">
+      対GDP比の損失順位（9位）は日本の曝露を<strong>過小評価する</strong>。価格ショックそのものの大きさは標本中で際立っている。
+    </div>
+    <div class="exposure">
+      <div class="hook-figure" style="justify-content:center;">
+        <div class="hook-number" style="color:var(--crimson); font-size:100px; letter-spacing:-0.04em; font-variant-numeric:normal;">−17.9%</div>
+        <div class="hook-unit" style="font-size:22px; color:var(--text-mid);">交易条件変化<br>（2021→2022年）</div>
+      </div>
+      <div class="two-col" style="flex:0 0 auto;">
+        <div class="col-box">
+          <h3>価格ショックそのもの</h3>
+          <p>交易条件の悪化幅 <strong>−17.9%</strong> は<br>標本46ヶ国中で<strong>最大級</strong>。</p>
+        </div>
+        <div class="col-box">
+          <h3>なぜ対GDP比は9位か</h3>
+          <p>貿易開放度（貿易額／GDP ≒ <strong>37%</strong>）が<span class="nowrap">中位</span>のため、対GDP比でみた損失順位はやや下がる。</p>
+        </div>
+      </div>
+    </div>
+    <div class="note">交易条件＝輸出価格／輸入価格。対GDP比損失は交易条件変化を貿易規模で評価したもの。出所: 筆者作成（World Bank）。</div>
   </div>
 
 </div>
