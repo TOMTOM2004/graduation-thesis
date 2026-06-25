@@ -269,6 +269,16 @@
   .exposure { display: flex; flex-direction: column; flex: 1; align-content: center; justify-content: center; gap: 26px; }
   .col-box p { font-size: 16px; color: var(--text-mid); line-height: 1.65; }
   .col-box p strong { color: var(--navy); font-weight: 700; }
+
+  /* ── Identity equation strip (s6 backbone) ── */
+  .eq-strip { max-width: 720px; margin: 6px auto 0; background: var(--muted-bg); border-radius: 6px; padding: 16px 24px 14px; text-align: center; }
+  .eq-line { font-size: 30px; font-weight: 700; color: var(--navy); line-height: 1.2; font-variant-numeric: tabular-nums; }
+  .eq-line .eq-op { color: var(--blue-soft); font-weight: 400; margin: 0 9px; }
+  .eq-line .eq-sum { color: var(--blue-mid); margin-right: 3px; }
+  .eq-line sub { font-size: 0.5em; font-weight: 600; vertical-align: -0.15em; }
+  .eq-legend { margin-top: 11px; font-size: 14px; color: var(--text-mid); line-height: 1.6; }
+  .eq-legend b { color: var(--navy); font-weight: 700; }
+  .eq-legend .eq-sep { color: var(--border); margin: 0 10px; }
 </style>
 </head>
 <body>
@@ -437,9 +447,16 @@
     <div class="hook-caption">
       2022年・低所得層（Q1）が高所得層（Q5）より<br>多く被った<strong>実効インフレ率の差</strong>（逆進性）
     </div>
-    <div class="takeaway-sub" style="font-size:15px; max-width:860px; margin:8px auto 0;">
-      実績CPI × 所得階層別の実支出シェアという<strong style="color:var(--navy);">恒等式</strong>で算出。<br>
-      回帰の識別仮定に依存せず、<strong style="color:var(--navy);">本研究で最も頑健な結果</strong>。2023年 +0.90pp・2024年 +1.13pp と全ショック年で逆進的。
+    <div class="eq-strip">
+      <div class="eq-line">
+        <span>π<sub>q</sub></span><span class="eq-op">=</span><span class="eq-sum">Σ<sub>i</sub></span><span>w<sub>q,i</sub></span><span class="eq-op">×</span><span>Δπ<sub>i</sub></span>
+      </div>
+      <div class="eq-legend">
+        <span style="white-space:nowrap;"><b>w<sub>q,i</sub></b> 五分位qの費目i支出シェア（家計調査・2019固定）</span><span class="eq-sep"> </span><span style="white-space:nowrap;"><b>Δπ<sub>i</sub></b> 費目iの実績CPI変化率（2015–19基準）</span>
+      </div>
+    </div>
+    <div class="takeaway-sub" style="font-size:15px; max-width:860px; margin:14px auto 0;">
+      実績CPI × 実支出シェアの<strong style="color:var(--navy);">加重平均だけ</strong> ── 回帰の識別仮定に依存しない<strong style="color:var(--navy);">最も頑健な結果</strong>。2023年 +0.90pp・2024年 +1.13pp と全ショック年で逆進的。
     </div>
     <div class="note" style="text-align:center; max-width:880px; margin:22px auto 0; border-top:1px solid var(--border); padding-top:10px;">
       ⚠ これは<strong>実効インフレ</strong>（実績CPIベース）の逆進性で、コストプッシュ＋デマンドプル込み。コストプッシュ単独の逆進性ではない点に注意 ── 橋渡しは次スライド。
