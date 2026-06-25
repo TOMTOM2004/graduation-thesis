@@ -1,24 +1,35 @@
 """
 Phase 1 Step 1-3: Trade loss (terms of trade loss) estimation.
 
-Two estimates are computed:
+Three estimates are computed (DEC-012):
 
-(A) Upper-bound (absolute):
+(C) Baseline-corrected — CENTRAL estimate（中心推計）:
+    ΔTL_g(t) = M_g(2020) × (P_import_g(t) − P_ref_g) / 100
+    P_ref_g = グループ別の参照期（2015-2019）平均輸入物価。
+    2020年はCOVIDで輸入物価が異常な底値（特にエネルギー: 2020=100 に対し
+    2015-19平均=128.5）。2020比だと「ショック」に「COVID価格暴落からの回復」が
+    混入し過大評価する。中心推計は 2015-19（識別のプラセボ期と同一窓）の
+    正常水準比で測る。2022年合計 ≈ 35兆円。
+
+(A) Upper-bound — 上限:
     ΔTL_g(t) = M_g(2020) × (P_import_g(t) / 100 − 1)
-    Measures the additional import cost vs. 2020. Overestimates income outflow
-    because it ignores the rise in domestic prices (inflation neutralizes part of
-    the increase in nominal import costs).
+    2020比の輸入コスト増。2020がトラフのため上限。2022年合計 ≈ 40.7兆円。
 
-(B) Net income transfer (preferred):
+(B) Net (relative to domestic CGPI) — 相対価格変種:
     ΔTL_g(t) = M_g(2020) × (P_import_g(t) − P_domestic(t)) / 100
-    Measures only the excess price increase relative to domestic inflation — the
-    portion that represents a real income transfer to foreign exporters.
-    Comparable to Cabinet Office 交易利得（損失）in the SNA.
+    輸入物価上昇のうち国内一般物価を上回った分。後年マイナスになり得る相対価格
+    指標（フロー概念でない）。中心推計(C ≈35兆)を裏打ちする参考値。2022年 ≈ 34.6兆円。
 
 Where:
     M_g(2020)      = IO table import value for group g (2020, billion JPY)
     P_import_g(t)  = BOJ CGPI import price index for group g (2020=100)
+    P_ref_g        = group g の 2015-2019 平均輸入物価（中心推計の参照水準, DEC-012）
     P_domestic(t)  = BOJ CGPI domestic price index total (2020=100)
+
+参照期に複数年平均（2015-19）を使う理由（DEC-012）:
+  - 単年は石油サイクルの一点を拾い恣意的（2016=底91.8, 2018=山154.1）。
+  - 2015-19 は両極を含むサイクル中立で、識別のプラセボ期と同一窓＝「正常」を論文で
+    一回だけ定義できる。compute_baseline_sensitivity() で単年・3年平均との頑健性を出力。
 
 --- 内閣府推計との定義の違い（論文注記用） ---
 
@@ -30,15 +41,17 @@ Where:
 
   本研究:  ΔTL = 輸入コスト増加分のみ（輸出価格上昇分を控除しない）
            → 「家計・企業が負担する輸入コスト増加」の粗推計
-           → 2022年推計: 約△34.6兆円（net B）
+           → 2022年中心推計(C, 2015-19基準): 約△35兆円 / 上限(A, 2020基準): 約△40.7兆円
 
 本研究が大きくなる主因:
   1. 輸出側の交易利得（特に自動車・半導体等の輸出価格上昇分）を控除していない
   2. 対象5グループはエネルギー・金属・化学・食料・木材のみ（輸出財を含まない）
-  3. 2020年基準IO表の固定ボリューム仮定（実際の輸入量変化を反映しない）
+  3. 固定ボリューム仮定（2020年IO輸入額固定＝Laspeyres、実際の輸入量変化を反映しない）
+     → 数量反応を織り込む Paasche/Fisher 化は財務省貿易統計の数量データ取得後の課題（未実施）
 
 本研究の位置づけ: 「輸入コスト増加が日本の家計・産業部門に課す負担の粗推計」であり、
 内閣府の交易損失（輸出相殺後）とは補完的な概念。両者を並記することで分析の透明性を確保する。
+なお (C) は基準年を 2020 トラフから 2015-19 正常水準に補正済み（主因1・2は残置、3は今後の課題）。
 """
 
 from pathlib import Path
@@ -59,6 +72,8 @@ TRADE_LOSS_DIR = DATA_PROCESSED / "trade-loss"
 
 CGPI_PATH = DATA_RAW / "boj-cgpi" / "import_prices_extracted.csv"
 BASE_YEAR = 2020
+# 中心推計の参照期（DEC-012）: 2015-2019 平均（識別のプラセボ期と同一窓・サイクル中立）
+REF_BASELINE = (2015, 2019)
 
 
 def load_import_prices() -> pd.DataFrame:
@@ -118,17 +133,42 @@ def compute_domestic_annual_index() -> pd.DataFrame:
     )
 
 
+def compute_group_baseline_prices(ref_period: tuple = REF_BASELINE) -> dict:
+    """
+    各グループの参照期（既定 2015-2019）平均輸入物価 P_ref_g を返す（中心推計の基準）。
+
+    2020 は COVID で輸入物価が異常な底値（特にエネルギー）。中心推計(C)は 2020 比でなく
+    2015-19（プラセボ期と同一窓）の正常水準比で測る（DEC-012）。
+
+    Returns
+    -------
+    dict: {group: P_ref_g (2020=100 スケールの参照期平均)}
+    """
+    annual = compute_annual_price_index()
+    ref = annual[annual["year"].between(ref_period[0], ref_period[1])]
+    ref_map = ref.groupby("group")["price_index"].mean().to_dict()
+    missing = set(GROUPS) - set(ref_map)
+    if missing:
+        raise ValueError(
+            f"参照期 {ref_period} の価格が無いグループ: {missing}。"
+            f"annual_price_index のキャッシュが古い可能性（要再生成）。"
+        )
+    return ref_map
+
+
 def compute_trade_loss() -> pd.DataFrame:
     """
-    Estimate trade loss (所得流出額) by group and year.
+    Estimate trade loss (輸入コスト負担増) by group and year.
 
-    Two estimates:
-    - trade_loss_ub_bn_jpy : upper bound — absolute import price change
+    Three estimates (DEC-012):
+    - trade_loss_corrected_bn_jpy : CENTRAL — vs 2015-19 normal baseline
+        = M_2020 × (P_import − P_ref_g) / 100   （P_ref_g = グループ別 2015-19 平均）
+    - trade_loss_ub_bn_jpy : upper bound — vs 2020 trough
         = M_2020 × (P_import − 100) / 100
-    - trade_loss_net_bn_jpy : net income transfer (preferred, comparable to Cabinet Office)
+    - trade_loss_net_bn_jpy : relative-price variant — vs domestic CGPI
         = M_2020 × (P_import − P_domestic) / 100
 
-    Positive value = income outflow from Japan (Japan pays more than domestic prices rise).
+    Positive value = import cost burden / income outflow from Japan.
 
     Returns
     -------
@@ -151,6 +191,7 @@ def compute_trade_loss() -> pd.DataFrame:
     annual_price = compute_annual_price_index()
     group_io = compute_group_import_content()
     domestic = compute_domestic_annual_index()
+    baseline_prices = compute_group_baseline_prices()  # P_ref_g (2015-19 平均)
 
     # IO import values by group (billion JPY = 十億円)
     group_import_map = dict(
@@ -168,11 +209,15 @@ def compute_trade_loss() -> pd.DataFrame:
         p_domestic = row["domestic_cgpi"]
 
         base_value = group_import_map.get(group, 0.0)  # billion JPY
+        p_ref = baseline_prices.get(group, 100.0)  # P_ref_g (2015-19 平均)
 
-        # (A) Upper bound: absolute import price change
+        # (C) Central: vs 2015-19 normal baseline
+        trade_loss_corrected_bn = base_value * (p_import - p_ref) / 100.0
+
+        # (A) Upper bound: vs 2020 trough
         trade_loss_ub_bn = base_value * (p_import - 100.0) / 100.0
 
-        # (B) Net income transfer: import price - domestic price
+        # (B) Net (relative-price variant): import price - domestic price
         net_diff = p_import - p_domestic if pd.notna(p_domestic) else np.nan
         trade_loss_net_bn = base_value * net_diff / 100.0 if pd.notna(net_diff) else np.nan
 
@@ -181,9 +226,12 @@ def compute_trade_loss() -> pd.DataFrame:
             "group": group,
             "group_ja": row["group_ja"],
             "import_price_index": round(p_import, 2),
+            "import_price_baseline": round(p_ref, 2),       # P_ref_g (2015-19 平均)
             "domestic_cgpi": round(p_domestic, 2) if pd.notna(p_domestic) else np.nan,
             "net_price_diff": round(net_diff, 2) if pd.notna(net_diff) else np.nan,
             "import_value_base_bn_jpy": round(base_value, 2),
+            "trade_loss_corrected_bn_jpy": round(trade_loss_corrected_bn, 2),
+            "trade_loss_corrected_tn_jpy": round(trade_loss_corrected_bn / 1000, 4),
             "trade_loss_ub_bn_jpy": round(trade_loss_ub_bn, 2),
             "trade_loss_ub_tn_jpy": round(trade_loss_ub_bn / 1000, 4),
             "trade_loss_net_bn_jpy": round(trade_loss_net_bn, 2) if pd.notna(trade_loss_net_bn) else np.nan,
@@ -220,25 +268,87 @@ def compute_total_trade_loss() -> pd.DataFrame:
     group_loss = compute_trade_loss()
 
     agg = group_loss.groupby("year").agg(
+        total_corrected_bn_jpy=("trade_loss_corrected_bn_jpy", "sum"),
         total_ub_bn_jpy=("trade_loss_ub_bn_jpy", "sum"),
         total_net_bn_jpy=("trade_loss_net_bn_jpy", "sum"),
     ).reset_index()
 
+    agg["total_corrected_tn_jpy"] = agg["total_corrected_bn_jpy"] / 1000
     agg["total_ub_tn_jpy"] = agg["total_ub_bn_jpy"] / 1000
     agg["total_net_tn_jpy"] = agg["total_net_bn_jpy"] / 1000
 
-    # Per-group upper-bound breakdown
+    # Per-group breakdown (central / upper-bound / net)
+    corr_pivot = group_loss.pivot(index="year", columns="group", values="trade_loss_corrected_bn_jpy")
+    corr_pivot.columns = [f"{c}_corrected_bn_jpy" for c in corr_pivot.columns]
+
     ub_pivot = group_loss.pivot(index="year", columns="group", values="trade_loss_ub_bn_jpy")
     ub_pivot.columns = [f"{c}_ub_bn_jpy" for c in ub_pivot.columns]
 
-    # Per-group net breakdown
     net_pivot = group_loss.pivot(index="year", columns="group", values="trade_loss_net_bn_jpy")
     net_pivot.columns = [f"{c}_net_bn_jpy" for c in net_pivot.columns]
 
-    total = agg.merge(ub_pivot.reset_index(), on="year").merge(net_pivot.reset_index(), on="year")
+    total = (
+        agg.merge(corr_pivot.reset_index(), on="year")
+        .merge(ub_pivot.reset_index(), on="year")
+        .merge(net_pivot.reset_index(), on="year")
+    )
     total.to_csv(cache_path, index=False)
     print(f"Saved total trade loss to {cache_path}")
     return total
+
+
+def compute_baseline_sensitivity(year: int = 2022) -> pd.DataFrame:
+    """
+    参照期の選択に対する合計交易損失の感度（恣意性チェック用、DEC-012）。
+
+    単年（2015/2016/2018/2019/2020）と複数年平均（2015-19=中心 / 2017-19）を比較。
+    単年は石油サイクルの一点を拾い 30.6〜42.7兆と振れるが、複数年平均は ~34-35兆で頑健。
+
+    Returns
+    -------
+    pd.DataFrame: columns = baseline, total_tn_jpy, gdp_pct, energy_share_pct
+    """
+    annual = compute_annual_price_index()
+    group_io = compute_group_import_content()
+    m0 = dict(zip(group_io["group"], group_io["import_value_total"]))
+    p_t = annual[annual["year"] == year].set_index("group")["price_index"].to_dict()
+    gdp_bn = 561_000  # 名目GDP 2022 ≈ 561兆円
+
+    specs = {
+        "2020 単年（上限）": ("year", 2020),
+        "2015 単年": ("year", 2015),
+        "2016 単年": ("year", 2016),
+        "2018 単年": ("year", 2018),
+        "2019 単年": ("year", 2019),
+        "2015-19 平均（中心）": ("range", REF_BASELINE),
+        "2017-19 平均": ("range", (2017, 2019)),
+    }
+
+    rows = []
+    for label, (kind, spec) in specs.items():
+        total = energy = 0.0
+        for g in GROUPS:
+            sub = annual[annual["group"] == g]
+            if kind == "year":
+                p_ref = sub[sub["year"] == spec]["price_index"].mean()
+            else:
+                p_ref = sub[sub["year"].between(*spec)]["price_index"].mean()
+            v = m0.get(g, 0.0) * (p_t.get(g, 100.0) - p_ref) / 100.0
+            total += v
+            if g == "energy":
+                energy = v
+        rows.append({
+            "baseline": label,
+            "total_tn_jpy": round(total / 1000, 2),
+            "gdp_pct": round(100 * total / gdp_bn, 1),
+            "energy_share_pct": round(100 * energy / total, 1) if total else np.nan,
+        })
+
+    df = pd.DataFrame(rows)
+    cache_path = TRADE_LOSS_DIR / f"trade_loss_baseline_sensitivity_{year}.csv"
+    df.to_csv(cache_path, index=False)
+    print(f"Saved baseline sensitivity ({year}) to {cache_path}")
+    return df
 
 
 if __name__ == "__main__":
@@ -251,29 +361,38 @@ if __name__ == "__main__":
     dom = compute_domestic_annual_index()
     print(dom.to_string(index=False))
 
+    print("\n=== Baseline P_ref (2015-19 平均, 2020=100) ===")
+    for g, p in compute_group_baseline_prices().items():
+        print(f"  {g:10s}: {p:6.1f}")
+
     print("\n=== Trade Loss by Group (bn JPY) ===")
     loss_df = compute_trade_loss()
 
     for year in sorted(loss_df["year"].unique()):
         year_data = loss_df[loss_df["year"] == year]
+        total_corr = year_data["trade_loss_corrected_bn_jpy"].sum()
         total_ub = year_data["trade_loss_ub_bn_jpy"].sum()
         total_net = year_data["trade_loss_net_bn_jpy"].sum()
-        print(f"\n[{year}]  Upper bound: {total_ub/1000:.1f} tn JPY   Net transfer: {total_net/1000:.1f} tn JPY")
-        for _, row in year_data.sort_values("trade_loss_net_bn_jpy", ascending=False).iterrows():
+        print(f"\n[{year}]  中心C(2015-19基準): {total_corr/1000:.1f} tn  "
+              f"上限A(2020基準): {total_ub/1000:.1f} tn  net B(対国内): {total_net/1000:.1f} tn")
+        for _, row in year_data.sort_values("trade_loss_corrected_bn_jpy", ascending=False).iterrows():
             print(f"  {row['group_ja']:24s}: "
-                  f"P_import={row['import_price_index']:6.1f}  "
-                  f"P_dom={row['domestic_cgpi']:6.1f}  "
-                  f"diff={row['net_price_diff']:+6.1f}pp  "
-                  f"net={row['trade_loss_net_bn_jpy']:7,.0f} bn JPY")
+                  f"P_imp={row['import_price_index']:6.1f}  "
+                  f"P_ref={row['import_price_baseline']:6.1f}  "
+                  f"中心={row['trade_loss_corrected_bn_jpy']:7,.0f} bn JPY")
 
-    print("\n=== Total Trade Loss by Year ===")
+    print("\n=== Total Trade Loss by Year（中心C / 上限A / net B）===")
     total_df = compute_total_trade_loss()
-    GDP_2020_BN = 537_000
-    print(f"\n{'Year':>6}  {'UB (tn)':>9}  {'Net (tn)':>9}  {'Net % GDP':>10}")
+    GDP_2022_BN = 561_000  # 名目GDP 2022 ≈ 561兆円
+    print(f"\n{'Year':>6}  {'中心C(tn)':>11}  {'上限A(tn)':>11}  {'net B(tn)':>11}  {'中心%GDP':>9}")
     for _, row in total_df.iterrows():
-        pct = row["total_net_bn_jpy"] / GDP_2020_BN * 100
-        print(f"  {int(row['year'])}: UB={row['total_ub_tn_jpy']:6.1f} tn  "
-              f"Net={row['total_net_tn_jpy']:6.1f} tn  ({pct:.1f}% of GDP)")
+        pct = row["total_corrected_bn_jpy"] / GDP_2022_BN * 100
+        print(f"  {int(row['year'])}: {row['total_corrected_tn_jpy']:9.1f}    "
+              f"{row['total_ub_tn_jpy']:9.1f}    {row['total_net_tn_jpy']:9.1f}    {pct:7.1f}%")
 
-    print("\nNote: Net estimate = import price rise minus domestic inflation.")
-    print("Comparable to Cabinet Office 交易利得（損失）. Upper bound = absolute import cost increase.")
+    print("\n=== Baseline Sensitivity (2022, 恣意性チェック) ===")
+    sens = compute_baseline_sensitivity(2022)
+    print(sens.to_string(index=False))
+
+    print("\nNote: 中心推計C = 輸入物価 − 2015-19平均（正常水準）。2020はCOVIDトラフのため上限A。")
+    print("net B = 輸入物価 − 国内CGPI（相対価格・参考）。内閣府交易損失（輸出相殺後）とは別概念。")
