@@ -23,6 +23,14 @@
 | P005 | Goldsmith-Pinkham et al. | 2020 | Bartik IV分解 | シェア外生性で識別、Rotemberg weights | High |
 | P006 | Adão, Kolesár, Morales | 2019 | Shift-share推論理論 | 通常SEで最大55%過剰棄却 | High |
 | P013 | Autor, Dorn, Hanson | 2013 | Shift-share IV応用 | China shockの地域別労働市場効果 | Medium |
+| P077 | Moreno-Louzada, Figueira, Picchetti | 2025 | 価格エクスポージャー設計の微視的基礎 | 相関 shifter では群別係数の分離識別が一般に不成立・few-shock 推論の警告 | High |
+| P078 | Bhattarai, Chatterjee, Udupa | 2025 | IV（グローバル需要除去）×コモディティ価格 | food/oil 2 ショックを分離推定、food は単調逆進・oil は両裾（印度家計パネル） | High |
+| P079 | Cícero, Heras-Recuero | 2025 | Shift-share IV応用（China shock×ブラジル地域） | 貿易ショックの消費・輸入側、格差拡大→奢侈輸入増 | Medium |
+| P080 | Borusyak, Hull, Jaravel | 2024 | Shift-share IV 実務ガイド（JEP） | many-shifts vs many-shares の2経路チェックリスト・exposure-robust SE は Stata 実装 | High |
+| P081 | Shapiro | 2024 | 価格-数量共変動による供給/需要分解（符号制約・per-category） | 清浄 control 不要で集計インフレを供給/需要に分解。set-identified（magnitude不能）。軽量・再実装可 | High |
+| P082 | Bernanke & Blanchard | 2023 | 構造的賃金-物価連立動学+historical decomposition | 外生供給ショック系列を直接投入し供給寄与を識別（control群不要）。重量級benchmark | High |
+| P083 | di Giovanni et al. | 2022 | 多国多部門生産ネットワークGE | コストプッシュ/供給制約をセクター分解。外国ショック+ボトルネックが支配的（ユーロ圏）。重量級benchmark | Medium |
+| P084 | Borusyak & Hull | 2023 | recentered instrument（design-based） | エクスポージャー非ランダム性を反実仮想分布で recenter。share外生性軸 | High |
 
 ## Phase 2 関連（シミュレーションモデル）
 
@@ -139,3 +147,10 @@
 |----|------|-----|------|--------|---------|--------|
 | P037 | Muto, Oda, Sudo | 2016 | OLGモデル | 日本・人口動態 | 出生率低下がGNP成長に支配的な悪影響 | Low |
 | P038 | Kambayashi & Kiyota | 2015 | 労働需要関数 | 日本・FDI企業パネル | FDIによる雇用喪失は資本-労働代替が主因 | Low |
+
+## COVID-19 所得ショック・家計異質性（背景・所得階層次元の正当化）
+
+| ID | 著者 | 年 | 手法 | データ | 主要発見 | 重要度 |
+|----|------|-----|------|--------|---------|--------|
+| P085 | Kikuchi, Kitao, Mikoshiba | 2021 | エクスポージャー記述+ライフサイクル異質エージェント | 日本・ESS+JCB消費NOW | 産業/職業エクスポージャー差が所得階層別ショック格差に直結（非正規・女性・対人職で増幅） | Medium |
+| P086 | Kaneda, Kubota, Tanaka | 2021 | 給付タイミング外生変動（自然実験） | 日本・家計簿アプリ高頻度パネル | 給付MPCは流動性制約・所得減少家計で大きい | Medium |

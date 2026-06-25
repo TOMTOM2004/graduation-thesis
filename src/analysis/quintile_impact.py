@@ -27,7 +27,7 @@ RESULTS_DIR = DATA_PROCESSED / "simulation-params"
 QUINTILE_LABELS = {0: "平均", 1: "Q1(最低)", 2: "Q2", 3: "Q3", 4: "Q4", 5: "Q5(最高)"}
 
 
-def load_expenditure_shares(year: int = 2019) -> pd.DataFrame:
+def load_expenditure_shares(year: int = 2019, household_type: int = 3) -> pd.DataFrame:
     """
     Load household expenditure shares by quintile × major category from 家計調査.
 
@@ -35,6 +35,14 @@ def load_expenditure_shares(year: int = 2019) -> pd.DataFrame:
     ----------
     year : int
         Year to use for expenditure structure (default: 2019 = pre-COVID baseline)
+    household_type : int
+        家計調査の世帯区分 (cat02_code):
+          3 = 二人以上の世帯（メイン母集団。高齢無職世帯を含む）
+          4 = 二人以上のうち勤労者世帯（将来の勤労所得ターゲット政策の評価用に保持）
+        負担の帰着分析は母集団を 3 に固定し、勤労ターゲット政策（減税等）は
+        別途、各分位の勤労者シェア(cat02=4 / cat02=3)を資格マスクとして適用する
+        設計（DEC-011）。universe を切替えると分位の再ランキングが起き交絡するため、
+        母集団は 3 に固定してマスクで分ける。
 
     Returns
     -------
@@ -43,8 +51,12 @@ def load_expenditure_shares(year: int = 2019) -> pd.DataFrame:
     hh_file = DATA_RAW / "household-survey" / "household_quintile_2015_2024.csv"
     hh = pd.read_csv(hh_file)
 
-    # Filter to target year
-    hh_yr = hh[hh["time_code"] == int(f"{year}000000")].copy()
+    # Filter to target year AND household type (cat02).
+    # 以前は cat02 を絞らず .iloc[0] が暗黙に cat02=3 を拾う行順依存バグ（DEC-011 で明示化）。
+    hh_yr = hh[
+        (hh["time_code"] == int(f"{year}000000"))
+        & (hh["cat02_code"] == household_type)
+    ].copy()
 
     # Total consumption expenditure (cat01_code=59) per quintile (nominal JPY/month)
     total_cons = (

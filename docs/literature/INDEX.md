@@ -2,7 +2,7 @@
 
 ## 概要
 
-本研究に関連する先行研究の管理。論文サマリーは `papers/` 以下に1論文1ファイルで格納。計76件。
+本研究に関連する先行研究の管理。論文サマリーは `papers/` 以下に1論文1ファイルで格納。計86件。
 
 ---
 
@@ -70,6 +70,15 @@
 - [P004 Borusyak, Hull, Jaravel (2022)](papers/borusyak-hull-jaravel-2022-shift-share.md) — Shift-share IVの計量理論（ショック外生性）
 - [P005 Goldsmith-Pinkham et al. (2020)](papers/goldsmith-pinkham-2020-bartik.md) — Bartik IVの分解（シェア外生性）
 - [P006 Adão, Kolesár, Morales (2019)](papers/adao-kolesar-morales-2019-shift-share-inference.md) — Shift-shareの推論理論
+- [P013 Autor, Dorn, Hanson (2013)](papers/autor-dorn-hanson-2013-china-syndrome.md) — Shift-share IV応用（China shock・地域労働市場）
+- [P077 Moreno-Louzada, Figueira, Picchetti (2025)](papers/moreno-louzada-etal-2025-price-exposure-designs.md) — 【A-4核心】価格エクスポージャー設計：相関 shifter では群別係数の分離識別が一般に不成立・few-shock 推論
+- [P078 Bhattarai, Chatterjee, Udupa (2025)](papers/bhattarai-chatterjee-udupa-2025-food-fuel-distributional.md) — 【A-4 applied 最良例】food/oil 2 ショックの所得階層別分配効果を分離推定
+- [P079 Cícero, Heras-Recuero (2025)](papers/cicero-heras-recuero-2025-consumption-trade-shocks-luxury.md) — Shift-share IV応用：貿易ショックの消費・輸入側と格差（ブラジル）
+- [P080 Borusyak, Hull, Jaravel (2024)](papers/borusyak-hull-jaravel-2024-practical-guide-shift-share.md) — 【実務ガイド+実装】many-shifts vs many-shares チェックリスト・exposure-robust SE は Stata
+- [P081 Shapiro (2024)](papers/shapiro-2024-supply-demand-driven-inflation.md) — 【Q1+Q4核心・採用候補】価格-数量共変動の符号制約で供給/需要分解。清浄control不要・軽量再実装可。set-identified（magnitude不能）
+- [P082 Bernanke & Blanchard (2023)](papers/bernanke-blanchard-2023-pandemic-era-inflation.md) — 【Q1+Q4 benchmark】外生供給ショック系列+構造連立動学で供給寄与を識別。重量級・引用用途
+- [P083 di Giovanni et al. (2022)](papers/digiovanni-etal-2022-supply-chain-pressures-inflation.md) — 【Q1 benchmark】多国多部門GEでコストプッシュをセクター分解。重量級・引用用途
+- [P084 Borusyak & Hull (2023)](papers/borusyak-hull-2023-nonrandom-exposure.md) — 【Q2 share外生性軸】recentered instrument：エクスポージャー非ランダム性を反実仮想で除去（Econometrica）
 
 ### 国際収支制約と成長（理論・実証）
 - [P064 Thirlwall (1979)](papers/thirlwall-1979-bop-constraint-growth.md) — 国際収支制約による成長率格差の説明（Thirlwall's Law）
@@ -118,6 +127,10 @@
 ### 人口・雇用・構造変化（背景）
 - [P037 Muto, Oda, Sudo (2016)](papers/muto-oda-sudo-2016-population-aging-japan.md) — 人口高齢化のマクロ経済影響（OLGモデル）
 - [P038 Kambayashi & Kiyota (2015)](papers/kambayashi-kiyota-2015-fdi-disemployment.md) — FDIと国内雇用喪失（資本-労働代替）
+
+### COVID-19 所得ショック・家計異質性（背景・所得階層次元の正当化）
+- [P085 Kikuchi, Kitao, Mikoshiba (2021)](papers/kikuchi-kitao-mikoshiba-2021-covid-labor-heterogeneity-japan.md) — 産業/職業エクスポージャー差が所得階層別ショック格差に直結（日本・ESS+JCB消費NOW）。※扱う衝撃は労働市場所得ショックでcost-push帰着ではない
+- [P086 Kaneda, Kubota, Tanaka (2021)](papers/kaneda-kubota-tanaka-2021-stimulus-payment-japan.md) — 定額給付金MPCの所得階層/流動性制約による異質性（日本・家計簿アプリ）
 
 ---
 
