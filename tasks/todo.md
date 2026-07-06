@@ -6,7 +6,7 @@ _Last updated: 2026-07-06 21:55 / session: 全体監査(DEC-019/020/021)→再�
 - What: **論文執筆着手**（実証3本柱を結果章に統合）。数値は必ず DEC-021 の再生成値を使う: 交易損失 中心~35兆/上限40.7兆・Q1-Q5 **+2.14pp**(2022)・β=**0.425 (p=0.047)**・Shapiro 0.41→0.70→0.83・RMSE 10.00pp。goods-services分解（DEC-022）は §5 のとおり research-design.md/decision-log.md/第2回スライドに反映済
 - Where: `paper/`（outline.md が章割り。01-introduction はドラフト済・DEC-015 準拠に修正済）
 - Done when: 先行研究 or 方法論の章が1本ドラフトされ、数値が全て repo 再現値と一致
-- 別線: ① ~~main push~~（完了・origin=09ff542） ② ~~AKM SE の R 再実行~~（DEC-021補遺で消化・p≈0.15 再現） ③ ~~財/サービス分解（DEC-022）~~（実装・doc反映・§4官公表突合とも完了。突合2件差異は価格決定メカニズム基準の事前定義として意図的差異と明記しクローズ済＝09ff542） ④ shapiro_decomp の e-Stat 品目名をキャッシュ化（現状 API キー必須＝再現性の残穴） ⑤ GDP 561兆の vintage 確定（trade_loss.py TODO） ⑥ data/processed_stale_20260706/ の削除判断（新キャッシュ安定後） ⑦ 第2回スライド s7「橋渡しの論理」key-message の改行位置が不自然（budoux 系ライブラリで文節改行を別途導入予定・2026-07-07 認識済み。導入時に他の長文 key-message も一括適用）
+- 別線: ① ~~main push~~（完了・origin=09ff542） ② ~~AKM SE の R 再実行~~（DEC-021補遺で消化・p≈0.15 再現） ③ ~~財/サービス分解（DEC-022）~~（実装・doc反映・§4官公表突合とも完了。突合2件差異は価格決定メカニズム基準の事前定義として意図的差異と明記しクローズ済＝09ff542） ④ shapiro_decomp の e-Stat 品目名をキャッシュ化（現状 API キー必須＝再現性の残穴） ⑤ GDP 561兆の vintage 確定（trade_loss.py TODO） ⑥ data/processed_stale_20260706/ の削除判断（新キャッシュ安定後） ⑦ ~~第2回スライド s7 改行位置が不自然~~（完了・2026-07-07: budoux ZWSP 361箇所を全文焼き込み＋監査修正一式=bdc15c2。スクリプトはグローバル `~/.claude/skills/slide-design/scripts/apply_budoux.py`）
 
 ## ✅ 直近完了（2026-07-06・セッション後半・スキル/検収/修正）
 - **thesis-writing スキル作成**（`.claude/skills/thesis-writing/SKILL.md`）: 執筆視点（パラグラフ/章役割/クレーム階層言い分け表）＋推敲7視点チェックリスト＋golden値表＋章手順。paper/ 作業で自動発動
