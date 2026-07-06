@@ -23,6 +23,7 @@ dependencies = [
     # HTTP / data fetching
     "requests>=2.28",
     "httpx>=0.24",
+    "setuptools>=69",  # japanize_matplotlib が distutils を要求（Py3.12で標準から削除）
 
     # Jupyter
     "jupyter>=1.0",
