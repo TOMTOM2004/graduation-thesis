@@ -1,6 +1,6 @@
 # TODO — 卒業論文（案B）
 
-_Last updated: 2026-07-06 / session: goods-services contrast分析実装（DEC-022）完了・main統合済（ローカル・未push）_
+_Last updated: 2026-07-06 / session: goods-services contrast実装（DEC-022）完了・handoff統合・第3回スライド残反映・push済_
 
 ## 🎯 Next action（1つだけ、具体的に）
 - What: **論文執筆着手**（実証3本柱を結果章に統合）。数値は必ず DEC-021 の再生成値を使う: 交易損失 中心~35兆/上限40.7兆・Q1-Q5 **+2.14pp**(2022)・β=**0.425 (p=0.047)**・Shapiro 0.41→0.70→0.83・RMSE 10.00pp。goods-services分解（DEC-022）は §5 のとおり research-design.md/decision-log.md/第2回スライドに反映済
