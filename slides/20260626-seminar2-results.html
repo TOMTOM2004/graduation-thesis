@@ -311,19 +311,69 @@
   .bar-seg .blab { white-space: nowrap; }
   .slide.run .bar-seg { width: var(--w); }
 
-  /* flow dot gliding along transition arrows */
-  .supply-arrow, .pivot-arrow { position: relative; }
-  .flow-dot::after {
-    content: ''; position: absolute; top: 50%; margin-top: -3px; left: -2px;
-    width: 6px; height: 6px; border-radius: 50%;
-    background: var(--blue-soft); opacity: 0;
-    animation: flowdot 2s ease-in-out infinite;
+  /* animated flow arrows (s7/s8 transitions): 破線がシャフトを矢頭方向へ流れ続ける */
+  .supply-arrow, .pivot-arrow { padding: 0 8px; }
+  .flow-arrow { display: block; }
+  .flow-arrow .fa-shaft { stroke: var(--border); stroke-width: 7; stroke-linecap: round; fill: none; }
+  .flow-arrow .fa-flow  { stroke: var(--blue-soft); stroke-width: 7; stroke-linecap: round; fill: none;
+                          stroke-dasharray: 13 15; animation: dashflow 1s linear infinite; }
+  .flow-arrow .fa-head  { fill: var(--blue-soft); }
+  @keyframes dashflow { to { stroke-dashoffset: -28; } }
+
+  /* two-step bold emphasis: 表示時は通常ウェイト → 次のキー送りで太字+ネイビー */
+  .frag.emph {
+    opacity: 1; transform: none; font-weight: 400; color: inherit;
+    transition: color .35s ease;
   }
-  @keyframes flowdot {
-    0%   { left: -2px; opacity: 0; }
-    20%  { opacity: .8; }
-    80%  { opacity: .8; }
-    100% { left: calc(100% - 4px); opacity: 0; }
+  .frag.emph.on { font-weight: 700; color: var(--navy); }
+
+  /* ── animated ranking bars (p1, PNG置換) ── */
+  .rank-chart { width: 100%; display: grid; grid-template-columns: 1fr 1fr; gap: 44px; align-self: center; padding: 0 6px; }
+  .rank-col { display: flex; flex-direction: column; gap: 2px; }
+  .rank-row { display: grid; grid-template-columns: 112px 1fr; align-items: center; gap: 8px; height: 14px; }
+  .rank-row .rname { font-size: 10px; color: var(--text-mid); text-align: right; white-space: nowrap; line-height: 1; }
+  .rank-row.jp .rname { color: var(--navy); font-weight: 700; }
+  .rank-track { position: relative; height: 14px; }
+  .rank-zero { position: absolute; top: -1px; bottom: -1px; width: 1px; background: #9aa8ba; }
+  .rank-bar { position: absolute; top: 2px; height: 10px; border-radius: 2px; width: 0;
+              transition: width .7s cubic-bezier(.22,.61,.36,1) var(--d, 0s); }
+  .slide.run .rank-bar { width: var(--w); }
+  .rank-bar.loss { background: #c0392b; }
+  .rank-bar.gain { background: #27ae60; }
+  .rank-bar.jpbar { background: var(--navy); }
+  .rank-note { position: absolute; font-size: 11px; font-weight: 700; color: var(--navy); white-space: nowrap; top: 0;
+               opacity: 0; transition: opacity .5s ease 1.5s; }
+  .slide.run .rank-note { opacity: 1; }
+  .rank-axis { display: grid; grid-template-columns: 112px 1fr; gap: 8px; margin-top: 5px; }
+  .rank-axis .ax { position: relative; height: 13px; font-size: 10px; color: var(--text-light); }
+  .rank-axis .ax span { position: absolute; transform: translateX(-50%); }
+
+  /* ── animated scatter (p2, PNG置換) ── */
+  .scatter-svg { width: 100%; height: auto; max-height: 408px; }
+  .scatter-svg .gridline { stroke: #e8edf4; stroke-width: 1; }
+  .scatter-svg .axline { stroke: #8a97a8; stroke-width: 1.2; }
+  .scatter-svg .zline { stroke: #667788; stroke-width: 0.9; stroke-dasharray: 3 4; }
+  .scatter-svg .ticklab { font-size: 12px; fill: var(--text-light); }
+  .scatter-svg .axlab { font-size: 12px; fill: var(--text-mid); }
+  .scatter-svg .pt { transform: scale(0); transform-origin: center; transform-box: fill-box;
+                     transition: transform .45s cubic-bezier(.34,1.56,.64,1) var(--d, 0s); }
+  .scatter-svg .frag.on .pt { transform: scale(1); }
+  .scatter-svg .fitline { fill: none; stroke: var(--crimson); stroke-width: 2.4;
+                          stroke-dasharray: var(--len); stroke-dashoffset: var(--len);
+                          transition: stroke-dashoffset .9s ease .15s; }
+  .scatter-svg .frag.on .fitline { stroke-dashoffset: 0; }
+  .scatter-svg .fitlab { font-size: 12.5px; font-weight: 700; fill: var(--crimson); }
+  .scatter-svg .clab { font-size: 12px; fill: #444; opacity: 0; transition: opacity .4s ease var(--d, 0s); }
+  .scatter-svg .frag.on .clab { opacity: 1; }
+  .scatter-svg .jplab { font-size: 16px; font-weight: 800; fill: var(--navy); }
+  .scatter-svg .jpline { stroke: var(--navy); stroke-width: 1.4; fill: none; }
+  .scatter-svg .jp-pulse { fill: none; stroke: var(--navy); stroke-width: 2; opacity: 0;
+                           transform-origin: center; transform-box: fill-box; }
+  .scatter-svg .frag.on .jp-pulse { animation: jppulse 1.6s ease-out infinite; }
+  @keyframes jppulse {
+    0%   { transform: scale(.5); opacity: .9; }
+    80%  { transform: scale(2.4); opacity: 0; }
+    100% { transform: scale(2.4); opacity: 0; }
   }
 
   /* bottom progress bar (current position in deck) */
@@ -334,10 +384,15 @@
 
   @media (prefers-reduced-motion: reduce) {
     .slide.active { animation: none; }
-    .rise, .frag, .bar-seg { transition: none; }
+    .rise, .frag, .bar-seg, .rank-bar, .rank-note, .scatter-svg .pt, .scatter-svg .fitline, .scatter-svg .clab { transition: none; }
     .rise { opacity: 1; transform: none; }
     .bar-seg { width: var(--w); }
-    .flow-dot::after { animation: none; }
+    .rank-bar { width: var(--w); }
+    .rank-note { opacity: 1; }
+    .scatter-svg .pt { transform: scale(1); }
+    .scatter-svg .fitline { stroke-dashoffset: 0; }
+    .flow-arrow .fa-flow { animation: none; }
+    .scatter-svg .frag.on .jp-pulse { animation: none; }
   }
 </style>
 </head>
@@ -374,9 +429,9 @@
       輸入価格ショックによる実質所得の海外流出は日本に固有ではない。<br><strong>しかし日本はその影響の大きさで流出側の上位に位置する。</strong>
     </div>
     <div class="fig-full rise" style="--d:.25s;">
-      <img src="assets/s2b-tot-loss-ranking.png" alt="2022年 交易損失（対GDP比）国際比較ランキング（46ヶ国・2カラム）。日本9位をハイライト。" class="fig-rank-wide">
+      <div class="rank-chart" id="rankChart"></div>
     </div>
-    <div class="note">2022年の交易損失（対GDP比、46ヶ国）。正＝海外流出、負＝交易利得（エネ輸出国）。出所: 筆者作成（World Bank）。</div>
+    <div class="note">2022年の交易損失（対GDP比、46ヶ国）。正＝海外流出（赤）、負＝交易利得（緑・エネ輸出国）、青＝日本。出所: 筆者作成（World Bank）。</div>
   </div>
 
   <!-- 01c 問題意識 2/2: エネルギー依存散布図 + 橋渡し -->
@@ -391,17 +446,17 @@
     <div class="split split-scatter">
       <div>
         <ul class="bullets">
-          <li class="frag"><span class="nowrap">エネルギー</span>を輸入に依存する国ほど、大きな所得流出を被った</li>
-          <li class="frag">交易利得を得たのは<span class="nowrap">エネルギー輸出国</span>（ノルウェー等）</li>
-          <li class="frag">日本はエネルギー使用の<strong>約9割</strong>を純輸入に依存 — 脆弱性の典型例</li>
+          <li class="frag" data-frag="g1"><span class="nowrap">エネルギー</span>を輸入に依存する国ほど、大きな所得流出を被った</li>
+          <li class="frag" data-frag="g1">交易利得を得たのは<span class="nowrap">エネルギー輸出国</span>（ノルウェー等）<!-- フラグメント順序マーカー: 散布図の点→回帰線→国名ラベルをこの位置に割込ませる --><i class="frag" data-frag="g2" hidden></i><i class="frag" data-frag="g3" hidden></i><i class="frag" data-frag="g4" hidden></i></li>
+          <li class="frag" data-frag="g5">日本はエネルギー使用の<strong class="frag emph" data-frag="g6">約9割</strong>を純輸入に依存 — 脆弱性の典型例</li>
         </ul>
-        <p class="bridge frag">→ この<strong>輸入依存という構造</strong>の上で、所得流出が <strong>①どの規模で → ②誰の負担として → ③どう抑制できるか</strong> を、本日の中間結果（国内データ）で示す。</p>
+        <p class="bridge frag" data-frag="g7">→ この<strong class="frag emph" data-frag="g8">輸入依存という構造</strong>の上で、所得流出が <strong class="frag emph" data-frag="g8">①どの規模で → ②誰の負担として → ③どう抑制できるか</strong> を、本日の中間結果（国内データ）で示す。</p>
       </div>
       <div class="fig-wrap rise" style="--d:.2s;">
-        <img src="assets/s2b-energy-scatter.png" alt="純エネルギー輸入依存と2022年交易損失の散布図。回帰のR²=0.64。" class="fig-scatter">
+        <svg id="scatterSvg" class="scatter-svg" viewBox="0 0 640 470" role="img" aria-label="純エネルギー輸入依存と2022年交易損失の散布図（45ヶ国）。回帰のR²=0.64。"></svg>
       </div>
     </div>
-    <div class="note">純エネルギー輸入依存と2022年交易損失（46ヶ国）。横軸: 正＝輸入依存・負＝輸出国。出所: 筆者作成（World Bank）。</div>
+    <div class="note">純エネルギー輸入依存と2022年交易損失（45ヶ国・エネルギーデータ欠損のアイスランドを除く）。横軸: 正＝輸入依存・負＝輸出国。点の色: 赤＝流出・緑＝交易利得・青＝日本。出所: 筆者作成（World Bank）。</div>
   </div>
 
   <!-- 02 Recap + refined hook -->
@@ -538,13 +593,13 @@
         <div class="sshare" data-count="0.41" data-decimals="2" data-duration="900">0.41</div>
         <div class="sdesc">需要主導<br>（経済再開）</div>
       </div>
-      <div class="supply-arrow flow-dot frag" data-frag="y2">→</div>
+      <div class="supply-arrow frag" data-frag="y2"><svg class="flow-arrow" viewBox="0 0 90 30" width="90" height="30" aria-hidden="true"><path class="fa-shaft" d="M4 15 H60"/><path class="fa-flow" d="M4 15 H60"/><path class="fa-head" d="M58 4.5 L84 15 L58 25.5 Z"/></svg></div>
       <div class="supply-year supply frag" data-frag="y2">
         <div class="syr">2022年</div>
         <div class="sshare" data-count="0.70" data-decimals="2" data-duration="900">0.70</div>
         <div class="sdesc">供給主導へ転換<br>（侵攻・資源高）</div>
       </div>
-      <div class="supply-arrow flow-dot frag" data-frag="y3">→</div>
+      <div class="supply-arrow frag" data-frag="y3"><svg class="flow-arrow" viewBox="0 0 90 30" width="90" height="30" aria-hidden="true"><path class="fa-shaft" d="M4 15 H60"/><path class="fa-flow" d="M4 15 H60"/><path class="fa-head" d="M58 4.5 L84 15 L58 25.5 Z"/></svg></div>
       <div class="supply-year supply frag" data-frag="y3">
         <div class="syr">2024年</div>
         <div class="sshare" data-count="0.83" data-decimals="2" data-duration="900">0.83</div>
@@ -569,13 +624,13 @@
         <div class="ptitle">輸入含有率の財間差異で<br>コストプッシュを単離できる</div>
         <p>仮説の前提③として、回帰でデマンドプルから分離する識別戦略を提示した。</p>
       </div>
-      <div class="pivot-arrow flow-dot frag" data-frag="p2">→</div>
+      <div class="pivot-arrow frag" data-frag="p2"><svg class="flow-arrow" viewBox="0 0 90 30" width="90" height="30" aria-hidden="true"><path class="fa-shaft" d="M4 15 H60"/><path class="fa-flow" d="M4 15 H60"/><path class="fa-head" d="M58 4.5 L84 15 L58 25.5 Z"/></svg></div>
       <div class="pivot-col finding frag" data-frag="p2">
         <div class="plabel">分析でわかったこと</div>
         <div class="ptitle">単一マクロ事象では<br>満たせない</div>
         <p>独立な輸入物価ショックが実質1つ（2021–24サージ）。exposure-robust推論では非有意・期間延長でも救えない。点推定 β=0.425 は「整合的」止まり。</p>
       </div>
-      <div class="pivot-arrow flow-dot frag" data-frag="p3">→</div>
+      <div class="pivot-arrow frag" data-frag="p3"><svg class="flow-arrow" viewBox="0 0 90 30" width="90" height="30" aria-hidden="true"><path class="fa-shaft" d="M4 15 H60"/><path class="fa-flow" d="M4 15 H60"/><path class="fa-head" d="M58 4.5 L84 15 L58 25.5 Z"/></svg></div>
       <div class="pivot-col survives frag" data-frag="p3">
         <div class="plabel">それでも残るもの</div>
         <div class="ptitle">問いへの答えは<br>より防御可能な形で残る</div>
@@ -676,6 +731,144 @@
   let cur = 0;
   const total = slides.length;
   const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  /* ══ data-driven charts (p1 ranking / p2 scatter) ══
+     出所: data/processed/deindustrialization/xc_2022.csv（World Bank・筆者計算）
+     OLS: tot_loss = 0.7165 + 0.021541 × eimp, R² = 0.64（n=45, ISL は eimp 欠損） */
+  const RANK = [
+    {iso:'IRL',name:'アイルランド',loss:10.11,eimp:86.0},{iso:'TUR',name:'トルコ',loss:5.34,eimp:72.7},
+    {iso:'HUN',name:'ハンガリー',loss:5.09,eimp:64.4},{iso:'THA',name:'タイ',loss:4.60,eimp:57.1},
+    {iso:'CHE',name:'スイス',loss:4.57,eimp:51.7},{iso:'SVK',name:'スロバキア',loss:4.44,eimp:68.9},
+    {iso:'CRI',name:'コスタリカ',loss:3.64,eimp:53.1},{iso:'ITA',name:'イタリア',loss:3.36,eimp:83.6},
+    {iso:'JPN',name:'日本',loss:3.28,eimp:90.0},{iso:'NLD',name:'オランダ',loss:3.27,eimp:99.4},
+    {iso:'CHL',name:'チリ',loss:2.93,eimp:66.3},{iso:'KOR',name:'韓国',loss:2.88,eimp:85.5},
+    {iso:'EST',name:'エストニア',loss:2.57,eimp:6.8},{iso:'IND',name:'インド',loss:2.53,eimp:36.5},
+    {iso:'ZAF',name:'南アフリカ',loss:2.35,eimp:-14.1},{iso:'CZE',name:'チェコ',loss:2.20,eimp:42.0},
+    {iso:'DNK',name:'デンマーク',loss:2.16,eimp:47.4},{iso:'MEX',name:'メキシコ',loss:1.89,eimp:21.1},
+    {iso:'SWE',name:'スウェーデン',loss:1.47,eimp:28.7},{iso:'AUT',name:'オーストリア',loss:1.46,eimp:76.8},
+    {iso:'GBR',name:'英国',loss:1.45,eimp:39.2},{iso:'BRA',name:'ブラジル',loss:1.38,eimp:-7.3},
+    {iso:'PRT',name:'ポルトガル',loss:1.36,eimp:81.5},{iso:'BEL',name:'ベルギー',loss:1.27,eimp:86.8},
+    {iso:'ESP',name:'スペイン',loss:1.23,eimp:82.9},{iso:'LVA',name:'ラトビア',loss:1.12,eimp:40.4},
+    {iso:'ISR',name:'イスラエル',loss:1.06,eimp:26.1},{iso:'DEU',name:'ドイツ',loss:1.03,eimp:71.8},
+    {iso:'POL',name:'ポーランド',loss:1.02,eimp:46.8},{iso:'FRA',name:'フランス',loss:0.96,eimp:54.3},
+    {iso:'GRC',name:'ギリシャ',loss:0.84,eimp:92.9},{iso:'NZL',name:'ニュージーランド',loss:0.62,eimp:28.8},
+    {iso:'LTU',name:'リトアニア',loss:0.55,eimp:76.2},{iso:'CHN',name:'中国',loss:-0.06,eimp:20.6},
+    {iso:'ISL',name:'アイスランド',loss:-0.38,eimp:null},{iso:'USA',name:'米国',loss:-0.52,eimp:-6.5},
+    {iso:'FIN',name:'フィンランド',loss:-0.54,eimp:42.4},{iso:'SVN',name:'スロベニア',loss:-0.67,eimp:53.5},
+    {iso:'IDN',name:'インドネシア',loss:-1.66,eimp:-82.9},{iso:'AUS',name:'オーストラリア',loss:-2.02,eimp:-234.3},
+    {iso:'CAN',name:'カナダ',loss:-2.29,eimp:-89.5},{iso:'LUX',name:'ルクセンブルク',loss:-2.88,eimp:110.3},
+    {iso:'COL',name:'コロンビア',loss:-3.97,eimp:-139.1},{iso:'MYS',name:'マレーシア',loss:-4.33,eimp:-0.6},
+    {iso:'SAU',name:'サウジアラビア',loss:-5.09,eimp:-178.2},{iso:'NOR',name:'ノルウェー',loss:-14.96,eimp:-746.7}
+  ];
+  const OLS = { const: 0.7165, slope: 0.021541, r2: 0.64 };
+
+  (function buildRank() {
+    const wrap = document.getElementById('rankChart');
+    if (!wrap) return;
+    const min = -15.5, max = 10.6, range = max - min;
+    const zero = (0 - min) / range * 100;
+    const half = Math.ceil(RANK.length / 2);
+    [RANK.slice(0, half), RANK.slice(half)].forEach((seg, ci) => {
+      const col = document.createElement('div');
+      col.className = 'rank-col';
+      seg.forEach((r, i) => {
+        const rank = ci * half + i + 1;
+        const isJp = r.iso === 'JPN';
+        const w = Math.abs(r.loss) / range * 100;
+        const cls = isJp ? 'jpbar' : (r.loss >= 0 ? 'loss' : 'gain');
+        const pos = r.loss >= 0 ? `left:${zero}%` : `right:${(100 - zero).toFixed(3)}%`;
+        const d = (0.35 + rank * 0.028).toFixed(2);
+        const row = document.createElement('div');
+        row.className = 'rank-row' + (isJp ? ' jp' : '');
+        row.innerHTML =
+          `<span class="rname">${rank}. ${r.name}</span>` +
+          `<span class="rank-track"><span class="rank-zero" style="left:${zero}%"></span>` +
+          `<span class="rank-bar ${cls}" style="${pos}; --w:${w.toFixed(2)}%; --d:${d}s"></span>` +
+          (isJp ? `<span class="rank-note" style="left:${(zero + w + 1.5).toFixed(2)}%">◀ 日本 3.28%GDP</span>` : '') +
+          `</span>`;
+        col.appendChild(row);
+      });
+      const ax = document.createElement('div');
+      ax.className = 'rank-axis';
+      let ticks = '';
+      for (const t of [-15, -10, -5, 0, 5, 10]) {
+        ticks += `<span style="left:${((t - min) / range * 100).toFixed(2)}%">${t}</span>`;
+      }
+      ax.innerHTML = `<span></span><span class="ax">${ticks}</span>`;
+      col.appendChild(ax);
+      wrap.appendChild(col);
+    });
+  })();
+
+  (function buildScatter() {
+    const svg = document.getElementById('scatterSvg');
+    if (!svg) return;
+    const NS = 'http://www.w3.org/2000/svg';
+    const W = 640, H = 470, ml = 54, mr = 18, mt = 16, mb = 56;
+    const x0 = -790, x1 = 150, y0 = -16.5, y1 = 11.5;
+    const X = v => ml + (v - x0) / (x1 - x0) * (W - ml - mr);
+    const Y = v => mt + (y1 - v) / (y1 - y0) * (H - mt - mb);
+    const el = (tag, attrs, txt) => {
+      const e = document.createElementNS(NS, tag);
+      for (const k in attrs) e.setAttribute(k, attrs[k]);
+      if (txt != null) e.textContent = txt;
+      return e;
+    };
+    // 真っさらな座標平面（スライド表示と同時に見える）
+    const plane = el('g', {});
+    for (const t of [-750, -500, -250, 0]) plane.appendChild(el('line', {class:'gridline', x1:X(t), y1:mt, x2:X(t), y2:H-mb}));
+    for (const t of [-15, -10, -5, 0, 5, 10]) plane.appendChild(el('line', {class:'gridline', x1:ml, y1:Y(t), x2:W-mr, y2:Y(t)}));
+    plane.appendChild(el('line', {class:'zline', x1:ml, y1:Y(0), x2:W-mr, y2:Y(0)}));
+    plane.appendChild(el('line', {class:'axline', x1:ml, y1:mt, x2:ml, y2:H-mb}));
+    plane.appendChild(el('line', {class:'axline', x1:ml, y1:H-mb, x2:W-mr, y2:H-mb}));
+    for (const t of [-750, -500, -250, 0]) plane.appendChild(el('text', {class:'ticklab', x:X(t), y:H-mb+16, 'text-anchor':'middle'}, String(t)));
+    for (const t of [-15, -10, -5, 0, 5, 10]) plane.appendChild(el('text', {class:'ticklab', x:ml-7, y:Y(t)+4, 'text-anchor':'end'}, String(t)));
+    plane.appendChild(el('text', {class:'axlab', x:(ml+W-mr)/2, y:H-14, 'text-anchor':'middle'}, '純エネルギー輸入（％エネルギー使用、正＝輸入依存・負＝輸出国）'));
+    plane.appendChild(el('text', {class:'axlab', x:14, y:(mt+H-mb)/2, 'text-anchor':'middle', transform:`rotate(-90 14 ${(mt+H-mb)/2})`}, '2022年 交易損失（％GDP、正＝所得流出）'));
+    svg.appendChild(plane);
+    const pts = RANK.filter(r => r.eimp != null);
+    // g2: 各国の点がポップイン（流出=赤・利得=緑・日本=青）
+    const gPts = el('g', {class:'frag', 'data-frag':'g2'});
+    pts.forEach((r, i) => {
+      const isJp = r.iso === 'JPN';
+      const c = el('circle', {
+        class:'pt', cx:X(r.eimp), cy:Y(r.loss), r: isJp ? 8 : 5,
+        fill: isJp ? '#1f4e79' : (r.loss >= 0 ? '#c0392b' : '#27ae60'),
+        'fill-opacity': isJp ? 1 : 0.72, stroke:'#fff', 'stroke-width': isJp ? 1.4 : 0.7
+      });
+      c.style.setProperty('--d', (i * 0.03) + 's');
+      gPts.appendChild(c);
+    });
+    svg.appendChild(gPts);
+    // g3: 回帰直線がスッと引かれる
+    const fx0 = -746.7, fx1 = 110.3;
+    const fy = x => OLS.const + OLS.slope * x;
+    const gFit = el('g', {class:'frag', 'data-frag':'g3'});
+    const line = el('path', {class:'fitline', d:`M${X(fx0)} ${Y(fy(fx0))} L${X(fx1)} ${Y(fy(fx1))}`});
+    const len = Math.hypot(X(fx1) - X(fx0), Y(fy(fx1)) - Y(fy(fx0)));
+    line.style.setProperty('--len', Math.ceil(len) + 'px');
+    gFit.appendChild(line);
+    gFit.appendChild(el('text', {class:'fitlab', x:ml+12, y:mt+18}, `回帰直線（R²=${OLS.r2.toFixed(2)}）`));
+    svg.appendChild(gFit);
+    // g4: 代表国ラベル（本論図と同じ DEU/USA/NOR/SAU/AUS）
+    const gLab = el('g', {class:'frag', 'data-frag':'g4'});
+    ['DEU', 'USA', 'NOR', 'SAU', 'AUS'].forEach((iso, i) => {
+      const r = RANK.find(q => q.iso === iso);
+      if (!r || r.eimp == null) return;
+      const t = el('text', {class:'clab', x:X(r.eimp)+7, y:Y(r.loss)-8}, r.name);
+      t.style.setProperty('--d', (i * 0.12) + 's');
+      gLab.appendChild(t);
+    });
+    svg.appendChild(gLab);
+    // g6: 日本の強調（パルス + コールアウト） — 左テキストの「約9割」太字化と同じキーで発火
+    const jp = RANK.find(r => r.iso === 'JPN');
+    const gJp = el('g', {class:'frag', 'data-frag':'g6'});
+    gJp.appendChild(el('circle', {class:'jp-pulse', cx:X(jp.eimp), cy:Y(jp.loss), r:11}));
+    const lx = X(jp.eimp - 260), ly = Y(jp.loss + 3.6);
+    gJp.appendChild(el('line', {class:'jpline', x1:lx+30, y1:ly+7, x2:X(jp.eimp)-10, y2:Y(jp.loss)-5}));
+    gJp.appendChild(el('text', {class:'jplab', x:lx, y:ly, 'text-anchor':'middle'}, '日本'));
+    svg.appendChild(gJp);
+  })();
 
   /* ── count-up ── */
   function startCount(el) {
