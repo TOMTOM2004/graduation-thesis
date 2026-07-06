@@ -243,6 +243,11 @@
   }
   .pivot-contrib strong { color: var(--navy); }
 
+  /* ぶら下げインデント: ラベル+コロン後の折返しを本文開始位置に揃える */
+  .hang { display: flex; }
+  .hang > .hang-label { flex: 0 0 auto; white-space: nowrap; }
+  .hang > .hang-body { flex: 1 1 auto; min-width: 0; }
+
   /* ── Two-column generic ── */
   .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 26px; flex: 1; align-content: center; }
   .col-box { background: var(--muted-bg); border-radius: 4px; padding: 20px 22px; }
@@ -610,8 +615,8 @@
         <div class="sdesc">供給主導が​継続</div>
       </div>
     </div>
-    <div class="key-message frag" style="margin:8px 0 0; background:var(--white); border-left:4px solid var(--crimson);">
-      <strong class="frag emph" data-frag="em">橋渡しの​論理</strong>：① 必需品＝高輸入含有​（柱②）＋ ② 供給主導インフレ​（本スライド）→ 実効インフレの​逆進性​（柱③）は<strong class="frag emph" data-frag="em">コストプッシュ由来と​整合的</strong>。<span class="frag emph emph-crimson" data-frag="em">これは​「識別」ではなく​三角測量である</span>と​明示する。
+    <div class="key-message frag hang" style="margin:8px 0 0; background:var(--white); border-left:4px solid var(--crimson);">
+      <span class="hang-label"><strong class="frag emph" data-frag="em">橋渡しの​論理</strong>：</span><span class="hang-body">① 必需品＝高輸入含有​（柱②）＋ ② 供給主導インフレ​（本スライド）→ 実効インフレの​逆進性<span class="nowrap">（柱③）は</span><strong class="frag emph" data-frag="em">コストプッシュ由来と​整合的</strong>。<span class="frag emph emph-crimson" data-frag="em">これは​「識別」ではなく​三角測量である</span>と​明示する。</span>
     </div>
     <div class="note">出所: Shapiro 分解を CGPI/CPI 品目（116品目バスケット）に​適用、​インフレ寄与加重。5仕様で 2022＞2021 の​供給シェア上昇が​頑健。​供給寄与の​品目構成は​広範​（ガソリン・鶏肉・水産物​等）。</div>
   </div>
@@ -641,8 +646,8 @@
         <p>逆進性の​結論は​恒等式​（柱③）​＋曝露​（柱②）​＋供給主導​（三角測量）で​立つ。​前提に​依存しない。</p>
       </div>
     </div>
-    <div class="pivot-contrib frag">
-      <strong class="frag emph" data-frag="em">方​法論的貢献​（貢献③）</strong>：単一の​交易ショックから​コストプッシュを​清浄に​識別する​ことの<strong class="frag emph" data-frag="em">原理的限界を、​実データで​体系的に​提示</strong>した。​五分位別の group-specific 分解は inconclusive ── 年次×五分位の​粗さでは​数量応答マージンを​解像できない​ことを​正直に​記録。
+    <div class="pivot-contrib frag hang">
+      <span class="hang-label"><strong class="frag emph" data-frag="em">方法論的貢献​（貢献③）</strong>：</span><span class="hang-body">単一の​交易ショックから​コストプッシュを​清浄に​識別する​ことの<strong class="frag emph" data-frag="em">原理的限界を、​実データで​体系的に​提示</strong>した。<br>五分位別の group-specific 分解は inconclusive ──<br>年次×五分位の​粗さでは​数量応答マージンを​解像できない​ことを​正直に​記録。</span>
     </div>
   </div>
 
