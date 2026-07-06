@@ -109,8 +109,8 @@
   }
 
   ul.bullets { list-style: none; padding: 0; display: flex; flex-direction: column; gap: 13px; }
-  ul.bullets li { display: flex; align-items: flex-start; gap: 12px; font-size: 18px; line-height: 1.55; color: var(--text-mid); }
-  ul.bullets li::before { content: '—'; color: var(--blue-soft); flex-shrink: 0; margin-top: 1px; font-weight: 700; }
+  ul.bullets li { position: relative; padding-left: 32px; font-size: 18px; line-height: 1.55; color: var(--text-mid); }
+  ul.bullets li::before { content: '—'; color: var(--blue-soft); position: absolute; left: 0; top: 0; font-weight: 700; }
 
   .note {
     margin-top: auto;
@@ -459,7 +459,7 @@
           <li class="frag" data-frag="g1">交易利得を​得たのは<span class="nowrap">エネルギー輸出国</span>（ノルウェー等）<!-- フラグメント順序マーカー: 散布図の点→回帰線→国名ラベルをこの位置に割込ませる --><i class="frag" data-frag="g2" hidden></i><i class="frag" data-frag="g3" hidden></i><i class="frag" data-frag="g4" hidden></i></li>
           <li class="frag" data-frag="g5">日本は​エネルギー使用の<strong class="frag emph" data-frag="g6">約9割</strong>を​純輸入に​依存 — 脆弱性の​典型例</li>
         </ul>
-        <p class="bridge frag" data-frag="g7">→ この<strong class="frag emph" data-frag="g8">輸入依存と​いう​構造</strong>の​上で、​所得流出が <strong class="frag emph" data-frag="g8">①どの​規模で → ②誰の​負担と​して → ③どう​抑制できるか</strong> を、​本日の​中間結果​（国内データ）で​示す。</p>
+        <p class="bridge frag" data-frag="g7">→ この<strong class="frag emph" data-frag="g8">輸入依存と​いう​構造</strong>の​上で、​所得流出が<br><strong class="frag emph" data-frag="g8"><span class="nowrap">①どの規模で</span> → <span class="nowrap">②誰の負担として</span> → <span class="nowrap">③どう抑制できるか</span></strong>を、<br>本日の​中間結果​（国内データ）で​示す。</p>
       </div>
       <div class="fig-wrap rise" style="--d:.2s;">
         <svg id="scatterSvg" class="scatter-svg" viewBox="0 0 640 470" role="img" aria-label="純エネルギー輸入依存と2022年交易損失の散布図（45ヶ国）。回帰のR²=0.64。"></svg>
