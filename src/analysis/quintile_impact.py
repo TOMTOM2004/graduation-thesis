@@ -401,7 +401,8 @@ def print_gdp_aggregate_summary(df: pd.DataFrame) -> None:
     print(f"  Q5 累積負担: {shock['q5_pp'].iloc[-1]:.2f}pp")
     print(f"  Q1-Q5 格差（2024年時点）: {shock['q1_q5_gap_pp'].iloc[-1]:.2f}pp")
     print("\n解釈（Phase 2b、実績CPI使用）: 集計的影響（平均）は実績CPI と概ね一致し、モデルの妥当性を示す。")
-    print("      Q1 は毎年 Q5 より 0.9–1.4pp 多くのインフレを負担している（コストプッシュ＋デマンドプル合計）。")
+    shock_gaps = shock["q1_q5_gap_pp"]
+    print(f"      Q1 は毎年 Q5 より {shock_gaps.min():.1f}–{shock_gaps.max():.1f}pp 多くのインフレを負担している（コストプッシュ＋デマンドプル合計）。")
     print("      コストプッシュ固有の逆進性は Phase 3 で別途推定。")
 
 

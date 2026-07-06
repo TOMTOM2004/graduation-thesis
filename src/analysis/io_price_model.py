@@ -14,7 +14,7 @@ Phase 3 Step 3-1: IO価格モデル（レオンチェフ価格方程式）。
 
 2仕様で並列実装:
     (i)  β=1.0: レオンチェフ原形（完全転嫁）
-    (ii) β=BETA_EMPIRICAL（cost_push_panel_results.csv spec iii から読込・≈0.431）: 実証スケーリング（Phase 2a-3 パネルOLS 推定値）
+    (ii) β=BETA_EMPIRICAL（cost_push_panel_results.csv spec iii から読込・≈0.43）: 実証スケーリング（Phase 2a-3 パネルOLS 推定値）
 
 競争的輸入財（衣料・履物）は転嫁係数を 0 に設定（DEC-010）。
 """
