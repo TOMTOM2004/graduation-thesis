@@ -365,11 +365,11 @@
   .scatter-svg .pt { transform: scale(0); transform-origin: center; transform-box: fill-box;
                      transition: transform .45s cubic-bezier(.34,1.56,.64,1) var(--d, 0s); }
   .scatter-svg .frag.on .pt { transform: scale(1); }
-  .scatter-svg .fitline { fill: none; stroke: var(--crimson); stroke-width: 2.4;
+  .scatter-svg .fitline { fill: none; stroke: var(--orange); stroke-width: 2.4;
                           stroke-dasharray: var(--len); stroke-dashoffset: var(--len);
                           transition: stroke-dashoffset .9s ease .15s; }
   .scatter-svg .frag.on .fitline { stroke-dashoffset: 0; }
-  .scatter-svg .fitlab { font-size: 14px; font-weight: 700; fill: var(--crimson); }
+  .scatter-svg .fitlab { font-size: 14px; font-weight: 700; fill: var(--orange); }
   .scatter-svg .clab { font-size: 13px; fill: var(--text-mid); opacity: 0; transition: opacity .4s ease var(--d, 0s);
                        stroke: #fff; stroke-width: 3px; paint-order: stroke; }
   .scatter-svg .frag.on .clab { opacity: 1; }
@@ -868,7 +868,7 @@
     const LABEL_POS = {
       DEU: {dx: 10,  dy: 4,   anchor: 'start'},
       USA: {dx: -10, dy: 12,  anchor: 'end'},
-      NOR: {dx: 16,  dy: -12, anchor: 'start'},
+      NOR: {dx: 18,  dy: 16,  anchor: 'start'},
       SAU: {dx: 0,   dy: 22,  anchor: 'middle'},
       AUS: {dx: -12, dy: 4,   anchor: 'end'}
     };
