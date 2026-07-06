@@ -6,13 +6,13 @@ _Last updated: 2026-07-06 / session: goods-services contrast分析実装（DEC-0
 - What: **論文執筆着手**（実証3本柱を結果章に統合）。数値は必ず DEC-021 の再生成値を使う: 交易損失 中心~35兆/上限40.7兆・Q1-Q5 **+2.14pp**(2022)・β=**0.425 (p=0.047)**・Shapiro 0.41→0.70→0.83・RMSE 10.00pp。goods-services分解（DEC-022）は §5 のとおり research-design.md/decision-log.md/第2回スライドに反映済
 - Where: `paper/`（outline.md が章割り。01-introduction はドラフト済・DEC-015 準拠に修正済）
 - Done when: 先行研究 or 方法論の章が1本ドラフトされ、数値が全て repo 再現値と一致
-- 別線: ① main を origin へ push（ユーザー判断待ち） ② AKM SE の R 再実行（_akm_cross.csv は B-4 整合版に再生成済・ShiftShareSE 環境が前提。旧 p≈0.15 の再確認） ③ shapiro_decomp の e-Stat 品目名をキャッシュ化（現状 API キー必須＝再現性の残穴） ④ GDP 561兆の vintage 確定（trade_loss.py TODO） ⑤ data/processed_stale_20260706/ の削除判断（新キャッシュ安定後） ⑥ §4突合結果の判断（上下水道料・設備修繕維持の分類を総務省公式に合わせるか維持するかを次セッションで決定 — `docs/design/2026-07-06-goods-services-contrast.md` 末尾参照）
+- 別線: ① ~~main push~~（完了・origin=09ff542） ② ~~AKM SE の R 再実行~~（DEC-021補遺で消化・p≈0.15 再現） ③ ~~財/サービス分解（DEC-022）~~（実装・doc反映・§4官公表突合とも完了。突合2件差異は価格決定メカニズム基準の事前定義として意図的差異と明記しクローズ済＝09ff542） ④ shapiro_decomp の e-Stat 品目名をキャッシュ化（現状 API キー必須＝再現性の残穴） ⑤ GDP 561兆の vintage 確定（trade_loss.py TODO） ⑥ data/processed_stale_20260706/ の削除判断（新キャッシュ安定後）
 
 ## ✅ 直近完了（2026-07-06・このセッション・goods-services contrast分析実装・DEC-022）
 - **設計書どおり実装**: `src/analysis/goods_services_contrast.py`（新規319行）。41カテゴリ財/サービス分類×S0-S3の4仕様で年次相関＋pooled β 算出。golden突合・決定論再現・バケットサイズassert全通過
 - **事前登録判定結果**: S1 goodsのショック期4年中2021年が負のため **(a) 消える**（全体コントラストの相当部分は財/サービス構成差で説明される）
 - **doc反映3箇所**: research-design.md・decision-log.md（DEC-022新設）・第2回スライド補足メモ。全てCSV値と突合済（手打ちゼロ）
-- **§4公式分類突合**: 総務省「品目から類への合算表(財・サービス分類)」（4-4.pdf）と照合し2件の齟齬（上下水道料=公式は財・設備修繕維持=公式は全サービス）を検出、設計書末尾に記録（表は変更せず、判断は次セッション）
+- **§4公式分類突合**: 総務省「品目から類への合算表(財・サービス分類)」（4-4.pdf）と照合し2件の齟齬（上下水道料=公式は財・設備修繕維持=公式は全サービス）を検出、設計書末尾に記録。→ **別セッションで意図的差異としてクローズ済み**（decision-log.md DEC-022補遺・commit `09ff542`。価格決定メカニズム基準の事前定義であり官公表準拠に組み替えても判定(a)は覆らない旨を明記）
 - **`/review-code light`**: correctness-critic が major 1件検出（S1図右パネルのプラセボ/ショック境界線 axvline が1インデックスずれ・2019年がショック側に食い込んで見える描画バグ）→ 修正・再検証・再commit済。security/removed-behaviorはpass
 - **worktree運用**: `worktree-20260707-goods-services-contrast` で実装 → main へ `--no-ff` マージ（commit `9be8ab9`）→ worktree削除済
 
