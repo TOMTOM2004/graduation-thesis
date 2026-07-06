@@ -239,3 +239,8 @@
 - **決定（ユーザー承認 2026-07-06）**: 再生成値（現行コードの決定論的出力）を正とし、docs（overview/research-design/contribution/analysis-plan/feasibility/progress/INDEX/shapiro-decomposition/design-review〔B-1 照合先差し替え〕/literature saito メモ）・paper（outline/01-introduction/04a）・README「主要結果」節・project CLAUDE.md を一括更新。本体ツリーの data/processed は旧を退避のうえ再生成値で置換。DEC-017 の Tier1 連鎖は数値を +2.14pp に差し替えて維持（構造は不変）。過去の DEC 本文は歴史記録として書き換えない（本DECが上書きを宣言）。
 - **含意**: (iii) p=0.047・プラセボ有意負・FD null 化により、β の Tier 2 位置づけ（「整合的な点推定・頑健に不確実」）の妥当性がさらに裏付けられた。論文では仕様表を B-4 後の値で提示し、プラセボの負値は goods-vs-services 交絡（プラセボ期は円高・輸入価格下落局面）とあわせて「pooled プラセボは ill-posed」の傍証として扱う。
 - **環境面の是正（同コミット群）**: setuptools 追加（Py3.12 で japanize_matplotlib が distutils 要求→全図生成不能だった）。**残課題**: shapiro_decomp が実行時に e-Stat API（品目名メタデータ）を要求し API キーなしで再現不能 → 品目名の raw キャッシュ化を別タスクで。
+
+#### DEC-021 補遺: 識別断念（DEC-013）の再検証 — B-4 整合データで同結論（2026-07-06・ユーザー質問起点）
+- 「識別はやり直したらできるのでは」を、断念根拠の3テストを現行データ（B-4 IC是正後・DEC-021 再生成キャッシュ）で再実行して確認。
+- ①ショック独立性: 平均相関 0.831（2021-24）・pr_group=1.29 → group-specific β_g 分離不能（IC 非依存の構造的事実・再現）。②期間延長: FD-Koyck two-way FE δ=0.55 で p=0.167/0.60（両窓非有意・DEC-013 記録と一致）。③AKM0: p=0.153/0.155（B-4 整合の _akm_cross.csv 再生成版・記録の p≈0.15 と一致）。
+- **結論: 断念は正しく、再実行でも覆らない。** 識別不能は「実効的な独立ショックが1本」という設定内在の構造で、B-4 修正はむしろパネル回帰を弱めた（p 0.002→0.047・FD null・プラセボ有意負）。貢献③（識別限界の方法論的提示）は再検証で強化。todo の残タスク「AKM SE の R 再実行」は本補遺で消化。
