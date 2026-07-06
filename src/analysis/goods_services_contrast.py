@@ -298,7 +298,7 @@ def plot_contrast(df: pd.DataFrame, output_path: Path | None = None) -> None:
         offset = (i - 0.5) * width
         ax.bar([xi + offset for xi in x], vals, width=width, label=bucket, alpha=0.82)
     ax.axhline(0, color="black", linewidth=0.8)
-    ax.axvline(3.5, color="gray", linewidth=1.2, linestyle="--", alpha=0.7)
+    ax.axvline(len(placebo_years) - 0.5, color="gray", linewidth=1.2, linestyle="--", alpha=0.7)
     ax.set_xticks(list(x))
     ax.set_xticklabels(all_years, rotation=45, fontsize=9)
     ax.set_xlabel("年")
