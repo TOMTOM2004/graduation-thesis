@@ -326,6 +326,7 @@
     transition: color .35s ease;
   }
   .frag.emph.on { font-weight: 700; color: var(--navy); }
+  .frag.emph.emph-orange.on { color: var(--orange); }
 
   /* ── animated ranking bars (p1, PNG置換) ── */
   .rank-chart { width: 100%; display: grid; grid-template-columns: 1fr 1fr; gap: 44px; align-self: center; padding: 0 6px; }
@@ -363,9 +364,11 @@
                           transition: stroke-dashoffset .9s ease .15s; }
   .scatter-svg .frag.on .fitline { stroke-dashoffset: 0; }
   .scatter-svg .fitlab { font-size: 12.5px; font-weight: 700; fill: var(--crimson); }
-  .scatter-svg .clab { font-size: 12px; fill: #444; opacity: 0; transition: opacity .4s ease var(--d, 0s); }
+  .scatter-svg .clab { font-size: 12px; fill: #444; opacity: 0; transition: opacity .4s ease var(--d, 0s);
+                       stroke: #fff; stroke-width: 3px; paint-order: stroke; }
   .scatter-svg .frag.on .clab { opacity: 1; }
-  .scatter-svg .jplab { font-size: 16px; font-weight: 800; fill: var(--navy); }
+  .scatter-svg .jplab { font-size: 16px; font-weight: 800; fill: var(--navy);
+                        stroke: #fff; stroke-width: 3px; paint-order: stroke; }
   .scatter-svg .jpline { stroke: var(--navy); stroke-width: 1.4; fill: none; }
   .scatter-svg .jp-pulse { fill: none; stroke: var(--navy); stroke-width: 2; opacity: 0;
                            transform-origin: center; transform-box: fill-box; }
@@ -571,10 +574,10 @@
       </div>
     </div>
     <div class="takeaway-sub frag" style="font-size:15px; max-width:860px; margin:14px auto 0;">
-      実績CPI × 実支出シェアの<strong style="color:var(--navy);">加重平均だけ</strong> ── 回帰の識別仮定に依存しない<strong style="color:var(--navy);">最も頑健な結果</strong>。2023年 +1.96pp・2024年 +2.67pp と全ショック年で逆進的。
+      実績CPI × 実支出シェアの<strong class="frag emph" data-frag="em">加重平均だけ</strong> ── 回帰の識別仮定に依存しない<strong class="frag emph" data-frag="em">最も頑健な結果</strong>。2023年 +1.96pp・2024年 +2.67pp と全ショック年で逆進的。
     </div>
     <div class="note" style="text-align:center; max-width:880px; margin:22px auto 0; border-top:1px solid var(--border); padding-top:10px;">
-      ⚠ これは<strong>実効インフレ</strong>（実績CPIベース）の逆進性で、コストプッシュ＋デマンドプル込み。コストプッシュ単独の逆進性ではない点に注意 ── 橋渡しは次スライド。
+      ⚠ これは<strong class="frag emph" data-frag="em">実効インフレ</strong>（実績CPIベース）の逆進性で、コストプッシュ＋デマンドプル込み。コストプッシュ単独の逆進性ではない点に注意 ── 橋渡しは次スライド。
     </div>
   </div>
 
@@ -607,7 +610,7 @@
       </div>
     </div>
     <div class="key-message frag" style="margin:8px 0 0; background:var(--white); border-left:4px solid var(--crimson);">
-      <strong style="color:var(--navy);">橋渡しの論理</strong>：① 必需品＝高輸入含有（柱②）＋ ② 供給主導インフレ（本スライド）→ 実効インフレの逆進性（柱③）は<strong>コストプッシュ由来と整合的</strong>。<span style="color:var(--orange); font-weight:700;">これは「識別」ではなく三角測量である</span>と明示する。
+      <strong class="frag emph" data-frag="em">橋渡しの論理</strong>：① 必需品＝高輸入含有（柱②）＋ ② 供給主導インフレ（本スライド）→ 実効インフレの逆進性（柱③）は<strong class="frag emph" data-frag="em">コストプッシュ由来と整合的</strong>。<span class="frag emph emph-orange" data-frag="em">これは「識別」ではなく三角測量である</span>と明示する。
     </div>
     <div class="note">出所: Shapiro 分解を CGPI/CPI 品目（116品目バスケット）に適用、インフレ寄与加重。5仕様で 2022＞2021 の供給シェア上昇が頑健。供給寄与の品目構成は広範（ガソリン・鶏肉・水産物等）。</div>
   </div>
@@ -638,7 +641,7 @@
       </div>
     </div>
     <div class="pivot-contrib frag">
-      <strong>方法論的貢献（貢献③）</strong>：単一の交易ショックからコストプッシュを清浄に識別することの<strong>原理的限界を、実データで体系的に提示</strong>した。五分位別の group-specific 分解は inconclusive ── 年次×五分位の粗さでは数量応答マージンを解像できないことを正直に記録。
+      <strong class="frag emph" data-frag="em">方法論的貢献（貢献③）</strong>：単一の交易ショックからコストプッシュを清浄に識別することの<strong class="frag emph" data-frag="em">原理的限界を、実データで体系的に提示</strong>した。五分位別の group-specific 分解は inconclusive ── 年次×五分位の粗さでは数量応答マージンを解像できないことを正直に記録。
     </div>
   </div>
 
@@ -663,7 +666,7 @@
         <ul class="bullets" style="gap:10px; font-size:15px;">
           <li>IOモデルが実績CPI比で過剰伝播（overshoot）</li>
           <li>政策削減率が産業連関表の構築前提に強く依存</li>
-          <li>→ 絶対値は結論にせず<strong style="color:var(--orange);">符号レベルのみ</strong>採用</li>
+          <li>→ 絶対値は結論にせず<strong class="frag emph emph-orange" data-frag="em">符号レベルのみ</strong>採用</li>
           <li>頑健な符号：Q1＞Q5（逆進的）／エネルギーが最大寄与／エネ・食料補助は方向としてgapを縮小</li>
         </ul>
       </div>
@@ -804,7 +807,7 @@
     const svg = document.getElementById('scatterSvg');
     if (!svg) return;
     const NS = 'http://www.w3.org/2000/svg';
-    const W = 640, H = 470, ml = 54, mr = 18, mt = 16, mb = 56;
+    const W = 640, H = 470, ml = 54, mr = 18, mt = 16, mb = 72;
     const x0 = -790, x1 = 150, y0 = -16.5, y1 = 11.5;
     const X = v => ml + (v - x0) / (x1 - x0) * (W - ml - mr);
     const Y = v => mt + (y1 - v) / (y1 - y0) * (H - mt - mb);
@@ -823,12 +826,14 @@
     plane.appendChild(el('line', {class:'axline', x1:ml, y1:H-mb, x2:W-mr, y2:H-mb}));
     for (const t of [-750, -500, -250, 0]) plane.appendChild(el('text', {class:'ticklab', x:X(t), y:H-mb+16, 'text-anchor':'middle'}, String(t)));
     for (const t of [-15, -10, -5, 0, 5, 10]) plane.appendChild(el('text', {class:'ticklab', x:ml-7, y:Y(t)+4, 'text-anchor':'end'}, String(t)));
-    plane.appendChild(el('text', {class:'axlab', x:(ml+W-mr)/2, y:H-14, 'text-anchor':'middle'}, '純エネルギー輸入（％エネルギー使用、正＝輸入依存・負＝輸出国）'));
+    // X軸ラベルは目盛のすぐ下（プロット領域内扱い）に置く — 最下段の注記/出典ゾーンと視覚的に分離する
+    plane.appendChild(el('text', {class:'axlab', x:(ml+W-mr)/2, y:H-mb+38, 'text-anchor':'middle'}, '純エネルギー輸入（％エネルギー使用、正＝輸入依存・負＝輸出国）'));
     plane.appendChild(el('text', {class:'axlab', x:14, y:(mt+H-mb)/2, 'text-anchor':'middle', transform:`rotate(-90 14 ${(mt+H-mb)/2})`}, '2022年 交易損失（％GDP、正＝所得流出）'));
     svg.appendChild(plane);
     const pts = RANK.filter(r => r.eimp != null);
-    // g2: 各国の点がポップイン（流出=赤・利得=緑・日本=青）
+    // g2: 各国の点がポップイン（流出=赤・利得=緑・日本=青）。日本は最後に append して最前面に置く
     const gPts = el('g', {class:'frag', 'data-frag':'g2'});
+    let jpCircle = null;
     pts.forEach((r, i) => {
       const isJp = r.iso === 'JPN';
       const c = el('circle', {
@@ -837,8 +842,10 @@
         'fill-opacity': isJp ? 1 : 0.72, stroke:'#fff', 'stroke-width': isJp ? 1.4 : 0.7
       });
       c.style.setProperty('--d', (i * 0.03) + 's');
+      if (isJp) { jpCircle = c; return; }
       gPts.appendChild(c);
     });
+    if (jpCircle) gPts.appendChild(jpCircle);
     svg.appendChild(gPts);
     // g3: 回帰直線がスッと引かれる
     const fx0 = -746.7, fx1 = 110.3;
@@ -851,11 +858,20 @@
     gFit.appendChild(el('text', {class:'fitlab', x:ml+12, y:mt+18}, `回帰直線（R²=${OLS.r2.toFixed(2)}）`));
     svg.appendChild(gFit);
     // g4: 代表国ラベル（本論図と同じ DEU/USA/NOR/SAU/AUS）
+    // オフセットは点・他国の点・回帰直線と被らない空き方向へ国別に指定
+    const LABEL_POS = {
+      DEU: {dx: 10,  dy: 4,   anchor: 'start'},
+      USA: {dx: -10, dy: 12,  anchor: 'end'},
+      NOR: {dx: 16,  dy: -12, anchor: 'start'},
+      SAU: {dx: 0,   dy: 22,  anchor: 'middle'},
+      AUS: {dx: -12, dy: 4,   anchor: 'end'}
+    };
     const gLab = el('g', {class:'frag', 'data-frag':'g4'});
-    ['DEU', 'USA', 'NOR', 'SAU', 'AUS'].forEach((iso, i) => {
+    Object.keys(LABEL_POS).forEach((iso, i) => {
       const r = RANK.find(q => q.iso === iso);
       if (!r || r.eimp == null) return;
-      const t = el('text', {class:'clab', x:X(r.eimp)+7, y:Y(r.loss)-8}, r.name);
+      const p = LABEL_POS[iso];
+      const t = el('text', {class:'clab', x:X(r.eimp)+p.dx, y:Y(r.loss)+p.dy, 'text-anchor':p.anchor}, r.name);
       t.style.setProperty('--d', (i * 0.12) + 's');
       gLab.appendChild(t);
     });
