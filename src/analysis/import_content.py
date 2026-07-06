@@ -74,9 +74,11 @@ GROUP_JA = {
 }
 
 
-def compute_sector_import_content() -> pd.DataFrame:
+def compute_sector_import_content(force: bool = False) -> pd.DataFrame:
     """
     Compute import content ratio by IO sector and analysis group.
+
+    force: キャッシュを無視して再計算（再現性検証用）
 
     Returns
     -------
@@ -87,7 +89,7 @@ def compute_sector_import_content() -> pd.DataFrame:
     DATA_PROCESSED.mkdir(parents=True, exist_ok=True)
     cache_path = DATA_PROCESSED / "sector_import_content.csv"
 
-    if cache_path.exists():
+    if cache_path.exists() and not force:
         print(f"Loading cached: {cache_path}")
         return pd.read_csv(cache_path)
 
@@ -123,9 +125,11 @@ def compute_sector_import_content() -> pd.DataFrame:
     return df
 
 
-def compute_group_import_content() -> pd.DataFrame:
+def compute_group_import_content(force: bool = False) -> pd.DataFrame:
     """
     Aggregate import content and import values to 5 analysis groups.
+
+    force: キャッシュを無視して再計算（再現性検証用）
 
     Returns
     -------
@@ -136,11 +140,11 @@ def compute_group_import_content() -> pd.DataFrame:
     DATA_PROCESSED.mkdir(parents=True, exist_ok=True)
     cache_path = DATA_PROCESSED / "group_import_content.csv"
 
-    if cache_path.exists():
+    if cache_path.exists() and not force:
         print(f"Loading cached: {cache_path}")
         return pd.read_csv(cache_path)
 
-    sector_df = compute_sector_import_content()
+    sector_df = compute_sector_import_content(force=force)
 
     # Filter to 5 groups only
     in_scope = sector_df[sector_df["group"].isin(GROUPS)].copy()

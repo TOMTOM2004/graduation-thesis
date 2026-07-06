@@ -1,4 +1,7 @@
 # Step4: AKM/BHJ exposure-robust SE（実験・非保持）
+# 入力 data/processed/price-indices/_akm_cross.csv は tasks/_a4_akm_prep.py で再生成可能（DEC-019）。
+# ShiftShareSE インストール: install.packages("ShiftShareSE", lib="~/.Rlib")
+#   CRAN に無い場合: remotes::install_github("kolesarm/ShiftShareSE", lib="~/.Rlib")
 .libPaths("~/.Rlib")
 library(ShiftShareSE)
 d <- read.csv("data/processed/price-indices/_akm_cross.csv")

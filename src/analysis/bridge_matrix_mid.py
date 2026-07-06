@@ -309,12 +309,14 @@ CPI_CODE_TO_NAME: dict[str, str] = {
 }
 
 
-def build_bridge_matrix_mid() -> pd.DataFrame:
+def build_bridge_matrix_mid(force: bool = False) -> pd.DataFrame:
     """
     Build bridge matrix for CPI middle categories.
 
     B(cpi_mid_name, io_sector) = weight of IO sector in that CPI category,
     derived from IO private consumption column (column "721").
+
+    force: キャッシュを無視して再計算（再現性検証用）
 
     Returns
     -------
@@ -325,7 +327,7 @@ def build_bridge_matrix_mid() -> pd.DataFrame:
     BRIDGE_DIR.mkdir(parents=True, exist_ok=True)
     cache_path = BRIDGE_DIR / "bridge_matrix_mid.csv"
 
-    if cache_path.exists():
+    if cache_path.exists() and not force:
         print(f"Loading cached: {cache_path}")
         return pd.read_csv(cache_path, index_col=0)
 
@@ -361,11 +363,13 @@ def build_bridge_matrix_mid() -> pd.DataFrame:
     return bridge
 
 
-def compute_mid_category_import_content() -> pd.DataFrame:
+def compute_mid_category_import_content(force: bool = False) -> pd.DataFrame:
     """
     Compute import content (IC_c) for each CPI middle category.
 
     IC_c = Σ_i  B_mid(c, i) × import_content(i)
+
+    force: キャッシュを無視して再計算（再現性検証用）
 
     Returns
     -------
@@ -378,11 +382,11 @@ def compute_mid_category_import_content() -> pd.DataFrame:
     BRIDGE_DIR.mkdir(parents=True, exist_ok=True)
     cache_path = BRIDGE_DIR / "mid_category_import_content.csv"
 
-    if cache_path.exists():
+    if cache_path.exists() and not force:
         print(f"Loading cached: {cache_path}")
         return pd.read_csv(cache_path)
 
-    bridge = build_bridge_matrix_mid()
+    bridge = build_bridge_matrix_mid(force=force)
     io_data = load_io_table()
     import_content = compute_import_content(io_data)
 

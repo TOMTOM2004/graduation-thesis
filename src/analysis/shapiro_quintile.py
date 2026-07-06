@@ -13,7 +13,7 @@ differential cost-push exposure:
   ❌  "Q1 faces more supply-driven / cost-push inflation."  (FALSE -- P is common.)
 
 Position as the MECHANISM behind the Phase 2b backbone (Q1 faces a higher
-effective-inflation gap, +1.42pp): Q1 absorbs it by involuntarily cutting
+effective-inflation gap, +2.14pp; DEC-021): Q1 absorbs it by involuntarily cutting
 quantity. Triangulation, not free-standing novelty.
 
 EXPLORATORY by construction (DEC-016 pre-registration): annual data (2000-2024 =

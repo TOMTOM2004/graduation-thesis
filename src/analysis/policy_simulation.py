@@ -19,6 +19,7 @@ import numpy as np
 import pandas as pd
 
 from src.analysis.quintile_impact import run_microsimulation, QUINTILE_LABELS
+from src.analysis.io_price_model import DELTA_KOYCK, BETA_EMPIRICAL
 
 DATA_PROCESSED = Path(__file__).resolve().parents[2] / "data" / "processed"
 SIM_DIR = DATA_PROCESSED / "simulation-params"
@@ -312,7 +313,7 @@ def plot_policy_scenarios(
     fig, axes = plt.subplots(1, 2, figsize=(15, 6))
     fig.suptitle(
         "政策シナリオ評価: エネルギー補助・食料価格支援の所得階層別分配効果\n"
-        "IOモデル（Koyckラグ δ=0.55）+ 五分位マイクロシミュレーション",
+        f"IOモデル（Koyckラグ δ={DELTA_KOYCK}）+ 五分位マイクロシミュレーション",
         fontsize=12, fontweight="bold",
     )
 
@@ -379,7 +380,7 @@ def plot_policy_scenarios(
         0.5, -0.04,
         f"注: {BENCHMARK_YEAR}年（コストプッシュ主導期）を基準年として比較。"
         "補助率: エネルギー50%・食料30%。ceteris paribus（一般均衡効果なし）の前提。"
-        f"Koyck δ=0.55（輸入コスト上昇の年内転嫁率55%）。",
+        f"Koyck δ={DELTA_KOYCK}（輸入コスト上昇の年内転嫁率{DELTA_KOYCK:.0%}）。",
         ha="center", fontsize=8, color="gray",
     )
 

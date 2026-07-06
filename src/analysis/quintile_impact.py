@@ -91,11 +91,13 @@ def load_expenditure_shares(year: int = 2019, household_type: int = 3) -> pd.Dat
     return df
 
 
-def compute_quintile_inflation_burden() -> pd.DataFrame:
+def compute_quintile_inflation_burden(force: bool = False) -> pd.DataFrame:
     """
     Compute effective price increase burden by income quintile and year.
 
     effective_inflation(q, t) = Σ_cat [share(q, cat) × ΔCPI(cat, t)]
+
+    force: キャッシュを無視して再計算（再現性検証用）
 
     Returns
     -------
@@ -105,7 +107,7 @@ def compute_quintile_inflation_burden() -> pd.DataFrame:
     RESULTS_DIR.mkdir(parents=True, exist_ok=True)
     cache_path = RESULTS_DIR / "quintile_inflation_burden.csv"
 
-    if cache_path.exists():
+    if cache_path.exists() and not force:
         print(f"Loading cached: {cache_path}")
         return pd.read_csv(cache_path)
 
@@ -153,7 +155,7 @@ def compute_quintile_inflation_burden() -> pd.DataFrame:
     return df
 
 
-def compute_quintile_real_income_change() -> pd.DataFrame:
+def compute_quintile_real_income_change(force: bool = False) -> pd.DataFrame:
     """
     Compute real income change by quintile.
 
@@ -162,16 +164,18 @@ def compute_quintile_real_income_change() -> pd.DataFrame:
     Since we focus on the inflation burden (not nominal income tracking),
     we report the effective inflation differential: Q1 burden minus Q5 burden.
 
+    force: キャッシュを無視して再計算（再現性検証用）
+
     Returns summary DataFrame showing regressive/progressive pattern.
     """
     RESULTS_DIR.mkdir(parents=True, exist_ok=True)
     cache_path = RESULTS_DIR / "quintile_real_income.csv"
 
-    if cache_path.exists():
+    if cache_path.exists() and not force:
         print(f"Loading cached: {cache_path}")
         return pd.read_csv(cache_path)
 
-    burden_df = compute_quintile_inflation_burden()
+    burden_df = compute_quintile_inflation_burden(force=force)
 
     # Pivot to year × quintile
     pivot = burden_df.pivot(index="year", columns="quintile_label", values="effective_inflation_pp")
@@ -188,7 +192,7 @@ def compute_quintile_real_income_change() -> pd.DataFrame:
     return pivot
 
 
-def compute_gdp_aggregate_impact() -> pd.DataFrame:
+def compute_gdp_aggregate_impact(force: bool = False) -> pd.DataFrame:
     """
     Step 2b-3: Aggregate effective inflation to GDP consumption level,
     compare with actual CPI, and decompose the distributional gap.
@@ -197,6 +201,8 @@ def compute_gdp_aggregate_impact() -> pd.DataFrame:
     - Population-weighted aggregate ≈ "平均" quintile (equal weights: 20% per quintile)
     - Actual CPI general (cat01_code=1, vs 2020 baseline) as reference
     - Distributional decomposition: show aggregate vs Q1/Q5 divergence simultaneously
+
+    force: キャッシュを無視して再計算（再現性検証用）
 
     Returns
     -------
@@ -213,12 +219,12 @@ def compute_gdp_aggregate_impact() -> pd.DataFrame:
     RESULTS_DIR.mkdir(parents=True, exist_ok=True)
     cache_path = RESULTS_DIR / "gdp_aggregate_impact.csv"
 
-    if cache_path.exists():
+    if cache_path.exists() and not force:
         print(f"Loading cached: {cache_path}")
         return pd.read_csv(cache_path)
 
     # 1. Model predicted aggregate (平均 quintile)
-    real_df = compute_quintile_real_income_change()
+    real_df = compute_quintile_real_income_change(force=force)
 
     # 2. Actual CPI general (cat01_code=1, 2020 base)
     cpi_file = DATA_RAW / "cpi" / "cpi_category_2015_2025.csv"
@@ -395,8 +401,9 @@ def print_gdp_aggregate_summary(df: pd.DataFrame) -> None:
     print(f"  Q5 累積負担: {shock['q5_pp'].iloc[-1]:.2f}pp")
     print(f"  Q1-Q5 格差（2024年時点）: {shock['q1_q5_gap_pp'].iloc[-1]:.2f}pp")
     print("\n解釈（Phase 2b、実績CPI使用）: 集計的影響（平均）は実績CPI と概ね一致し、モデルの妥当性を示す。")
-    print("      Q1 は毎年 Q5 より 0.9–1.4pp 多くのインフレを負担している（コストプッシュ＋デマンドプル合計）。")
-    print("      コストプッシュ固有の逆進性は Phase 3 IOモデルで 0.3–0.4pp と識別（別途推定）。")
+    shock_gaps = shock["q1_q5_gap_pp"]
+    print(f"      Q1 は毎年 Q5 より {shock_gaps.min():.1f}–{shock_gaps.max():.1f}pp 多くのインフレを負担している（コストプッシュ＋デマンドプル合計）。")
+    print("      コストプッシュ固有の逆進性は Phase 3 で別途推定。")
 
 
 # --------------------------------------------------------------------------- #
@@ -422,6 +429,7 @@ _GROUP_TO_HH_CODE: dict[str, int] = {
 def run_microsimulation(
     cpi_changes: pd.DataFrame,
     scenario_label: str = "baseline",
+    force: bool = False,
 ) -> pd.DataFrame:
     """
     Quintile-level microsimulation using IO price model output.
@@ -443,6 +451,7 @@ def run_microsimulation(
         Source: IO price model output (e.g. delta_cpi_koyck_pp or scenario-adjusted)
     scenario_label : str
         Label for cache file and output column; identifies the policy scenario.
+    force : キャッシュを無視して再計算（再現性検証用）
 
     Returns
     -------
@@ -456,7 +465,7 @@ def run_microsimulation(
     RESULTS_DIR.mkdir(parents=True, exist_ok=True)
     cache_path = RESULTS_DIR / f"microsim_{scenario_label}.csv"
 
-    if cache_path.exists():
+    if cache_path.exists() and not force:
         print(f"Loading cached: {cache_path}")
         return pd.read_csv(cache_path)
 

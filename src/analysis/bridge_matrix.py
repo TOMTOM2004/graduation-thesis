@@ -89,12 +89,14 @@ HH_CATEGORY_MAP: dict[int, dict] = {
 QUINTILE_CODES = {0: "平均", 1: "1分位（最低）", 2: "2分位", 3: "3分位", 4: "4分位", 5: "5分位（最高）"}
 
 
-def build_bridge_matrix() -> pd.DataFrame:
+def build_bridge_matrix(force: bool = False) -> pd.DataFrame:
     """
     Build bridge matrix: household category × IO sector.
 
     B(hh_cat, io_sector) = weight of IO sector in that household category,
     derived from IO private consumption column (column "721").
+
+    force: キャッシュを無視して再計算（再現性検証用）
 
     Returns
     -------
@@ -104,7 +106,7 @@ def build_bridge_matrix() -> pd.DataFrame:
     BRIDGE_DIR.mkdir(parents=True, exist_ok=True)
     cache_path = BRIDGE_DIR / "bridge_matrix.csv"
 
-    if cache_path.exists():
+    if cache_path.exists() and not force:
         print(f"Loading cached: {cache_path}")
         return pd.read_csv(cache_path, index_col=0)
 
@@ -145,11 +147,13 @@ def build_bridge_matrix() -> pd.DataFrame:
     return bridge
 
 
-def compute_hh_category_import_content() -> pd.DataFrame:
+def compute_hh_category_import_content(force: bool = False) -> pd.DataFrame:
     """
     Compute import content for each household expenditure category.
 
     import_content_hh(cat) = sum_i B(cat, i) × import_content(i)
+
+    force: キャッシュを無視して再計算（再現性検証用）
 
     Returns
     -------
@@ -159,11 +163,11 @@ def compute_hh_category_import_content() -> pd.DataFrame:
     BRIDGE_DIR.mkdir(parents=True, exist_ok=True)
     cache_path = BRIDGE_DIR / "hh_category_import_content.csv"
 
-    if cache_path.exists():
+    if cache_path.exists() and not force:
         print(f"Loading cached: {cache_path}")
         return pd.read_csv(cache_path)
 
-    bridge = build_bridge_matrix()
+    bridge = build_bridge_matrix(force=force)
     io_data = load_io_table()
     import_content = compute_import_content(io_data)
 
@@ -195,7 +199,7 @@ def compute_hh_category_import_content() -> pd.DataFrame:
     return df
 
 
-def classify_necessity_discretionary() -> pd.DataFrame:
+def classify_necessity_discretionary(force: bool = False) -> pd.DataFrame:
     """
     Classify household expenditure categories as necessity or discretionary.
 
@@ -203,6 +207,8 @@ def classify_necessity_discretionary() -> pd.DataFrame:
     in the lowest quintile (Q1) exceeds that in the highest quintile (Q5).
 
     Uses 家計調査 2019 (pre-COVID baseline) for classification.
+
+    force: キャッシュを無視して再計算（再現性検証用）
 
     Returns
     -------
@@ -212,7 +218,7 @@ def classify_necessity_discretionary() -> pd.DataFrame:
     BRIDGE_DIR.mkdir(parents=True, exist_ok=True)
     cache_path = BRIDGE_DIR / "necessity_classification.csv"
 
-    if cache_path.exists():
+    if cache_path.exists() and not force:
         print(f"Loading cached: {cache_path}")
         return pd.read_csv(cache_path)
 
@@ -230,7 +236,7 @@ def classify_necessity_discretionary() -> pd.DataFrame:
     )
 
     # For each household category, get expenditure share by quintile
-    ic_df = compute_hh_category_import_content()
+    ic_df = compute_hh_category_import_content(force=force)
 
     rows = []
     for _, cat_row in ic_df.iterrows():

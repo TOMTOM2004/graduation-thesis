@@ -75,6 +75,10 @@ BASE_YEAR = 2020
 # 中心推計の参照期（DEC-012）: 2015-2019 平均（識別のプラセボ期と同一窓・サイクル中立）
 REF_BASELINE = (2015, 2019)
 
+# 名目GDP（十億円）。出典: 内閣府「国民経済計算」名目暦年GDP（2022年 ≈561兆円・取得時点の推計値）
+# TODO(DEC-019): 確報改定で値が動くため、論文確定時に vintage（公表回）を明記して更新する
+GDP_BN_BY_YEAR = {2022: 561_000}
+
 
 def load_import_prices() -> pd.DataFrame:
     """Load BOJ CGPI import price indices (2020=100)."""
@@ -82,9 +86,11 @@ def load_import_prices() -> pd.DataFrame:
     return df
 
 
-def compute_annual_price_index() -> pd.DataFrame:
+def compute_annual_price_index(force: bool = False) -> pd.DataFrame:
     """
     Compute annual average import price index for each of the 5 groups.
+
+    force: キャッシュを無視して再計算（再現性検証用）
 
     Returns
     -------
@@ -93,7 +99,7 @@ def compute_annual_price_index() -> pd.DataFrame:
     TRADE_LOSS_DIR.mkdir(parents=True, exist_ok=True)
     cache_path = TRADE_LOSS_DIR / "annual_price_index.csv"
 
-    if cache_path.exists():
+    if cache_path.exists() and not force:
         print(f"Loading cached: {cache_path}")
         return pd.read_csv(cache_path)
 
@@ -156,7 +162,7 @@ def compute_group_baseline_prices(ref_period: tuple = REF_BASELINE) -> dict:
     return ref_map
 
 
-def compute_trade_loss() -> pd.DataFrame:
+def compute_trade_loss(force: bool = False) -> pd.DataFrame:
     """
     Estimate trade loss (輸入コスト負担増) by group and year.
 
@@ -169,6 +175,8 @@ def compute_trade_loss() -> pd.DataFrame:
         = M_2020 × (P_import − P_domestic) / 100
 
     Positive value = import cost burden / income outflow from Japan.
+
+    force: キャッシュを無視して再計算（再現性検証用）
 
     Returns
     -------
@@ -184,12 +192,12 @@ def compute_trade_loss() -> pd.DataFrame:
     TRADE_LOSS_DIR.mkdir(parents=True, exist_ok=True)
     cache_path = TRADE_LOSS_DIR / "trade_loss_by_group.csv"
 
-    if cache_path.exists():
+    if cache_path.exists() and not force:
         print(f"Loading cached: {cache_path}")
         return pd.read_csv(cache_path)
 
-    annual_price = compute_annual_price_index()
-    group_io = compute_group_import_content()
+    annual_price = compute_annual_price_index(force=force)
+    group_io = compute_group_import_content(force=force)
     domestic = compute_domestic_annual_index()
     baseline_prices = compute_group_baseline_prices()  # P_ref_g (2015-19 平均)
 
@@ -244,11 +252,13 @@ def compute_trade_loss() -> pd.DataFrame:
     return df
 
 
-def compute_total_trade_loss() -> pd.DataFrame:
+def compute_total_trade_loss(force: bool = False) -> pd.DataFrame:
     """
     Aggregate trade loss across all 5 groups by year.
 
     Returns both upper-bound and net estimates.
+
+    force: キャッシュを無視して再計算（再現性検証用）
 
     Returns
     -------
@@ -261,11 +271,11 @@ def compute_total_trade_loss() -> pd.DataFrame:
     TRADE_LOSS_DIR.mkdir(parents=True, exist_ok=True)
     cache_path = TRADE_LOSS_DIR / "trade_loss_total.csv"
 
-    if cache_path.exists():
+    if cache_path.exists() and not force:
         print(f"Loading cached: {cache_path}")
         return pd.read_csv(cache_path)
 
-    group_loss = compute_trade_loss()
+    group_loss = compute_trade_loss(force=force)
 
     agg = group_loss.groupby("year").agg(
         total_corrected_bn_jpy=("trade_loss_corrected_bn_jpy", "sum"),
@@ -297,22 +307,28 @@ def compute_total_trade_loss() -> pd.DataFrame:
     return total
 
 
-def compute_baseline_sensitivity(year: int = 2022) -> pd.DataFrame:
+def compute_baseline_sensitivity(year: int = 2022, force: bool = False) -> pd.DataFrame:
     """
     参照期の選択に対する合計交易損失の感度（恣意性チェック用、DEC-012）。
 
     単年（2015/2016/2018/2019/2020）と複数年平均（2015-19=中心 / 2017-19）を比較。
     単年は石油サイクルの一点を拾い 30.6〜42.7兆と振れるが、複数年平均は ~34-35兆で頑健。
 
+    force: キャッシュを無視して再計算（再現性検証用）
+
     Returns
     -------
     pd.DataFrame: columns = baseline, total_tn_jpy, gdp_pct, energy_share_pct
     """
-    annual = compute_annual_price_index()
-    group_io = compute_group_import_content()
+    annual = compute_annual_price_index(force=force)
+    group_io = compute_group_import_content(force=force)
     m0 = dict(zip(group_io["group"], group_io["import_value_total"]))
     p_t = annual[annual["year"] == year].set_index("group")["price_index"].to_dict()
-    gdp_bn = 561_000  # 名目GDP 2022 ≈ 561兆円
+    if year not in GDP_BN_BY_YEAR:
+        raise KeyError(
+            f"GDP_BN_BY_YEAR に {year} 年のGDPが未登録。trade_loss.py 冒頭の GDP_BN_BY_YEAR に追加せよ"
+        )
+    gdp_bn = GDP_BN_BY_YEAR[year]
 
     specs = {
         "2020 単年（上限）": ("year", 2020),
@@ -383,10 +399,9 @@ if __name__ == "__main__":
 
     print("\n=== Total Trade Loss by Year（中心C / 上限A / net B）===")
     total_df = compute_total_trade_loss()
-    GDP_2022_BN = 561_000  # 名目GDP 2022 ≈ 561兆円
     print(f"\n{'Year':>6}  {'中心C(tn)':>11}  {'上限A(tn)':>11}  {'net B(tn)':>11}  {'中心%GDP':>9}")
     for _, row in total_df.iterrows():
-        pct = row["total_corrected_bn_jpy"] / GDP_2022_BN * 100
+        pct = row["total_corrected_bn_jpy"] / GDP_BN_BY_YEAR[2022] * 100
         print(f"  {int(row['year'])}: {row['total_corrected_tn_jpy']:9.1f}    "
               f"{row['total_ub_tn_jpy']:9.1f}    {row['total_net_tn_jpy']:9.1f}    {pct:7.1f}%")
 
