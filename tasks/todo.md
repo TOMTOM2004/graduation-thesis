@@ -1,15 +1,22 @@
 # TODO — 卒業論文（案B）
 
-_Last updated: 2026-07-06 / session: 全体監査(DEC-019/020/021)＝AI混入数値排除・再現性強化・再生成値への一括更新。main統合済（ローカル・未push）_
+_Last updated: 2026-07-06 / session: goods-services contrast分析実装（DEC-022）完了・main統合済（ローカル・未push）_
 
 ## 🎯 Next action（1つだけ、具体的に）
-- What: **論文執筆着手**（実証3本柱を結果章に統合）。数値は必ず DEC-021 の再生成値を使う: 交易損失 中心~35兆/上限40.7兆・Q1-Q5 **+2.14pp**(2022)・β=**0.425 (p=0.047)**・Shapiro 0.41→0.70→0.83・RMSE 10.00pp
+- What: **論文執筆着手**（実証3本柱を結果章に統合）。数値は必ず DEC-021 の再生成値を使う: 交易損失 中心~35兆/上限40.7兆・Q1-Q5 **+2.14pp**(2022)・β=**0.425 (p=0.047)**・Shapiro 0.41→0.70→0.83・RMSE 10.00pp。goods-services分解（DEC-022）は §5 のとおり research-design.md/decision-log.md/第2回スライドに反映済
 - Where: `paper/`（outline.md が章割り。01-introduction はドラフト済・DEC-015 準拠に修正済）
 - Done when: 先行研究 or 方法論の章が1本ドラフトされ、数値が全て repo 再現値と一致
-- **【次セッション・Sonnet 実装依頼済み】財/サービス分解分析（DEC-022 予定）**: 設計書 = `docs/design/2026-07-06-goods-services-contrast.md`（v2・/review-basic-design 通過・GO）。実装者は設計書のみを根拠に §7 の段取りで実施（worktree・最初に §1.2 のデータコピー）。**注意: main が未 push の場合、worktree は origin/main 起点になり設計書を含まない → 実装前に main を push するか、worktree 作成後に本体ツリーから docs/design/ を確認すること**
-- 別線: ① ~~main push~~（完了・origin=09ff542） ② ~~AKM SE の R 再実行~~（DEC-021補遺で消化・p≈0.15 再現） ②' ~~財/サービス分解~~（DEC-022 完了・判定=(a) 交絡が主要因） ③' 旧: AKM SE の R 再実行（_akm_cross.csv は B-4 整合版に再生成済・ShiftShareSE 環境が前提。旧 p≈0.15 の再確認） ③ shapiro_decomp の e-Stat 品目名をキャッシュ化（現状 API キー必須＝再現性の残穴） ④ GDP 561兆の vintage 確定（trade_loss.py TODO） ⑤ data/processed_stale_20260706/ の削除判断（新キャッシュ安定後）
+- 別線: ① ~~main push~~（完了・origin=09ff542） ② ~~AKM SE の R 再実行~~（DEC-021補遺で消化・p≈0.15 再現） ③ ~~財/サービス分解（DEC-022）~~（実装・doc反映・§4官公表突合とも完了。突合2件差異は価格決定メカニズム基準の事前定義として意図的差異と明記しクローズ済＝09ff542） ④ shapiro_decomp の e-Stat 品目名をキャッシュ化（現状 API キー必須＝再現性の残穴） ⑤ GDP 561兆の vintage 確定（trade_loss.py TODO） ⑥ data/processed_stale_20260706/ の削除判断（新キャッシュ安定後）
 
-## ✅ 直近完了（2026-07-06・このセッション・全体監査 DEC-019/020/021）
+## ✅ 直近完了（2026-07-06・このセッション・goods-services contrast分析実装・DEC-022）
+- **設計書どおり実装**: `src/analysis/goods_services_contrast.py`（新規319行）。41カテゴリ財/サービス分類×S0-S3の4仕様で年次相関＋pooled β 算出。golden突合・決定論再現・バケットサイズassert全通過
+- **事前登録判定結果**: S1 goodsのショック期4年中2021年が負のため **(a) 消える**（全体コントラストの相当部分は財/サービス構成差で説明される）
+- **doc反映3箇所**: research-design.md・decision-log.md（DEC-022新設）・第2回スライド補足メモ。全てCSV値と突合済（手打ちゼロ）
+- **§4公式分類突合**: 総務省「品目から類への合算表(財・サービス分類)」（4-4.pdf）と照合し2件の齟齬（上下水道料=公式は財・設備修繕維持=公式は全サービス）を検出、設計書末尾に記録。→ **別セッションで意図的差異としてクローズ済み**（decision-log.md DEC-022補遺・commit `09ff542`。価格決定メカニズム基準の事前定義であり官公表準拠に組み替えても判定(a)は覆らない旨を明記）
+- **`/review-code light`**: correctness-critic が major 1件検出（S1図右パネルのプラセボ/ショック境界線 axvline が1インデックスずれ・2019年がショック側に食い込んで見える描画バグ）→ 修正・再検証・再commit済。security/removed-behaviorはpass
+- **worktree運用**: `worktree-20260707-goods-services-contrast` で実装 → main へ `--no-ff` マージ（commit `9be8ab9`）→ worktree削除済
+
+## ✅ 直近完了（2026-07-06・全体監査 DEC-019/020/021）
 - **監査**: 3系統並列（整合性/数値出典/ハードコード）→ 齊藤2022「GNI比4.6%」がAI混入数値と確定（JCER原文に不存在）→ 内閣府SNA一次値（2022年度 −16.4兆円）に差し替え。paper序論の撤回済み識別主張・34.6兆混用値・Phase3旧値3系統・G-4表記ゆれを一括修正
 - **再現性強化**: β/δ/GDP単一ソース化・全compute_*にforce・fetch_worldbank.py新設（ページング/ボディ検証込み）・_a4_akm_prep.py新設・uv.lock・setuptools修正・README再現手順
 - **再現性ゲート（DEC-021・最重要）**: rawから全再生成→golden突合で、+1.42pp が**DEC-011で除去済みバグ時代のシェアローダー出力**と特定（正= **+2.14pp**）。β仕様表はB-4前のstaleキャッシュ（正= 0.425/p=0.047・プラセボ有意負・FD null・年次相関 +0.06〜+0.39 vs 全年負）。ユーザー承認のうえ再生成値を正として全doc更新・本体data/processedを置換（旧= processed_stale_20260706/ に退避）。Shapiro 0.41/0.70/0.83・35兆系・H1/H2・国際比較は完全再現＝無傷
