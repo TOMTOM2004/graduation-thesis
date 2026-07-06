@@ -14,7 +14,7 @@ Phase 3 Step 3-1: IO価格モデル（レオンチェフ価格方程式）。
 
 2仕様で並列実装:
     (i)  β=1.0: レオンチェフ原形（完全転嫁）
-    (ii) β=0.431: 実証スケーリング（Phase 2a-3 パネルOLS 推定値）
+    (ii) β=BETA_EMPIRICAL（cost_push_panel_results.csv spec iii から読込・≈0.431）: 実証スケーリング（Phase 2a-3 パネルOLS 推定値）
 
 競争的輸入財（衣料・履物）は転嫁係数を 0 に設定（DEC-010）。
 """
@@ -36,13 +36,22 @@ DATA_RAW = Path(__file__).resolve().parents[2] / "data" / "raw"
 DATA_PROCESSED = Path(__file__).resolve().parents[2] / "data" / "processed"
 SIM_DIR = DATA_PROCESSED / "simulation-params"
 
+def _load_beta_empirical() -> float:
+    """Phase 2a-3 パネルOLS spec(iii) の β を結果CSVから読む（DEC-019: 結果数値のハードコード禁止・回帰再実行に自動追随）"""
+    df = pd.read_csv(DATA_PROCESSED / "price-indices" / "cost_push_panel_results.csv")
+    row = df[df["仕様"].str.contains("競争的輸入財除外", na=False)]
+    if len(row) != 1:
+        raise RuntimeError("spec (iii) が cost_push_panel_results.csv に見つからない。先に src/analysis/cost_push_panel.py を実行すること")
+    return float(row["β"].iloc[0])
+
 # Empirical pass-through coefficient (Phase 2a-3 panel OLS, spec iii)
-BETA_EMPIRICAL = 0.431
+BETA_EMPIRICAL = _load_beta_empirical()
 
 # Koyck partial adjustment: annual pass-through rate
-# δ=0.55: estimated by minimizing RMSE against actual CPI (2021-2024 shock period)
+# δ=0.55 は calibration（推定値ではない）。独立グリッド探索では RMSE 最小は δ≈0.60、
+# ただし RMSE 曲面は [0.5, 0.7] でほぼ平坦（弱識別）— design-review C-3 / DEC-020。
 # Economic interpretation: 55% of import cost increase is passed through within one year
-# Half-life ≈ 10.4 months. Sensitivity range: 0.4, 0.55, 0.7
+# Half-life ≈ 10.4 months. Sensitivity range: 0.4, 0.55, 0.7, 1.0
 DELTA_KOYCK = 0.55
 
 # CPI categories with near-zero pass-through (competitive imports, DEC-010)
@@ -145,7 +154,7 @@ def run_leontief_price_model(
         sector_code, sector_name, group,
         m_i          : direct import shock (fraction)
         p_leontief   : Leontief full pass-through (fraction, β=1)
-        p_empirical  : Empirically scaled (fraction, β=0.431)
+        p_empirical  : Empirically scaled (fraction, β=BETA_EMPIRICAL)
         p_leontief_pp: pp change (×100)
         p_empirical_pp: pp change (×100)
     """
@@ -210,7 +219,7 @@ def map_to_cpi_categories(
         cpi_mid_name, cpi_code, group,
         is_competitive_import,
         delta_cpi_leontief_pp  : Leontief full pass-through
-        delta_cpi_empirical_pp : Empirically scaled (β=0.431)
+        delta_cpi_empirical_pp : Empirically scaled (β=BETA_EMPIRICAL)
         delta_cpi_zero_pp      : For competitive imports (always 0)
     """
     bridge = pd.read_csv(
@@ -481,7 +490,7 @@ def print_validation_summary(val_df: pd.DataFrame) -> None:
     rmse_l = np.sqrt((sub_shock["err_leontief_pp"] ** 2).mean())
     rmse_e = np.sqrt((sub_shock["err_empirical_pp"] ** 2).mean())
     print(f"\n  ショック期 RMSE — Leontief: {rmse_l:.3f}pp / 実証スケール: {rmse_e:.3f}pp")
-    print(f"  → {'実証スケール (β=0.431)' if rmse_e < rmse_l else 'Leontief (β=1.0)'} のほうが実績CPI に近い")
+    print(f"  → {f'実証スケール (β={BETA_EMPIRICAL:.3f})' if rmse_e < rmse_l else 'Leontief (β=1.0)'} のほうが実績CPI に近い")
 
 
 # --------------------------------------------------------------------------- #
@@ -522,7 +531,7 @@ def plot_model_vs_actual(
     fig, axes = plt.subplots(1, 2, figsize=(14, 6))
     fig.suptitle(
         "IO価格モデル検証: モデル予測 vs 実績CPI\n"
-        "β=1.0（レオンチェフ原形）vs β=0.431（実証スケーリング、Phase 2a-3）",
+        f"β=1.0（レオンチェフ原形）vs β={BETA_EMPIRICAL:.3f}（実証スケーリング、Phase 2a-3）",
         fontsize=12, fontweight="bold",
     )
 
@@ -535,7 +544,7 @@ def plot_model_vs_actual(
     ax.plot(x, yearly["delta_cpi_leontief_pp"], "s--", color="#27ae60",
             linewidth=1.8, markersize=7, label="Leontief β=1.0")
     ax.plot(x, yearly["delta_cpi_empirical_pp"], "o-", color="#e67e22",
-            linewidth=1.8, markersize=7, label="実証スケール β=0.431")
+            linewidth=1.8, markersize=7, label=f"実証スケール β={BETA_EMPIRICAL:.3f}")
 
     ax.set_xticks(list(x))
     ax.set_xticklabels(yearly["year"].tolist(), rotation=45, fontsize=9)
@@ -557,7 +566,7 @@ def plot_model_vs_actual(
     lims = [shock_df["delta_cpi_actual_pp"].min() - 1, shock_df["delta_cpi_actual_pp"].max() + 1]
     ax.plot(lims, lims, "k--", linewidth=1, alpha=0.5, label="45度線（完全一致）")
     ax.set_xlabel("実績ΔCPI（pp）", fontsize=10)
-    ax.set_ylabel("モデル予測ΔCPI（pp, β=0.431）", fontsize=10)
+    ax.set_ylabel(f"モデル予測ΔCPI（pp, β={BETA_EMPIRICAL:.3f}）", fontsize=10)
     ax.set_title("費目別: モデル vs 実績（ショック期 2021-2024）", fontsize=11)
     ax.legend(fontsize=9)
     ax.grid(alpha=0.3)

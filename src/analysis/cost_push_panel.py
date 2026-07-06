@@ -81,7 +81,7 @@ def _load_import_price_annual() -> pd.DataFrame:
     return annual
 
 
-def build_panel_dataset() -> pd.DataFrame:
+def build_panel_dataset(force: bool = False) -> pd.DataFrame:
     """
     パネルデータセット（long 形式）を構築する。
 
@@ -90,6 +90,8 @@ def build_panel_dataset() -> pd.DataFrame:
       - 主分析期間: 2021-2024（ショック期、輸入価格急騰）
       - プラセボ期間: 2015-2019（非ショック期、日本の近ゼロインフレ期）
       - 2020 は P_import≈100 かつ ΔCPI≈0 で識別力がないため、回帰では除外する
+
+    force: キャッシュを無視して再計算（再現性検証用）
 
     Returns
     -------
@@ -107,14 +109,14 @@ def build_panel_dataset() -> pd.DataFrame:
     PRICE_DIR.mkdir(parents=True, exist_ok=True)
     cache_path = PRICE_DIR / "panel_cost_push.csv"
 
-    if cache_path.exists():
+    if cache_path.exists() and not force:
         print(f"Loading cached: {cache_path}")
         return pd.read_csv(cache_path)
 
     from src.analysis.bridge_matrix_mid import compute_mid_category_import_content
 
     # 1. IC_c
-    ic_df = compute_mid_category_import_content()
+    ic_df = compute_mid_category_import_content(force=force)
     ic_map = ic_df.set_index("cpi_mid_name")[["import_content", "group", "is_transport_comms", "is_competitive_import", "cpi_code"]]
 
     # 2. CPI 年次インデックス（全年）

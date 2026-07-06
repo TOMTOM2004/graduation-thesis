@@ -95,7 +95,7 @@ def main():
 
     print("\n### AXIS 1: CROSS-GROUP (identifies group-specific beta_g; A-4 heterogeneity)")
     print("--- YEN-BASIS (current design) ---")
-    _diag(dln.loc[2021:2024], "2021-2024 current window")
+    g_short = _diag(dln.loc[2021:2024], "2021-2024 current window")
     g_ext = _diag(dln.loc[2006:2024], "2006-2024 extended window")
     # contract-currency basis (案1; link only, 1976-2019)
     cc = pd.DataFrame({g: _series(link, idx, r) for g, r in CONTRACT.items()})
@@ -115,7 +115,7 @@ def main():
     pt_short = _temporal(aggchg.loc[2021:2024], "2021-2024 current window")
     pt_ext = _temporal(aggchg.loc[2006:2024], "2006-2024 extended window")
     print(f">> Kronecker eff#shocks ~ pr_group x pr_time:")
-    print(f"   2021-24: 1.29 x {pt_short:.2f} = {1.29*pt_short:.2f}    "
+    print(f"   2021-24: {g_short:.2f} x {pt_short:.2f} = {g_short*pt_short:.2f}    "
           f"2006-24: {g_ext:.2f} x {pt_ext:.2f} = {g_ext*pt_ext:.2f}")
     print(f">> verdict: temporal episodes multiply with extension -> pooled beta identification")
     print(f"   DOES improve (pr_time {pt_short:.2f}->{pt_ext:.2f}). 案2 premise holds; not refuted.")

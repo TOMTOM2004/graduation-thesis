@@ -93,6 +93,46 @@ pip install -e ".[dev]"   # pytest / ruff も入れる場合
 
 e-Stat API キー等は `.env`（`.gitignore` 済）で管理。
 
+## 再現手順（Reproducibility）
+
+① 依存関係の固定（`uv.lock`）:
+
+```bash
+uv sync
+```
+
+② データ取得。e-Stat 系は API キーが必要（`.env` に設定）:
+
+```bash
+python -m src.data.fetch_io_table
+python -m src.data.fetch_cpi
+python -m src.data.fetch_household
+python -m src.data.fetch_trade_stats
+python -m src.data.fetch_import_prices
+python -m src.data.fetch_worldbank    # World Bank（crosscountry / industry-structure）。デフォルトは既存 raw を保護し skip、再取得は --force
+```
+
+③ 分析パイプラインの実行順（`src/analysis/*.py` の import 依存に基づく）:
+
+```bash
+python -m src.analysis.import_content      # IO表 → セクター/グループ別輸入含有率（他の分析の前提）
+python -m src.analysis.trade_loss          # Phase 1: 交易損失（import_content に依存）
+python -m src.analysis.bridge_matrix       # 家計調査カテゴリ ⇄ IOセクターのブリッジ
+python -m src.analysis.bridge_matrix_mid   # CPI中分類 ⇄ IOセクターのブリッジ（cost_push_panel / io_price_model が依存）
+python -m src.analysis.cost_push_id        # bridge_matrix に依存（quintile_impact の前提）
+python -m src.analysis.cost_push_panel     # bridge_matrix_mid に依存。cost_push_panel_results.csv を出力
+                                            # → io_price_model の BETA_EMPIRICAL がこの CSV を読むため、必ず先に実行すること
+python -m src.analysis.quintile_impact     # bridge_matrix + cost_push_id に依存（Phase 2 家計帰着）
+python -m src.analysis.shapiro_decomp      # Shapiro分解（e-Stat 直接取得、他モジュールと独立）
+python -m src.analysis.shapiro_quintile    # shapiro_decomp に依存
+python -m src.analysis.io_price_model      # import_content + bridge_matrix_mid + cost_push_panel_results.csv に依存（Phase 3 IO価格モデル）
+python -m src.analysis.policy_simulation   # quintile_impact + io_price_model に依存（Phase 3 政策シナリオ評価）
+```
+
+④ キャッシュの無効化: 各 `compute_*` 系関数は `data/processed/` 配下に CSV キャッシュを持つ。再計算したい場合は `force=True` を渡す（例: `compute_trade_loss(force=True)`）。呼び出し先の `compute_*` にも force が伝播する（同一モジュール内のみ）。
+
+⑤ R 依存（AKM / ShiftShareSE）: `tasks/_a4_akm.R` ・ `tasks/_a4_akm2.R` は R + `ShiftShareSE` パッケージが必要（インストール手順は各ファイル冒頭のコメント参照）。入力 CSV（`_akm_cross.csv`）は `tasks/_a4_akm_prep.py` で再生成できる。
+
 ## ゼミ発表スケジュール
 
 | 回 | 時期 | 内容 |
