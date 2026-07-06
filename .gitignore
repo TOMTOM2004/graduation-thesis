@@ -27,3 +27,6 @@ Thumbs.db
 # Jupyter
 .ipynb_checkpoints/
 src/*.egg-info/
+
+# 再現性ゲートで退避した旧キャッシュ（DEC-021・安定後に削除）
+data/processed_stale_*/
