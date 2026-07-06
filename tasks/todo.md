@@ -7,7 +7,7 @@ _Last updated: 2026-07-06 / session: 全体監査(DEC-019/020/021)＝AI混入数
 - Where: `paper/`（outline.md が章割り。01-introduction はドラフト済・DEC-015 準拠に修正済）
 - Done when: 先行研究 or 方法論の章が1本ドラフトされ、数値が全て repo 再現値と一致
 - **【次セッション・Sonnet 実装依頼済み】財/サービス分解分析（DEC-022 予定）**: 設計書 = `docs/design/2026-07-06-goods-services-contrast.md`（v2・/review-basic-design 通過・GO）。実装者は設計書のみを根拠に §7 の段取りで実施（worktree・最初に §1.2 のデータコピー）。**注意: main が未 push の場合、worktree は origin/main 起点になり設計書を含まない → 実装前に main を push するか、worktree 作成後に本体ツリーから docs/design/ を確認すること**
-- 別線: ① main を origin へ push（ユーザー判断待ち） ② AKM SE の R 再実行（_akm_cross.csv は B-4 整合版に再生成済・ShiftShareSE 環境が前提。旧 p≈0.15 の再確認） ③ shapiro_decomp の e-Stat 品目名をキャッシュ化（現状 API キー必須＝再現性の残穴） ④ GDP 561兆の vintage 確定（trade_loss.py TODO） ⑤ data/processed_stale_20260706/ の削除判断（新キャッシュ安定後）
+- 別線: ① ~~main push~~（完了・origin=09ff542） ② ~~AKM SE の R 再実行~~（DEC-021補遺で消化・p≈0.15 再現） ②' ~~財/サービス分解~~（DEC-022 完了・判定=(a) 交絡が主要因） ③' 旧: AKM SE の R 再実行（_akm_cross.csv は B-4 整合版に再生成済・ShiftShareSE 環境が前提。旧 p≈0.15 の再確認） ③ shapiro_decomp の e-Stat 品目名をキャッシュ化（現状 API キー必須＝再現性の残穴） ④ GDP 561兆の vintage 確定（trade_loss.py TODO） ⑤ data/processed_stale_20260706/ の削除判断（新キャッシュ安定後）
 
 ## ✅ 直近完了（2026-07-06・このセッション・全体監査 DEC-019/020/021）
 - **監査**: 3系統並列（整合性/数値出典/ハードコード）→ 齊藤2022「GNI比4.6%」がAI混入数値と確定（JCER原文に不存在）→ 内閣府SNA一次値（2022年度 −16.4兆円）に差し替え。paper序論の撤回済み識別主張・34.6兆混用値・Phase3旧値3系統・G-4表記ゆれを一括修正
