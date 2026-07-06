@@ -1,0 +1,8 @@
+[
+  {"severity": "blocker", "critics": ["testability", "assumption", "clarity"], "file": "docs/design/2026-07-06-goods-services-contrast.md", "excerpt": "golden照合が擬似コード・year対応暗黙・導出手法参照なし→v2で実コード+対応表化"},
+  {"severity": "major", "critics": ["scope", "coherence"], "file": "docs/design/2026-07-06-goods-services-contrast.md", "excerpt": "§3集計行 services=13/mixed=3 が実カウント14/2と食い違い（相殺誤差）→v2訂正"},
+  {"severity": "major", "critics": ["scope", "risk"], "file": "docs/design/2026-07-06-goods-services-contrast.md", "excerpt": "(a)/(b)判定の定量基準未定義（事前登録の穴）→v2で機械規則追加"},
+  {"severity": "major", "critics": ["risk"], "file": "docs/design/2026-07-06-goods-services-contrast.md", "excerpt": "worktreeにgitignored dataが無く初手デッドエンド→v2でデータ提供手順追加"},
+  {"severity": "major", "critics": ["feasibility"], "file": "docs/design/2026-07-06-goods-services-contrast.md", "excerpt": "matplotlib Agg/show()未規定でheadlessハングリスク→v2で必須事項化"},
+  {"severity": "major", "critics": ["testability"], "file": "docs/design/2026-07-06-goods-services-contrast.md", "excerpt": "分類の双方向検証・doc突合手順・wrapper同一性の各検証欠落→v2で解消"}
+]
