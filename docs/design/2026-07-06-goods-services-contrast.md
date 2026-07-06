@@ -301,3 +301,9 @@ check_golden(b); print('deterministic OK')"
 - 分類検証を双方向 assert ＋バケットサイズ assert に強化（testability）
 - §5 の値抽出フィルタ条件・§6-3 の突合コマンドを明文化（testability / clarity）
 - §4 を WebSearch→WebFetch の2段階に修正（feasibility）・DEC-022 書式参照先を明示（specificity）・doc 誤記載時の戻し方を §1.5 に追加（gap D5）・β note にクラスタ数記録を追加（gap D9）
+
+---
+
+## 追記（2026-07-06・設計者）: worktree の基点に関する注意
+
+EnterWorktree の既定は **origin/main 起点**。本設計書を含む一連のコミットが origin へ push される前に実装セッションが worktree を作ると、**worktree 内に本設計書・DEC-021 後の docs が存在しない**。実装開始時に `ls docs/design/` で本書の存在を確認し、無ければ (1) ユーザーに main の push を依頼するか (2) 本体ツリー `/Users/ishidatomonori/Desktop/graduation-thesis/docs/design/` から本書を参照すること（コード・docs の変更コミットは通常どおり worktree ブランチで行い、マージ時に main との差分を確認する）。
