@@ -13,6 +13,19 @@ Slides should feel academic, calm, refined, and logically ordered — with inten
 
 ---
 
+## Numeric Standards — global `slide-design` skill
+
+数値規律（フォントサイズ ramp・60-30-10・影の抑制・page rhythm・CJK 文節改行）は
+グローバルスキル `~/.claude/skills/slide-design/` に従う。本ファイルには数値をコピーしない（二重管理禁止）。
+
+本プロジェクトの上書き・確定値:
+- 発表形態 = `presentation`（ゼミ投影）→ **本文 32px 基準**。ramp: page title 48–64 / subtitle 38–48 / annotation 22–26 / footnote 16–20（偶数スナップ・デッキ全体で各ロール1サイズ固定）
+- 配色は本ファイルの Color System 節が優先（学術・低装飾）
+- 日本語テキストは最終 HTML に `apply_budoux.py` で文節 ZWSP を焼き込む（原稿 .md には適用しない）
+- 矛盾時は本ファイル > slide-design スキル
+
+---
+
 ## Overall Design Direction
 
 ### Core Style
