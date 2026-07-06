@@ -1,0 +1,5 @@
+[
+  {"severity": "blocker", "critics": ["removed-behavior", "cross-file"], "file": "README.md", "line": 38, "excerpt": "README本文の主要結果節にDEC-021撤回済み旧値(β=0.431/p=0.002, +1.42pp, RMSE 9.744pp, ⚠️再較正中警告)が残存し docs/ 新値と矛盾"},
+  {"severity": "major", "critics": ["correctness", "test-coverage"], "file": "src/data/fetch_worldbank.py", "line": 120, "excerpt": "fetch_indicator が WB API 応答を無検証保存: ページング未対応(silent truncation)+HTTP200エラーボディを--forceでraw上書きし得る"},
+  {"severity": "major", "critics": ["correctness", "cross-file", "principles"], "file": "src/analysis/io_price_model.py", "line": 48, "excerpt": "BETA_EMPIRICAL=_load_beta_empirical() の import 時即時実行で CSV 不在環境では import 自体が RuntimeError(policy_simulation/_phase3_recalib_check に波及)"}
+]

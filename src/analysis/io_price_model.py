@@ -38,7 +38,13 @@ SIM_DIR = DATA_PROCESSED / "simulation-params"
 
 def _load_beta_empirical() -> float:
     """Phase 2a-3 パネルOLS spec(iii) の β を結果CSVから読む（DEC-019: 結果数値のハードコード禁止・回帰再実行に自動追随）"""
-    df = pd.read_csv(DATA_PROCESSED / "price-indices" / "cost_push_panel_results.csv")
+    results_csv = DATA_PROCESSED / "price-indices" / "cost_push_panel_results.csv"
+    if not results_csv.exists():
+        raise RuntimeError(
+            f"{results_csv} が存在しない。先に `python -m src.analysis.cost_push_panel` を実行すること"
+            "（README「再現手順」参照。本モジュールは import 時に β を読み込む）"
+        )
+    df = pd.read_csv(results_csv)
     row = df[df["仕様"].str.contains("競争的輸入財除外", na=False)]
     if len(row) != 1:
         raise RuntimeError("spec (iii) が cost_push_panel_results.csv に見つからない。先に src/analysis/cost_push_panel.py を実行すること")

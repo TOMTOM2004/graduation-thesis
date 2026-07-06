@@ -307,19 +307,21 @@ def compute_total_trade_loss(force: bool = False) -> pd.DataFrame:
     return total
 
 
-def compute_baseline_sensitivity(year: int = 2022) -> pd.DataFrame:
+def compute_baseline_sensitivity(year: int = 2022, force: bool = False) -> pd.DataFrame:
     """
     参照期の選択に対する合計交易損失の感度（恣意性チェック用、DEC-012）。
 
     単年（2015/2016/2018/2019/2020）と複数年平均（2015-19=中心 / 2017-19）を比較。
     単年は石油サイクルの一点を拾い 30.6〜42.7兆と振れるが、複数年平均は ~34-35兆で頑健。
 
+    force: キャッシュを無視して再計算（再現性検証用）
+
     Returns
     -------
     pd.DataFrame: columns = baseline, total_tn_jpy, gdp_pct, energy_share_pct
     """
-    annual = compute_annual_price_index()
-    group_io = compute_group_import_content()
+    annual = compute_annual_price_index(force=force)
+    group_io = compute_group_import_content(force=force)
     m0 = dict(zip(group_io["group"], group_io["import_value_total"]))
     p_t = annual[annual["year"] == year].set_index("group")["price_index"].to_dict()
     if year not in GDP_BN_BY_YEAR:

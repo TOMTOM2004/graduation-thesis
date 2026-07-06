@@ -25,6 +25,7 @@ industry-structure/wb_* は country=JP（日本単独の時系列、per_page=500
 実行する場合: `python -m src.data.fetch_worldbank --force` で全ファイルを再取得する。
 """
 
+import json
 from pathlib import Path
 
 import httpx
@@ -119,16 +120,36 @@ def fetch_indicator(
 
     date_param = f"{year_range[0]}:{year_range[1]}"
     url = f"{WB_API_BASE}/{country}/indicator/{indicator_code}"
-    params = {"format": "json", "per_page": per_page, "date": date_param}
 
     print(f"Fetching {indicator_code} (country={country}, date={date_param})...")
     with httpx.Client(follow_redirects=True, timeout=60) as client:
-        resp = client.get(url, params=params)
-        resp.raise_for_status()
+        meta: dict | None = None
+        records: list = []
+        page = 1
+        while True:
+            params = {"format": "json", "per_page": per_page, "date": date_param, "page": page}
+            resp = client.get(url, params=params)
+            resp.raise_for_status()
+            body = resp.json()
+            # WB API v2 は HTTP 200 のままエラーボディ [{"message": [...]}] を返すことがある。
+            # 保存前に [metadata, data] の2要素形式であることを検証（raw を壊さない）
+            if not (isinstance(body, list) and len(body) == 2 and isinstance(body[0], dict)):
+                raise RuntimeError(f"WB API error/unexpected body for {indicator_code}: {str(body)[:300]}")
+            meta = body[0]
+            records.extend(body[1] or [])
+            if page >= int(meta.get("pages", 1)):
+                break
+            page += 1
+
+    total = int(meta.get("total", len(records)))
+    if len(records) != total:
+        raise RuntimeError(f"{indicator_code}: fetched {len(records)} records != API total {total}（silent truncation 防止）")
 
     out_path.parent.mkdir(parents=True, exist_ok=True)
-    out_path.write_bytes(resp.content)
-    print(f"Saved to {out_path} ({len(resp.content) / 1024:.1f} KB)")
+    # 既存 raw と同じ [metadata, data] 形式で保存（複数ページは data を連結し per_page/pages を実態に合わせる）
+    meta_out = {**meta, "page": 1, "pages": 1, "per_page": len(records)}
+    out_path.write_text(json.dumps([meta_out, records], ensure_ascii=False))
+    print(f"Saved to {out_path} ({len(records)} records)")
     return out_path
 
 
