@@ -2,6 +2,12 @@
 
 _Last updated: 2026-07-07 / session: 矢印演出をB案（伸びて→再入場）へ刷新（3デッキ共通・時差付き）。main 統合済み_
 
+## 🔥 最優先タスク（先行研究調査の深掘り・2026-07-07 追加）
+- What: **識別戦略まわりの先行研究調査を深める**。方法論学習セッションの引き継ぎメモ `tasks/先行研究_識別戦略ハンドオフ_20260707.md` を**まず読む**。
+- なぜ最優先: 識別が脆弱（β exposure-robust p=0.089）で「類例なし」と断念しかけた部分を、shift-share(Bartik) 識別の枠に載せ直せる見込み。ここを固めると先行研究・方法論章の土台になる。
+- 進め方（ハンドオフ §8）: ① shift-share/Bartik 識別（Adão-Kolesár-Morales / Goldsmith-Pinkham et al. / Borusyak-Hull-Jaravel）② 弱い識別の感度分析（E-value / Rosenbaum bounds）③ 現代 event study/DID の負の重み是正 ④ 財政乗数の状態依存。
+- Done when: 卒論の識別戦略（share外生 or shock外生のどちらに乗るか）を1段落で言語化し、`paper/` の先行研究/方法論章に反映。
+
 ## 🎯 Next action（1つだけ、具体的に）
 - What: **論文執筆着手**（実証3本柱を結果章に統合）。⚠️**数値は必ず DEC-023 の暦年再生成値を使う**（DEC-021 の年度値は撤回）: 交易損失 中心~35兆/**2025年24.8兆**・Q1-Q5 **+2.01pp**(2022)/**+3.36pp**(2025)・β=**0.373 (p=0.089)**・Shapiro 0.41→0.70→0.83（不変）・Koyck RMSE **9.24pp**。goods-services分解（DEC-022）も暦年再生成済（S0 shock +0.08〜+0.41）。全 golden 値は decision-log DEC-023 参照
 - Where: `paper/`（outline.md が章割り。01-introduction はドラフト済・DEC-015 準拠に修正済）
