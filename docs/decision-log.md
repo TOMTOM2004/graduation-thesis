@@ -280,3 +280,22 @@
   - **Shapiro（Tier1・不変）**: 供給シェア 0.41/0.70/0.83 は月次コムーブメント分解で年次集計バグと構造的に無関係＝**暦年化の影響なし**（API依存で再実行不可はDEC-021既知）。
 - **伝播（本セッションで完遂）**: 暦年値を paper/outline・README・project CLAUDE.md・docs（overview/INDEX/contribution/feasibility/progress/analysis-plan/research-design/shapiro-decomposition/design/goods-services）へ一括反映。design-review.md は歴史記録として非改変＋DEC-023 ポインタ追記。inflation-timeline.md は前年比（YoY）公式値ゆえ対象外。コード内 golden（`goods_services_contrast.py`・設計doc）も暦年へ。**安全策**: 出力レベル回帰ガード（2022-24 交易損失 35.3/28.4/29.1兆 不変）、`check_golden` PASS、全ファイル旧値残存 grep=ゼロ（「旧年度 X」の provenance 注記のみ）で DEC-021 型事故を防止。
 - **再現**: worktree `claude/20260707-2025-data-availability`。生データはメイン `data/raw` を symlink（不変）。`python -m src.analysis.trade_loss` / `quintile_impact` / `cost_push_panel`（`force=True`）。
+
+### DEC-024: 識別戦略を shift-share 標準枠組（GPSS share外生設計）に正式に位置づけ（2026-07-07）
+
+- **契機**: 方法論学習セッションの引き継ぎ（`tasks/先行研究_識別戦略ハンドオフ_20260707.md`）。「識別に類例なし」ではなく shift-share (Bartik) 識別の枠に載せ直せる見込みを検証。GPSS 2020 原典（NBER WP 24408 全文）・引用の原典 verify を実施。
+- **判定（事前定義 A/B/C のうち A）**: 本設計は **GPSS share外生設計（exposure research design）そのもの**。識別の有意性を救う結果ではないが、「なぜ・どこで識別が壊れるか」を標準枠組の語彙で厳密に記述できる。
+- **識別戦略の言語化（1段落・paper 方法論章の正）**:
+  > 本研究の識別設計は、shift-share（Bartik）文献の語彙では「単一の集計ショック × ショック前決定の横断エクスポージャ」を用いる exposure research design であり、識別の立脚点は **share の外生性**（Goldsmith-Pinkham, Sorkin & Swift 2020）である。ショック外生性ルート（Borusyak, Hull & Jaravel 2022）は多数の準ランダムショックを要件とし（「産業数が大きくなる場合にのみ一致推定」）、K=1・実効ショック実質1本の本設計では論理的に閉じている（A-4 の5群分割でも群間相関≈0.78・participation ratio 1.3-1.5 で救えないことは実装検証済み＝DEC-013）。share外生ルートでの識別仮定は「輸入含有率 IC_c が、コントロール（年・カテゴリFE）条件付きで、輸入コスト経路以外によるカテゴリ別価格**変化**の差別的トレンドと無相関」（GPSS Assumption 2 の本設計への翻訳。水準との相関は許容される）。財/サービス構成による交絡（DEC-022）は**この仮定の違反の定義そのもの**であり、プラセボ期（2015-19）の負の相関は GPSS が推奨する pre-period falsification（Test 2）の失敗シグナルに当たる。したがって本研究の貢献③は、識別仮定が部分的に破れていることを GPSS の標準診断（Test 1=シェアの相関物：財/サービス分解 DEC-022／Test 2=pre-period プラセボ／exposure-robust 推論 AKM）で**自ら定量化した**点として再定式化でき、β=0.373（p=0.089）は「share外生が成立する限りで転嫁率の一致推定・違反の分だけバイアスを含む、cost-push と整合的な点推定」と位置づけられる。
+- **根拠（GPSS 原典・NBER WP 24408。引用ページは WP 版）**:
+  - 固定 K・T の設定では shares 解釈が自然（§2, p.13）。shocks ルートは「only consistent as the number of industries grows」（§2.2, p.15）＝ K=1 の本設計で shock外生ルートは選択不能。
+  - 識別仮定は「シェアが誤差項の**変化**と無相関（水準ではなく）」（§2.2, p.14）。IC は 2020 年 IO 表由来＝ショック前決定で、この設計と親和的。
+  - pre-period placebo は推奨診断（§1.2, p.11）: 非ゼロの pre-period 推定＝シェアが他チャネルで結果変化を予測＝仮定違反の証拠。**旧解釈の補正**: プラセボ期の負相関は「ill-posed で無情報」に加え、GPSS 枠では「share 内生性（goods/services 交絡と整合）の直接シグナル」という積極的読みができる。
+  - Rotemberg weights は K=1 でも**時点方向 α_t に分解可能**（§3.3, p.18「we could analogously aggregate to the time level」）＝「どの年が β を駆動するか」の透明化に使える（任意・未実装）。
+- **感度分析ツールの選定（優先度低・比較検討のみ）**: 連続処置・線形パネル・two-way FE の本設計に適合するのは **Cinelli & Hazlett (2020, JRSS-B 82(1), 39-67) の partial-R² 枠組（robustness value）のみ**。E-value（VanderWeele & Ding 2017, Ann Intern Med 167(4)）はリスク比スケール・二値曝露向け、Rosenbaum bounds はマッチング二値処置向けで不適合。実装は R `sensemakr` / Python `PySensemakr`（within 変換後 OLS に適用可）。goods ダミーを benchmark covariate にして「財/サービス交絡を覆すに必要な交絡強度」を定量化できる。**採否は執筆時に判断（未実装）**。caveat: p=0.089 ゆえ有意性喪失の RV は小さく出るため、点推定ゼロ化の RV を主に報告する framing が必要。
+- **引用の原典 verify（ハンドオフの記憶ベース記載を補正）**:
+  - GPSS 第三著者は **Swift**（Henry Swift）。ハンドオフの「Swanson」は誤記憶。正: Goldsmith-Pinkham, Sorkin & Swift (2020), AER 110(8), 2586-2624。
+  - BHJ practical guide の確定掲載: **JEP 2025, 39(1), 181-204**（P080 メモの「NBER WP / forthcoming」から更新）。
+  - 他は全て確認済: AKM 2019 QJE 134(4) 1949-2010 / BHJ 2022 REStud 89(1) 181-213 / Borusyak-Hull 2023 Econometrica 91(6) 2155-2185 / Callaway-Sant'Anna 2021 J.Econom 225(2) 200-230 / Sun-Abraham 2021 J.Econom 225(2) 175-199 / de Chaisemartin-D'Haultfœuille 2020 AER 110(9) 2964-2996 / Borusyak-Jaravel-Spiess 2024 REStud 91(6) 3253-3285。
+- **スコープ外（今回不実施）**: ハンドオフ優先③（event study/DID 負の重み是正）・④（財政乗数の状態依存）は別タスク。時点方向 Rotemberg weights・sensemakr は任意の追加分析（実装するなら要承認）。
+- **帰結**: 先行研究章・方法論章の識別節はこの枠組で書く（正: 本 DEC の1段落＋`research-design.md`「識別の到達点と限界」）。「識別に類例がない」という表現は今後使わない。
