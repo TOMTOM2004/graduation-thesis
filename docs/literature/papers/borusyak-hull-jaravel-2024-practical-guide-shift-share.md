@@ -2,14 +2,15 @@
 id: P080
 title: "A Practical Guide to Shift-Share Instruments"
 authors: "Borusyak, Hull, Jaravel"
-year: 2024
-source: "NBER Working Paper No. 33236 (forthcoming, Journal of Economic Perspectives)"
-doi: ""
+year: 2025
+source: "Journal of Economic Perspectives, 39(1), 181-204（旧 NBER WP 33236。確定掲載を DEC-024 で verify・2026-07-07）"
+doi: "10.1257/jep.20231370"
 importance: High
 categories:
   - identification-strategy
 verified: true
 added: 2026-05-31
+updated: 2026-07-07
 ---
 
 ## Summary

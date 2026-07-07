@@ -1,18 +1,20 @@
 # TODO — 卒業論文（案B）
 
-_Last updated: 2026-07-07 / session: 矢印演出B案刷新+下地非表示で確定。第2〜4回のデッキ・原稿は暦年値+モーション込みで完成状態。handoff 済み_
-
-## 🔥 最優先タスク（先行研究調査の深掘り・2026-07-07 追加）
-- What: **識別戦略まわりの先行研究調査を深める**。方法論学習セッションの引き継ぎメモ `tasks/先行研究_識別戦略ハンドオフ_20260707.md` を**まず読む**。
-- なぜ最優先: 識別が脆弱（β exposure-robust p=0.089）で「類例なし」と断念しかけた部分を、shift-share(Bartik) 識別の枠に載せ直せる見込み。ここを固めると先行研究・方法論章の土台になる。
-- 進め方（ハンドオフ §8）: ① shift-share/Bartik 識別（Adão-Kolesár-Morales / Goldsmith-Pinkham et al. / Borusyak-Hull-Jaravel）② 弱い識別の感度分析（E-value / Rosenbaum bounds）③ 現代 event study/DID の負の重み是正 ④ 財政乗数の状態依存。
-- Done when: 卒論の識別戦略（share外生 or shock外生のどちらに乗るか）を1段落で言語化し、`paper/` の先行研究/方法論章に反映。
+_Last updated: 2026-07-07 / session: 識別戦略を GPSS share外生枠へ正式位置づけ（DEC-024）。最優先タスク消化_
 
 ## 🎯 Next action（1つだけ、具体的に）
+- **先に**: `paper/03a-identification-strategy.md`（識別節骨子・DEC-024 準拠）のユーザー合意 → 合意後に本文ドラフト。先行研究章に shift-share 2経路（GPSS/BHJ/AKM）の導入を書く（骨子の注意書きどおり方法論章と分担）
 - What: **論文執筆着手**（実証3本柱を結果章に統合）。⚠️**数値は必ず DEC-023 の暦年再生成値を使う**（DEC-021 の年度値は撤回）: 交易損失 中心~35兆/**2025年24.8兆**・Q1-Q5 **+2.01pp**(2022)/**+3.36pp**(2025)・β=**0.373 (p=0.089)**・Shapiro 0.41→0.70→0.83（不変）・Koyck RMSE **9.24pp**。goods-services分解（DEC-022）も暦年再生成済（S0 shock +0.08〜+0.41）。全 golden 値は decision-log DEC-023 参照
 - Where: `paper/`（outline.md が章割り。01-introduction はドラフト済・DEC-015 準拠に修正済）
 - Done when: 先行研究 or 方法論の章が1本ドラフトされ、数値が全て repo 再現値と一致
 - 別線: ① ~~main push~~（完了・origin=09ff542） ② ~~AKM SE の R 再実行~~（DEC-021補遺で消化・p≈0.15 再現） ③ ~~財/サービス分解（DEC-022）~~（実装・doc反映・§4官公表突合とも完了。突合2件差異は価格決定メカニズム基準の事前定義として意図的差異と明記しクローズ済＝09ff542） ④ shapiro_decomp の e-Stat 品目名をキャッシュ化（現状 API キー必須＝再現性の残穴） ⑤ GDP 561兆の vintage 確定（trade_loss.py TODO） ⑥ data/processed_stale_20260706/ の削除判断（新キャッシュ安定後。※DEC-023 セッションで main の data/processed を暦年で再生成済） ⑦ ~~第2回スライド s7 改行位置が不自然~~（完了＝bdc15c2） ⑧ ~~第2〜4回スライド・原稿の暦年値（DEC-023）同期~~（**全完了・2026-07-07**: 第3・4回デッキ+原稿を暦年刷新・2025年延長。**第2回はユーザー確認で「未発表」と判明＝凍結対象外**としてデッキ+原稿も暦年値へ更新済み・stale grep 0）
+
+## ✅ 直近完了（2026-07-07・識別戦略の shift-share 位置づけ・DEC-024）
+- **最優先タスク（先行研究調査の深掘り）消化**: GPSS 2020 原典（NBER WP 24408）精読＋引用の原典 verify（並列エージェント2体）。**判定A＝本設計は GPSS share外生設計（exposure research design）そのもの**。K=1 ゆえ shock外生ルート（BHJ）は論理的に選択不能・goods/services 交絡（DEC-022）は share外生仮定違反の定義そのもの・プラセボ期負相関は GPSS Test 2 の失敗シグナル＝「識別に類例なし」→「標準枠組内で仮定の部分的違反を自ら定量化した事例」へ格上げ。1段落言語化は **DEC-024** が正
+- **成果物**: DEC-024 起票・research-design.md 識別節に枠組位置づけ追記・P005 メモ深化＋P080 確定掲載（JEP 2025 39(1)）＋P087 Cinelli-Hazlett 新設・`paper/03a-identification-strategy.md`（骨子・**ユーザー合意待ち**）・outline.md 登録・ハンドオフメモの誤記憶補正（GPSS 第三著者 Swanson→**Swift**）
+- **感度分析（優先度低で比較検討のみ）**: 本設計に適合するのは Cinelli-Hazlett robustness value のみ（E-value/Rosenbaum は二値処置向けで不適合）。採否は執筆時判断・未実装
+- **副産物**: thesis-writing スキルの golden 表が DEC-023 以前の年度値のまま残っていた地雷を暦年化（撤回パターン grep にも旧年度値を追加）
+- **残タスク（ハンドオフ §8 未消化分）**: ③ 現代 event study/DID の負の重み是正（小麦イベントスタディ補強・引用は verify 済: CS2021/SA2021/dCDH2020/BJS2024）④ 財政乗数の状態依存（政策章を理論裏打ちする場合のみ）
 
 ## ✅ 直近完了（2026-07-07・矢印演出の刷新・ユーザー選定B案）
 - **flow-arrow を3デッキ共通で「伸びる→一拍→消えて再入場」に変更**: 旧・破線コンベア（dashflow）への「イメージと違う」указ摘を受け、5案の動く比較デモ（現行/伸びて再入場/一回描画/コメット/シェブロン）を提示 → **B案をユーザー選定**。stroke-dashoffset 56→0 で描画(42%)→矢頭点灯で保持(72%)→フェード(86%)→再入場、周期2.4s
