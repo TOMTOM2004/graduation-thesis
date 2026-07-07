@@ -1,14 +1,21 @@
 # TODO — 卒業論文（案B）
 
-_Last updated: 2026-07-07 / session: 第3・4回スライドを草案→完成形（データ駆動チャート追加・placeholder解消）。main 統合済み（merge c0b779f）_
+_Last updated: 2026-07-07 18:04 / session: スライドデザイン基盤（ppt-master/budoux 調査→グローバル slide-design スキル新設→第2回監査修正→3/4回横展開→check_slides.py + slide-check hook 設置）。main 統合済（〜add1a69。並行の DEC-023/モーションセッションと相互マージ済）_
 
 ## 🎯 Next action（1つだけ、具体的に）
-- What: **論文執筆着手**（実証3本柱を結果章に統合）。数値は必ず DEC-021 の再生成値を使う: 交易損失 中心~35兆/上限40.7兆・Q1-Q5 **+2.14pp**(2022)・β=**0.425 (p=0.047)**・Shapiro 0.41→0.70→0.83・RMSE 10.00pp。goods-services分解（DEC-022）は §5 のとおり research-design.md/decision-log.md/第2回スライドに反映済
+- What: **論文執筆着手**（実証3本柱を結果章に統合）。数値は必ず DEC-023 の**暦年**再生成値を使う: 交易損失 中心~35兆(2022)/2025 24.8兆・Q1-Q5 **+2.01pp**(2022。23 +2.06/24 +2.45/25 +3.36)・β=**0.373 (p=0.089)**・Shapiro 0.41→0.70→0.83・RMSE 9.24pp（旧年度値 +2.14/β=0.425＝DEC-021 は論文に使わない）。goods-services分解（DEC-022）は §5 のとおり research-design.md/decision-log.md/第2回スライドに反映済
 - Where: `paper/`（outline.md が章割り。01-introduction はドラフト済・DEC-015 準拠に修正済）
 - Done when: 先行研究 or 方法論の章が1本ドラフトされ、数値が全て repo 再現値と一致
-- 別線: ① ~~main push~~（完了・origin=09ff542） ② ~~AKM SE の R 再実行~~（DEC-021補遺で消化・p≈0.15 再現） ③ ~~財/サービス分解（DEC-022）~~（実装・doc反映・§4官公表突合とも完了。突合2件差異は価格決定メカニズム基準の事前定義として意図的差異と明記しクローズ済＝09ff542） ④ shapiro_decomp の e-Stat 品目名をキャッシュ化（現状 API キー必須＝再現性の残穴） ⑤ GDP 561兆の vintage 確定（trade_loss.py TODO） ⑥ data/processed_stale_20260706/ の削除判断（新キャッシュ安定後） ⑦ ~~第2回スライド s7 改行位置が不自然~~（完了・2026-07-07: budoux ZWSP 361箇所を全文焼き込み＋監査修正一式=bdc15c2。スクリプトはグローバル `~/.claude/skills/slide-design/scripts/apply_budoux.py`）
+- 別線: ① ~~main push~~（完了・origin=09ff542） ② ~~AKM SE の R 再実行~~（DEC-021補遺で消化・p≈0.15 再現） ③ ~~財/サービス分解（DEC-022）~~（実装・doc反映・§4官公表突合とも完了。突合2件差異は価格決定メカニズム基準の事前定義として意図的差異と明記しクローズ済＝09ff542） ④ shapiro_decomp の e-Stat 品目名をキャッシュ化（現状 API キー必須＝再現性の残穴） ⑤ GDP 561兆の vintage 確定（trade_loss.py TODO） ⑥ data/processed_stale_20260706/ の削除判断（新キャッシュ安定後） ⑦ ~~第2回スライド s7 改行位置が不自然~~（完了・2026-07-07: budoux ZWSP 361箇所を全文焼き込み＋監査修正一式=bdc15c2。スクリプトはグローバル `~/.claude/skills/slide-design/scripts/apply_budoux.py`） ⑧ **スライド3デッキの数値が旧年度値のまま**（+2.14/+1.96/+2.67・β=0.425＝DEC-021。第3/4回の新チャートも旧値転記）— DEC-023 暦年伝播は docs/paper 止まりでスライド未達（2026-07-07 18:00 検出）。CSV 再生成値との突合の上、3/4回は次の内容改稿時に暦年値へ、第2回は発表本番前に更新要否を判断
 
-## ✅ 直近完了（2026-07-07・このセッション・第3・4回スライド完成形）
+## ✅ 直近完了（2026-07-07・スライドデザイン基盤セッション）
+- **ppt-master（MIT）/ budoux（Apache-2.0）調査**: 前者から数値化された暗黙知（用途別本文px・ramp比率・60-30-10・影の二層opacity・page rhythm）を蒸留、後者は「ZWSP+keep-all」の本質を吸収しビルド時焼き込み方式を採用
+- **グローバル slide-design スキル新設**（`~/.claude/skills/slide-design/`）: SKILL.md + references 5本（typography/color-shadow/layout-rhythm/cjk-text/**html-slide-pitfalls**）+ scripts（apply_budoux.py / check_slides.py）。DESIGN.md は数値委譲の参照節のみ（二重管理禁止・presentation=本文32px基準を宣言）
+- **第2回デッキ監査→全修正**: budoux ZWSP 361箇所・パレット統一（直書き#c0392b/#27ae60→--crimson/--green新設）・コントラスト是正（--text-light/--blue-soft を4.5:1+）・本文16→18px・極小10-13px引上げ・偶数スナップ・s7/s8 ぶら下げインデント（.hang）・**bullets の flex 分断バグ根治**（li の display:flex はインライン混在で語順崩壊→絶対配置ダッシュ）・p2 橋渡し文の文節改行整形・散布図の回帰直線 orange 化+ノルウェーラベル移動。全て Chrome 実レンダで overflow 検証
+- **第3/4回へ横展開**（同じテンプレ由来の同問題を一括修正・全28枚検証）→ その後のモーションセッションの編集後も check_slides.py 3デッキ OK を handoff 時に再確認
+- **再発防止**: `check_slides.py`（E1 li flex/E2 禁止hex/E3 フォント下限・端数/E4 コントラスト/E5 budoux未適用）+ 本 repo `.claude/settings.json` の PostToolUse hook（slides/*.html 編集直後に自動検査→違反を編集セッションへ exit 2 で返す。違反注入テスト済）。第1回デッキ（発表済み）は意図的に未修正＝編集するとエラーが出る仕様
+
+## ✅ 直近完了（2026-07-07・第3・4回スライド完成形セッション）
 - **第3回デッキ（15→17枚）**: s6 交易損失の年次推移バー（35.3/28.4/29.1兆・エネ寄与重ね棒＝`trade_loss_total.csv` 転記）／s7b 五分位別実効インフレ縦棒図 新設（2022-24×Q1-Q5・gap +2.14/+1.96/+2.67pp＝`quintile_inflation_burden.csv` 転記）／s8 Shapiro 2023 (0.60) 追記／s10 比較表の「数値要照合」ph 解消（Yagi=品目別転嫁率の異質性・Amiti=自社コスト弾力性≈0.6・Amores=EUROMOD逆進性、docs/literature 照合。βの同一 estimand 直接比較対象なしと明記）／巻末 b1 政策シナリオ例示チャート新設（`policy_comparison_2022.csv`: gap 1.05→エネ0.58(−44.8%)/食料0.91(−13.0%)/複合0.44(−57.7%)pp・incidence accounting caveat 明記＝DEC-014 準拠で絶対値は結論にしない）
 - **第4回デッキ（13→15枚）**: s1/s2 draft-flag 除去・s5 年次推移バー＋ph解消・s6b 五分位図 新設・s9 の政策数値 ph→補足b1参照・b1 新設。**s11（第3回フィードバック応答）のみ placeholder 維持＝第3回実施後に執筆（構造上未確定が正）**
 - **検証**: check_slides.py 両デッキ OK（budoux 再適用で中黒 ZWSP 手動2件が消える既知 trap → 再挿入）・headless Chrome ハーネスで全32枚 overflow 0・count-up 着地値一致・新チャート4種スクリーンショット目視
