@@ -1,5 +1,5 @@
 # Handoff — graduation-thesis 卒業論文（案B・論文執筆フェーズ）
-_Last updated: 2026-07-07 / session: ITEM 方式へ移行（旧 todo 追記形式から編成し直し）。識別戦略 DEC-024 済み_
+_Last updated: 2026-07-07 20:44 / session: 識別戦略 DEC-024（GPSS share外生位置づけ）→ロバストネスプラン ITEM-001 化→ITEM 方式移行→handoff_
 
 ## 📇 案件 index（自動生成・SSOT = `tasks/items/*.md` / 再生成 = `item_indexer.py`・手書き禁止）
 <!-- item_indexer.py が tasks/items/INDEX.md を生成。下表はその転記
@@ -21,7 +21,7 @@ _Last updated: 2026-07-07 / session: ITEM 方式へ移行（旧 todo 追記形�
 - 受動待ち（外部条件）: なし
 
 ## 📥 Inbox（未triage）
-- claude-brain: 情報の引き出し方の調査とアップデート＋RAG先行研究調査（Slack #todo より _2026-06-23_）→ **本 repo でなく claude-brain 側の案件**。claude-brain セッションで ITEM 化すべき（ここには置かない）
+- claude-brain: 情報の引き出し方の調査とアップデート＋RAG先行研究調査（Slack #todo より _2026-06-23_）→ **本 repo でなく claude-brain 側の案件**。handoff 時に gh issue 化を試みたが permission 拒否（2026-07-07）＝**次回 claude-brain セッションで ITEM 化して本行を消す**（ITEM-016 retrieval gate と統合可否も判断）
 
 ## 🗂️ 運用・監視（案件でなく反復運用・トリガー型）
 - slides/*.html 編集時: `check_slides.py` PostToolUse hook が自動検査（第1回デッキは発表済み凍結＝編集するとエラーが出る仕様）
