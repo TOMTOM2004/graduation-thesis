@@ -1,12 +1,19 @@
 # TODO — 卒業論文（案B）
 
-_Last updated: 2026-07-06 21:55 / session: 全体監査(DEC-019/020/021)→再現性ゲート→識別再検証(DEC-021補遺)→財/サービス分解の設計+実装検収(DEC-022)→スライド全4回更新→thesis-writing スキル作成→「中位」事実誤り修正。全て main 統合・push 済（origin=2033d2b 以降）_
+_Last updated: 2026-07-07 23:55 / session: スライド動化（第2〜4回モーション実装・PNG→データ駆動チャート化・slide-motion スキル新設）。main 統合済み_
 
 ## 🎯 Next action（1つだけ、具体的に）
 - What: **論文執筆着手**（実証3本柱を結果章に統合）。数値は必ず DEC-021 の再生成値を使う: 交易損失 中心~35兆/上限40.7兆・Q1-Q5 **+2.14pp**(2022)・β=**0.425 (p=0.047)**・Shapiro 0.41→0.70→0.83・RMSE 10.00pp。goods-services分解（DEC-022）は §5 のとおり research-design.md/decision-log.md/第2回スライドに反映済
 - Where: `paper/`（outline.md が章割り。01-introduction はドラフト済・DEC-015 準拠に修正済）
 - Done when: 先行研究 or 方法論の章が1本ドラフトされ、数値が全て repo 再現値と一致
 - 別線: ① ~~main push~~（完了・origin=09ff542） ② ~~AKM SE の R 再実行~~（DEC-021補遺で消化・p≈0.15 再現） ③ ~~財/サービス分解（DEC-022）~~（実装・doc反映・§4官公表突合とも完了。突合2件差異は価格決定メカニズム基準の事前定義として意図的差異と明記しクローズ済＝09ff542） ④ shapiro_decomp の e-Stat 品目名をキャッシュ化（現状 API キー必須＝再現性の残穴） ⑤ GDP 561兆の vintage 確定（trade_loss.py TODO） ⑥ data/processed_stale_20260706/ の削除判断（新キャッシュ安定後） ⑦ ~~第2回スライド s7 改行位置が不自然~~（完了・2026-07-07: budoux ZWSP 361箇所を全文焼き込み＋監査修正一式=bdc15c2。スクリプトはグローバル `~/.claude/skills/slide-design/scripts/apply_budoux.py`）
+
+## ✅ 直近完了（2026-07-07・このセッション・スライド動化）
+- **第2回デッキのモーション実装**: フラグメント段階表示・カウントアップ・TED風フック演出・バー成長・SVGフローアロー。ランキング/散布図を PNG→データ駆動 SVG/HTML に再構築（`xc_2022.csv` 転記・OLS 0.7165+0.021541x R²=0.64・散布図注記 46→45ヶ国に訂正）
+- **第3回・第4回デッキに同基盤を移植**: ロードマップ/研究の弧/三角測量の段階点灯・現在地/背骨リングハイライト・比較表の行frag・太字2段階強調（emph navy/orange/crimson・rq-box白→黄）。check_slides.py 3デッキ全て OK（第3回は budoux 再適用+中黒 ZWSP 手動2件）
+- **count-up watchdog**: 非表示タブ等で rAF 停止しても最終値を確定する仕組みを3デッキに実装（trap lesson 化済み）
+- **グローバル slide-motion スキル新設**（`~/.claude/skills/slide-motion/`）: 基盤コード正本 references/motion-base.md＋適用ルール・落とし穴6件。slide-design と対
+- **方針決定**: 第3・4回は内容が草案のため、別セッションで内容確定 → slide-motion で frag 割当てをやり直す運用（基盤は本文と直交なので残置）
 
 ## ✅ 直近完了（2026-07-06・セッション後半・スキル/検収/修正）
 - **thesis-writing スキル作成**（`.claude/skills/thesis-writing/SKILL.md`）: 執筆視点（パラグラフ/章役割/クレーム階層言い分け表）＋推敲7視点チェックリスト＋golden値表＋章手順。paper/ 作業で自動発動
