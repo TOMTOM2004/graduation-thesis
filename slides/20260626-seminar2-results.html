@@ -319,7 +319,7 @@
   /* animated flow arrows (s7/s8 transitions): 一本の矢印が伸びる→一拍→消えて再入場（複数本は --ad で時差） */
   .supply-arrow, .pivot-arrow { padding: 0 8px; }
   .flow-arrow { display: block; }
-  .flow-arrow .fa-shaft { stroke: var(--border); stroke-width: 7; stroke-linecap: round; fill: none; }
+  .flow-arrow .fa-shaft { display: none; }  /* 下地の枠は非表示: 消灯フェーズでは何も見せない（ユーザー要望） */
   .flow-arrow .fa-flow  { stroke: var(--blue-soft); stroke-width: 7; stroke-linecap: round; fill: none;
                           stroke-dasharray: 56; stroke-dashoffset: 56;
                           animation: arrowdraw 2.4s cubic-bezier(.3,.6,.3,1) infinite;
