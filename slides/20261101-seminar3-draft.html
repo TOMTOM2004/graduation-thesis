@@ -199,6 +199,19 @@
   .qgroup .qyear { font-size: 16px; font-weight: 700; color: var(--navy); }
   .qgroup .qgap { font-size: 16px; font-weight: 800; color: var(--crimson); font-variant-numeric: tabular-nums; }
 
+  /* 三角測量の説明（収束ダイアグラム） */
+  .conv { display: grid; grid-template-columns: 1fr 90px 340px; gap: 0 8px; align-items: center; flex: 1; }
+  .conv-evs { display: flex; flex-direction: column; gap: 12px; }
+  .conv-ev { border: 1px solid var(--border); border-left: 4px solid var(--blue-mid); border-radius: 4px; padding: 12px 16px; font-size: 16px; color: var(--text-mid); line-height: 1.55; }
+  .conv-ev .cel { font-weight: 700; color: var(--blue-soft); margin-right: 6px; }
+  .conv-arrow { display: flex; align-items: center; justify-content: center; }
+  .conv-concl { background: var(--navy); border-radius: 6px; padding: 22px 24px; }
+  .conv-concl .cc-label { font-size: 13px; font-weight: 600; color: #8ab4d4; letter-spacing: 0.08em; margin-bottom: 8px; }
+  .conv-concl .cc-main { font-size: 20px; font-weight: 700; color: var(--white); line-height: 1.5; }
+  .conv-contrast { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; margin-top: 18px; }
+  .conv-contrast span { background: var(--muted-bg); border-radius: 4px; padding: 10px 14px; font-size: 14px; color: var(--text-mid); line-height: 1.55; }
+  .conv-contrast strong { color: var(--navy); }
+
   /* 政策シナリオ例示（Q1−Q5 gap の横棒） */
   .pol-chart { display: flex; flex-direction: column; gap: 16px; flex: 1; justify-content: center; }
   .pol-row { display: grid; grid-template-columns: 320px 1fr 190px; gap: 16px; align-items: center; }
@@ -313,7 +326,7 @@
       <div class="rm-step done frag" data-frag="r2">
         <div class="rmlabel">第2回</div>
         <div class="rmtitle">第一次分析結果</div>
-        <div class="rmstate">3本柱＋識別の​到達点を​報告</div>
+        <div class="rmstate">3本柱と、​どこまで​言い​切れるかの​見極めを​報告</div>
       </div>
       <div class="rm-arrow frag" data-frag="r3"><svg class="flow-arrow" viewBox="0 0 90 30" width="56" height="20" aria-hidden="true"><path class="fa-shaft" d="M4 15 H60"/><path class="fa-flow" d="M4 15 H60"/><path class="fa-head" d="M58 4.5 L84 15 L58 25.5 Z"/></svg></div>
       <div class="rm-step now frag" data-frag="r3">
@@ -328,7 +341,7 @@
         <div class="rmstate">結論の​確定​（2027年1月）</div>
       </div>
     </div>
-    <div class="note">本日は​完成形の​ドラフトですが、​考察と​限界の​記述は​まだ wet です。​叩いていただく​ことを​歓迎します。</div>
+    <div class="note">本日は​完成形の​ドラフトですが、​考察と​限界の​記述は​まだ​書きかけです。​叩いていただく​ことを​歓迎します。</div>
   </div>
 
   <!-- 03 Background (compressed) -->
@@ -342,7 +355,7 @@
         <h3>構造的背景</h3>
         <ul class="bullets">
           <li>製造業の​海外移転で​エネルギー・​食料・素材の​輸入依存が​深化​（Thorbecke 2024）</li>
-          <li>経常収支が​貿易黒字型→第一次所得収支依存型へ​（Miwa 2024）</li>
+          <li>経常収支は​貿易黒字型から、​海外投資の​利子・配当​（第一次所得収支）で​稼ぐ​型へ​（Miwa 2024）</li>
           <li>輸入価格上昇分は​国内に​還流せず海外へ​流出＝交易条件悪化</li>
         </ul>
       </div>
@@ -351,11 +364,11 @@
         <ul class="bullets">
           <li>ウクライナ侵攻・​対ロシア制裁・​円安が​重畳</li>
           <li>エネルギーが​突出​（2020→22で約2〜3倍）、​食料も5〜6割上昇</li>
-          <li>日本は​実質賃金3年連続マイナス＝デマンドプル不在の​コストプッシュ主導</li>
+          <li>実質賃金は3年連続マイナス＝需要の​過熱​（デマンドプル）ではなく、​原価上昇​（コストプッシュ）​主導の​物価高</li>
         </ul>
       </div>
     </div>
-    <div class="note">産業構造変化の​原因分析は​スコープ外​（先行研究から​所与と​して​引用）。</div>
+    <div class="note">コストプッシュ＝原材料など​原価の​上昇が​押し上げる​物価高／デマンドプル＝需要の​過熱に​よる​物価高。​産業構造変化の​原因分析は​スコープ外​（先行研究から​所与と​して​引用）。</div>
   </div>
 
   <!-- 04 Research Question (honest reframe) -->
@@ -367,7 +380,7 @@
     </div>
     <div class="conclusion-line rise" style="margin-top:6px; font-size:16px; color:var(--text-mid); font-weight:400; --d:.45s;">
       副問1：所得流出の​構造定量化　／　副問2：家計消費への​帰着​（​異質性）​　／　副問3：政策シミュレーション<br>
-      <span style="color:var(--orange);">※ コストプッシュの​「清浄な​単離」は​研究の​過程で​原理的に​不可能と​判明 → 問いの​答え方を honest に​再定義​（後述）</span>
+      <span style="color:var(--orange);">※ 物価高から​コストプッシュ分だけを​取り出すこと​（清浄な​単離）は、​研究の​過程で​原理的に​不可能と​判明 → 問いへの​答え方を​正直に​立て直した​（後述）</span>
     </div>
   </div>
 
@@ -387,13 +400,13 @@
       <div class="tri-box frag" data-frag="p2">
         <div class="tstep">Phase 2</div>
         <div class="tname">家計への​帰着</div>
-        <p>家計調査 × 所得五分位。​実績CPI×実支出シェアの​恒等式で​逆進性を​分解​（背骨）。​回帰に​よる cost-push 単離は​到達点を​明示。</p>
+        <p>家計調査 × 所得五分位。​実績CPIと​実支出シェアの​掛け算・足し算だけ​（恒等式）で​逆進性を​分解​（背骨）。​回帰に​よる​コストプッシュ単離は​到達点を​明示。</p>
       </div>
       <div class="tri-arrow frag" data-frag="p3"><svg class="flow-arrow" viewBox="0 0 90 30" width="72" height="24" aria-hidden="true"><path class="fa-shaft" d="M4 15 H60"/><path class="fa-flow" d="M4 15 H60"/><path class="fa-head" d="M58 4.5 L84 15 L58 25.5 Z"/></svg></div>
       <div class="tri-box frag" data-frag="p3">
         <div class="tstep">Phase 3</div>
         <div class="tname">統合シミュレーション</div>
-        <p>IO×マイクロシミュレーション。​政策評価。​数値は​例示​（incidence accounting）と​して​符号レベルで​扱う。</p>
+        <p>産業連関表×マイクロシミュレーションで​政策評価。​数値は​例示と​して、​方向​（符号）​レベルで​扱う。</p>
       </div>
     </div>
     <div class="note">識別​戦略：当初は​輸入含有率の​財間差異で cost-push を​分離する​計画。​検証の​結果、​単一マクロ事象からの​清浄識別は​不可能と​判明​（識別の​到達点は​結果③で​詳述）。</div>
@@ -433,7 +446,7 @@
         <span style="color:var(--text-light);">バー長は​損失額に​比例</span>
       </div>
     </div>
-    <div class="note">出所: 総務省 産業連関表​（2020年表）+ 日本銀行 CGPI 輸入物価指数。​中心推計は 2015–19 平均を​正常基準（上限 40.7兆円＝2020基準）。​会計的積み上げの​ため回帰の​識別問題から​独立して​頑健​（Tier 1）。</div>
+    <div class="note">出所: 総務省 産業連関表​（2020年表）+ 日本銀行 CGPI 輸入物価指数。​中心推計は 2015–19 平均を​正常基準（上限 40.7兆円＝2020基準）。​会計的積み上げの​ため回帰の​識別問題から​独立して​頑健。</div>
   </div>
 
   <!-- 07 Result 2: exposure + regressivity -->
@@ -460,7 +473,7 @@
         </ul>
       </div>
     </div>
-    <div class="note">出所: 総務省 家計調査​（2022年・​二人以上​世帯・所得五分位）。+2.14pp は​実効インフレ​（cost-push＋demand-pull 込み）の​逆進性であり、cost-push 単独ではない​（橋渡しは​結果③）。</div>
+    <div class="note">五分位＝世帯を​所得順に5等分した​区分​（Q1=下位20%・Q5=上位20%）。​出所: 総務省 家計調査​（2022年・​二人以上​世帯）。+2.14pp は​実効インフレ​（cost-push＋demand-pull 込み）の​逆進性であり、cost-push 単独ではない​（橋渡しは​結果③）。</div>
   </div>
 
   <!-- 07b Figure: quintile effective inflation -->
@@ -507,6 +520,34 @@
     <div class="note">縦軸: 五分位別の​実効インフレ率​（2015–19年平均基準からの​累積・%）。​赤＝Q1（低所得層）。​実績CPI×実支出シェアの​恒等式に​よる​算出で、​識別仮定に​非依存。​出所: 総務省 家計調査・消費者物価指数より​筆者作成。</div>
   </div>
 
+  <!-- 07c Concept: what triangulation is -->
+  <div class="slide" id="s7c">
+    <div class="slide-header">
+      <div class="section-tag">考え方 — 三角測量とは</div>
+      <h2>決定打が1つない​とき、​独立した​証拠の​「収束」で​確からしさを​立てる</h2>
+    </div>
+    <div class="key-message rise">
+      名前の​由来は​測量：1地点からは​決められない​位置も、<strong>複数の​地点から​測ると1点に​定まる</strong>。​研究でも​同じで、​独立した​複数の​証拠が​すべて​同じ​答えを​指すなら、​その​答えは​確からしい。
+    </div>
+    <div class="conv">
+      <div class="conv-evs">
+        <div class="conv-ev frag" data-frag="e1"><span class="cel">証拠①</span>必需品​（食料・光熱）は​低所得層の​予算で​重く、​輸入依存度も​高い​（曝露）</div>
+        <div class="conv-ev frag" data-frag="e2"><span class="cel">証拠②</span>この​時期の​物価高は​原価側​（供給）が​主導​（Shapiro 分解）</div>
+        <div class="conv-ev frag" data-frag="e3"><span class="cel">証拠③</span>実効インフレは​低所得層ほど​高い​（恒等式・+2.14pp）</div>
+      </div>
+      <div class="conv-arrow frag" data-frag="c"><svg class="flow-arrow" viewBox="0 0 90 30" width="72" height="24" aria-hidden="true"><path class="fa-shaft" d="M4 15 H60"/><path class="fa-flow" d="M4 15 H60"/><path class="fa-head" d="M58 4.5 L84 15 L58 25.5 Z"/></svg></div>
+      <div class="conv-concl frag" data-frag="c">
+        <div class="cc-label">3つが​同じ​答えに​収束</div>
+        <div class="cc-main">逆進性は​コストプッシュ由来と​整合的</div>
+      </div>
+    </div>
+    <div class="conv-contrast frag" data-frag="c">
+      <span><strong>識別</strong>＝1本の​決定的な​証拠で​因果を​確定する​方法。​今回は​原理的に​不可能と​判明</span>
+      <span><strong>三角測量</strong>＝独立した​証拠の​束で​整合性を​示す方法。​言い​切りの​強さは​識別より​一段弱い</span>
+    </div>
+    <div class="note">この​「識別ではなく​三角測量」と​いう​言い​分けを、​次の​スライド以降​・論文全体で​一貫して​用いる。</div>
+  </div>
+
   <!-- 08 Result 3: triangulation + identification reach -->
   <div class="slide" id="s8">
     <div class="slide-header">
@@ -525,13 +566,13 @@
       <div class="col-box caution frag" data-frag="g2">
         <h3>識別の​到達点​（正直な​報告）</h3>
         <ul class="bullets">
-          <li>独立な​輸入物価ショックが​実質1つ → exposure-robust で​非有意</li>
+          <li>独立な​輸入物価ショックが​実質1つ → ショックの​数に​正直な​誤差評価​（exposure-robust）では​非有意</li>
           <li>点推定 β=0.425 は「cost-push と​整合的」​止まり​（因果識別ではない）</li>
           <li>→ <strong class="frag emph emph-orange" data-frag="em">「識別」ではなく​三角測量</strong>と明示</li>
         </ul>
       </div>
     </div>
-    <div class="note">Shapiro 分解は5仕様で 2022>2021 の​供給シェア上昇が​頑健。​識別限界の​詳細は​限界の​節​（s12）。</div>
+    <div class="note">供給主導シェア＝物価上昇の​うち原価側​（供給）​要因が​主導した​割合​（Shapiro 2022 の​手法）。5仕様で 2022>2021 の​上昇が​頑健。​識別限界の​詳細は​限界の​節。</div>
   </div>
 
   <!-- 09 Discussion (NEW layer) -->
@@ -581,7 +622,7 @@
           <td class="hl">価格転嫁率 β</td>
           <td>0.425（p=0.047・点推定は​整合的、exposure-robust では​非有意）</td>
           <td>Yagi et al.(2022)：日本・​品目レベルで​転嫁率は​大きく​異なり近年上昇／Amiti et al.(2019)：自社コストへの​価格​弾力性は​典型企業で​約0.6</td>
-          <td>部​分転嫁​（β&lt;1）と​品目間​異質性の​知見に​整合。​同一 estimand の​直接比較対象は​なし</td>
+          <td>部​分転嫁​（β&lt;1）と​品目間​異質性の​知見に​整合。​同じ​定義の​推定値を​出した​直接比較対象は​なし</td>
         </tr>
         <tr class="frag">
           <td class="hl">分配・​逆進性</td>
@@ -601,8 +642,8 @@
       <h2>背骨の​結果は​仕様変更に​対して​頑健</h2>
     </div>
     <ul class="bullets" style="flex:1; align-content:center; justify-content:center; gap:16px;">
-      <li class="frag" data-frag="b12"><strong class="frag emph" data-frag="em">逆進性​（+2.14pp）</strong>：実績CPIと​実支出シェアの​恒等式の​ため、​回帰の​識別仮定に​そもそも​依存しない。​世帯universe（二人以上）​固定でも​不変。</li>
-      <li class="frag" data-frag="b12"><strong class="frag emph" data-frag="em">供給​主導性​（Shapiro）</strong>：{VAR, AR}×{3, 12 lag}＋primary の5仕様で 2022>2021 の​上昇が​頑健。near-zero 由来の​汚染は5.5%のみ。</li>
+      <li class="frag" data-frag="b12"><strong class="frag emph" data-frag="em">逆進性​（+2.14pp）</strong>：実績CPIと​実支出シェアの​恒等式の​ため、​回帰の​識別仮定に​そもそも​依存しない。​対象世帯の​範囲​（二人以上​世帯）を​固定しても​不変。</li>
+      <li class="frag" data-frag="b12"><strong class="frag emph" data-frag="em">供給​主導性​（Shapiro）</strong>：残差の​取り方を​変えた5通りの​仕様すべてで 2022>2021 の​上昇が​保たれる。</li>
       <li class="frag"><strong class="frag emph" data-frag="em">交易損失​（35兆）</strong>：基準年の​取り方で​中心35兆〜上限40.7兆。​オーダーは​安定。</li>
       <li class="frag"><strong class="frag emph emph-orange" data-frag="em">非​有意性​（β）</strong>：これも​頑健 ── 期間延長でも​救えない。​原因は​設定に​内在​（独立ショックが​実質1つ）。</li>
     </ul>
@@ -620,8 +661,8 @@
         <h3>識別の​限界</h3>
         <ul class="bullets">
           <li>cost-push の​因果的単離は​単一マクロ事象では​不可能​（exposure-robust で​非有意）</li>
-          <li>五分位別 group-specific 分解は inconclusive（年次×五分位の​粗さで​消費応答を​解像できず）</li>
-          <li>年次相関コントラストは​財/サービス分解で​相当部​分が​構成差由来と​判明​（within-goods では IC 勾配が​消失・DEC-022）​＝交絡の​所在を​定量化</li>
+          <li>五分位別の​分解は​判定保留​（年次×五分位の​粗さでは​消費の​反応まで​解像できず）</li>
+          <li>年次相関の​差は、​財か​サービスかと​いう​支出構成の​違いで​相当部​分が​説明されると​判明​（財の​内部では​輸入含有率の​効きが​消える）​＝​混ざり込みの​正体まで​定量化</li>
         </ul>
       </div>
       <div class="col-box caution frag">
@@ -629,7 +670,7 @@
         <ul class="bullets">
           <li>Phase 3 IOモデルは​実績CPI比で​過剰伝播​（overshoot）</li>
           <li>政策削減率が​産業連関表の​構築前提に​依存 → 絶対値は​結論に​せず符号レベルのみ</li>
-          <li>交易損失は​固定数量​（Laspeyres）近似 → 数量データ取得後に Paasche/Fisher 化が​課題</li>
+          <li>交易損失は​数量を​固定した​近似 → 数量データの​取得後に​精緻化が​課題</li>
         </ul>
       </div>
     </div>
