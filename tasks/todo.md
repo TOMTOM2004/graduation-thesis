@@ -1,6 +1,6 @@
 # TODO — 卒業論文（案B）
 
-_Last updated: 2026-07-07 23:55 / session: スライド動化（第2〜4回モーション実装・PNG→データ駆動チャート化・slide-motion スキル新設）。main 統合済み_
+_Last updated: 2026-07-07 / session: 第3・4回スライドを草案→完成形（データ駆動チャート追加・placeholder解消）。main 統合済み（merge c0b779f）_
 
 ## 🎯 Next action（1つだけ、具体的に）
 - What: **論文執筆着手**（実証3本柱を結果章に統合）。数値は必ず DEC-021 の再生成値を使う: 交易損失 中心~35兆/上限40.7兆・Q1-Q5 **+2.14pp**(2022)・β=**0.425 (p=0.047)**・Shapiro 0.41→0.70→0.83・RMSE 10.00pp。goods-services分解（DEC-022）は §5 のとおり research-design.md/decision-log.md/第2回スライドに反映済
@@ -8,7 +8,13 @@ _Last updated: 2026-07-07 23:55 / session: スライド動化（第2〜4回モ�
 - Done when: 先行研究 or 方法論の章が1本ドラフトされ、数値が全て repo 再現値と一致
 - 別線: ① ~~main push~~（完了・origin=09ff542） ② ~~AKM SE の R 再実行~~（DEC-021補遺で消化・p≈0.15 再現） ③ ~~財/サービス分解（DEC-022）~~（実装・doc反映・§4官公表突合とも完了。突合2件差異は価格決定メカニズム基準の事前定義として意図的差異と明記しクローズ済＝09ff542） ④ shapiro_decomp の e-Stat 品目名をキャッシュ化（現状 API キー必須＝再現性の残穴） ⑤ GDP 561兆の vintage 確定（trade_loss.py TODO） ⑥ data/processed_stale_20260706/ の削除判断（新キャッシュ安定後） ⑦ ~~第2回スライド s7 改行位置が不自然~~（完了・2026-07-07: budoux ZWSP 361箇所を全文焼き込み＋監査修正一式=bdc15c2。スクリプトはグローバル `~/.claude/skills/slide-design/scripts/apply_budoux.py`）
 
-## ✅ 直近完了（2026-07-07・このセッション・スライド動化）
+## ✅ 直近完了（2026-07-07・このセッション・第3・4回スライド完成形）
+- **第3回デッキ（15→17枚）**: s6 交易損失の年次推移バー（35.3/28.4/29.1兆・エネ寄与重ね棒＝`trade_loss_total.csv` 転記）／s7b 五分位別実効インフレ縦棒図 新設（2022-24×Q1-Q5・gap +2.14/+1.96/+2.67pp＝`quintile_inflation_burden.csv` 転記）／s8 Shapiro 2023 (0.60) 追記／s10 比較表の「数値要照合」ph 解消（Yagi=品目別転嫁率の異質性・Amiti=自社コスト弾力性≈0.6・Amores=EUROMOD逆進性、docs/literature 照合。βの同一 estimand 直接比較対象なしと明記）／巻末 b1 政策シナリオ例示チャート新設（`policy_comparison_2022.csv`: gap 1.05→エネ0.58(−44.8%)/食料0.91(−13.0%)/複合0.44(−57.7%)pp・incidence accounting caveat 明記＝DEC-014 準拠で絶対値は結論にしない）
+- **第4回デッキ（13→15枚）**: s1/s2 draft-flag 除去・s5 年次推移バー＋ph解消・s6b 五分位図 新設・s9 の政策数値 ph→補足b1参照・b1 新設。**s11（第3回フィードバック応答）のみ placeholder 維持＝第3回実施後に執筆（構造上未確定が正）**
+- **検証**: check_slides.py 両デッキ OK（budoux 再適用で中黒 ZWSP 手動2件が消える既知 trap → 再挿入）・headless Chrome ハーネスで全32枚 overflow 0・count-up 着地値一致・新チャート4種スクリーンショット目視
+- 前セッション方針「別セッションで内容確定 → frag 割当てやり直し」を本セッションで消化。新規要素の frag/count は slide-motion スキル経由で割当て
+
+## ✅ 直近完了（2026-07-07・前セッション・スライド動化）
 - **第2回デッキのモーション実装**: フラグメント段階表示・カウントアップ・TED風フック演出・バー成長・SVGフローアロー。ランキング/散布図を PNG→データ駆動 SVG/HTML に再構築（`xc_2022.csv` 転記・OLS 0.7165+0.021541x R²=0.64・散布図注記 46→45ヶ国に訂正）
 - **第3回・第4回デッキに同基盤を移植**: ロードマップ/研究の弧/三角測量の段階点灯・現在地/背骨リングハイライト・比較表の行frag・太字2段階強調（emph navy/orange/crimson・rq-box白→黄）。check_slides.py 3デッキ全て OK（第3回は budoux 再適用+中黒 ZWSP 手動2件）
 - **count-up watchdog**: 非表示タブ等で rAF 停止しても最終値を確定する仕組みを3デッキに実装（trap lesson 化済み）
@@ -98,8 +104,6 @@ _Last updated: 2026-07-07 23:55 / session: スライド動化（第2〜4回モ�
 - **案2 は却下（DEC-013・実データ検証済）**: ①group-specific β_g は共線性で分離不能。②pooled β を CPI 2005延長で直接再推定→FD-Koyck δ=0.55・two-way FE で両窓非有意（level-anchoring現象）。単一集計 shifter は time FE が時間変動を吸収し識別が IC(2020固定)依存のため、期間延長は効かない。重心は Phase 2b（恒等式・β非依存）/Phase 1（会計）。Phase 2a は識別限界を鋭利化して明記。
 
 ## ❌ Don't do (this task)
-- [trap] 有意性回復のため「月次化・費目増で母数(n)を増やす」のは無効（観測非独立、AKM0が織り込み済）。効くのは独立ショック事象を増やすことだけ
-- [trap] Phase 2a の β を「因果的に実証/有意に識別」と書かない（exposure-robust推論では非有意）。「cost-pushと整合的な点推定」に留める
 
 ## ❓ Open questions for user
 - [x] 実験ブランチ `claude/20260531-...` を push/PR するか → **2026-06-25 consolidate に統合**（0531/0526 は 0613 内包。全作業を consolidate→main で main系に集約）。group-specific 負の結果と 2軸 feasibility は識別限界節の根拠として残す
