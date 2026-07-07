@@ -316,14 +316,28 @@
   .bar-seg .blab { white-space: nowrap; }
   .slide.run .bar-seg { width: var(--w); }
 
-  /* animated flow arrows (s7/s8 transitions): 破線がシャフトを矢頭方向へ流れ続ける */
+  /* animated flow arrows (s7/s8 transitions): 一本の矢印が伸びる→一拍→消えて再入場（複数本は --ad で時差） */
   .supply-arrow, .pivot-arrow { padding: 0 8px; }
   .flow-arrow { display: block; }
   .flow-arrow .fa-shaft { stroke: var(--border); stroke-width: 7; stroke-linecap: round; fill: none; }
   .flow-arrow .fa-flow  { stroke: var(--blue-soft); stroke-width: 7; stroke-linecap: round; fill: none;
-                          stroke-dasharray: 13 15; animation: dashflow 1s linear infinite; }
-  .flow-arrow .fa-head  { fill: var(--blue-soft); }
-  @keyframes dashflow { to { stroke-dashoffset: -28; } }
+                          stroke-dasharray: 56; stroke-dashoffset: 56;
+                          animation: arrowdraw 2.4s cubic-bezier(.3,.6,.3,1) infinite;
+                          animation-delay: var(--ad, 0s); }
+  .flow-arrow .fa-head  { fill: var(--blue-soft); opacity: 0;
+                          animation: arrowhead 2.4s infinite; animation-delay: var(--ad, 0s); }
+  @keyframes arrowdraw {
+    0%   { stroke-dashoffset: 56; opacity: 1; }
+    42%  { stroke-dashoffset: 0;  opacity: 1; }
+    72%  { stroke-dashoffset: 0;  opacity: 1; }
+    86%  { stroke-dashoffset: 0;  opacity: 0; }
+    100% { stroke-dashoffset: 56; opacity: 0; }
+  }
+  @keyframes arrowhead {
+    0%, 36%   { opacity: 0; }
+    46%, 72%  { opacity: 1; }
+    86%, 100% { opacity: 0; }
+  }
 
   /* two-step bold emphasis: 表示時は通常ウェイト → 次のキー送りで太字+ネイビー */
   .frag.emph {
@@ -400,7 +414,8 @@
     .rank-note { opacity: 1; }
     .scatter-svg .pt { transform: scale(1); }
     .scatter-svg .fitline { stroke-dashoffset: 0; }
-    .flow-arrow .fa-flow { animation: none; }
+    .flow-arrow .fa-flow { animation: none; stroke-dashoffset: 0; opacity: 1; }
+    .flow-arrow .fa-head { animation: none; opacity: 1; }
     .scatter-svg .frag.on .jp-pulse { animation: none; }
   }
 </style>
@@ -608,7 +623,7 @@
         <div class="sshare" data-count="0.70" data-decimals="2" data-duration="900">0.70</div>
         <div class="sdesc">供給主導へ​転換<br>（侵攻・資源高）</div>
       </div>
-      <div class="supply-arrow frag" data-frag="y3"><svg class="flow-arrow" viewBox="0 0 90 30" width="90" height="30" aria-hidden="true"><path class="fa-shaft" d="M4 15 H60"/><path class="fa-flow" d="M4 15 H60"/><path class="fa-head" d="M58 4.5 L84 15 L58 25.5 Z"/></svg></div>
+      <div class="supply-arrow frag" data-frag="y3"><svg class="flow-arrow" style="--ad:0.35s" viewBox="0 0 90 30" width="90" height="30" aria-hidden="true"><path class="fa-shaft" d="M4 15 H60"/><path class="fa-flow" d="M4 15 H60"/><path class="fa-head" d="M58 4.5 L84 15 L58 25.5 Z"/></svg></div>
       <div class="supply-year supply frag" data-frag="y3">
         <div class="syr">2024年</div>
         <div class="sshare" data-count="0.83" data-decimals="2" data-duration="900">0.83</div>
@@ -639,7 +654,7 @@
         <div class="ptitle">単一マクロ事象では<br>満たせない</div>
         <p>独立な​輸入物価ショックが​実質1つ（2021年以降の​サージ）。​ショックの​数に​正直な​誤差評価​（exposure-robust）では​非有意・​期間延長でも​救えない。​点推定 β=0.373 は​「整合的」​止まり。</p>
       </div>
-      <div class="pivot-arrow frag" data-frag="p3"><svg class="flow-arrow" viewBox="0 0 90 30" width="90" height="30" aria-hidden="true"><path class="fa-shaft" d="M4 15 H60"/><path class="fa-flow" d="M4 15 H60"/><path class="fa-head" d="M58 4.5 L84 15 L58 25.5 Z"/></svg></div>
+      <div class="pivot-arrow frag" data-frag="p3"><svg class="flow-arrow" style="--ad:0.35s" viewBox="0 0 90 30" width="90" height="30" aria-hidden="true"><path class="fa-shaft" d="M4 15 H60"/><path class="fa-flow" d="M4 15 H60"/><path class="fa-head" d="M58 4.5 L84 15 L58 25.5 Z"/></svg></div>
       <div class="pivot-col survives frag" data-frag="p3">
         <div class="plabel">それでも​残る​もの</div>
         <div class="ptitle">問いへの​答えは<br>より​防御可能な形で​残る</div>
