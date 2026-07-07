@@ -145,6 +145,62 @@
   .refs { columns: 2; gap: 32px; flex: 1; }
   .refs p { font-size: 13px; color: var(--text-mid); line-height: 1.6; margin-bottom: 8px; break-inside: avoid; }
   .refs p strong { color: var(--navy); }
+
+  /* ══ Motion system（第2回・第3回デッキと同一基盤） ══ */
+
+  .slide.active { animation: slideIn .5s cubic-bezier(.22,.61,.36,1) both; }
+  @keyframes slideIn {
+    from { opacity: 0; transform: translateY(16px); }
+    to   { opacity: 1; transform: none; }
+  }
+
+  .rise {
+    opacity: 0; transform: translateY(14px);
+    transition: opacity .55s ease var(--d, 0s), transform .55s cubic-bezier(.22,.61,.36,1) var(--d, 0s);
+  }
+  .slide.run .rise { opacity: 1; transform: none; }
+
+  .frag {
+    opacity: 0; transform: translateY(12px);
+    transition: opacity .4s ease, transform .4s cubic-bezier(.22,.61,.36,1);
+  }
+  .frag.on { opacity: 1; transform: none; }
+
+  /* two-step bold emphasis: 表示時は通常ウェイト → 次のキー送りで太字+色 */
+  .frag.emph {
+    opacity: 1; transform: none; font-weight: 400; color: inherit;
+    transition: color .35s ease;
+  }
+  .frag.emph.on { font-weight: 700; color: var(--navy); }
+  .frag.emph.emph-orange.on { color: var(--orange); }
+  .frag.emph.emph-crimson.on { color: var(--crimson); }
+  /* rq-box（紺地）内は 白 → 黄ハイライト */
+  .rq-box .frag.emph { color: var(--white); }
+  .rq-box .frag.emph.on { color: #ffd9a0; }
+
+  /* animated flow arrows */
+  .flow-arrow { display: block; }
+  .flow-arrow .fa-shaft { stroke: var(--border); stroke-width: 7; stroke-linecap: round; fill: none; }
+  .flow-arrow .fa-flow  { stroke: var(--blue-soft); stroke-width: 7; stroke-linecap: round; fill: none;
+                          stroke-dasharray: 13 15; animation: dashflow 1s linear infinite; }
+  .flow-arrow .fa-head  { fill: var(--blue-soft); }
+  @keyframes dashflow { to { stroke-dashoffset: -28; } }
+
+  /* 背骨カード（貢献②）はフラグメント表示後にハイライト */
+  .contrib-card.backbone { transition: box-shadow .5s ease .5s; }
+  .contrib-card.backbone.frag.on { box-shadow: 0 0 0 3px #e8c0ca; }
+
+  #progress {
+    position: fixed; bottom: 0; left: 0; height: 3px; width: 0;
+    background: var(--blue-soft); transition: width .35s ease; z-index: 100;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .slide.active { animation: none; }
+    .rise, .frag { transition: none; }
+    .rise { opacity: 1; transform: none; }
+    .flow-arrow .fa-flow { animation: none; }
+  }
 </style>
 </head>
 <body>
@@ -155,11 +211,11 @@
   <div class="slide slide-title active" id="s1">
     <span class="draft-flag">骨格＋placeholder（執筆後に​確定）</span>
     <div>
-      <div class="label">卒業論文 — 最終発表​（第4回）/ 結論</div>
-      <h1>輸入価格ショックに​よる​実質所得の​海外流出と<br>
-          <em>家計消費への​異質な​影響</em><br>
-          — 誰が、​どれだけ​負担したのか —</h1>
-      <div class="meta">
+      <div class="label rise">卒業論文 — 最終発表​（第4回）/ 結論</div>
+      <h1><span class="rise" style="--d:.15s; display:inline-block;">輸入価格ショックに​よる​実質所得の​海外流出と</span><br>
+          <em class="rise" style="--d:.35s; display:inline-block;">家計消費への​異質な​影響</em><br>
+          <span class="rise" style="--d:.55s; display:inline-block;">— 誰が、​どれだけ​負担したのか —</span></h1>
+      <div class="meta rise" style="--d:.8s;">
         <strong>石田智識</strong>　専修大学経済学部<br>
         2027年1月​（最終発表・​日程調整中）
       </div>
@@ -174,19 +230,19 @@
       <h2>計画 → 限界の​発見 → それでも​届けた​答え</h2>
     </div>
     <div class="arc-flow">
-      <div class="arc-box promise">
+      <div class="arc-box promise frag" data-frag="a1">
         <div class="alabel">第1回・計画</div>
         <div class="atitle">約束した​こと</div>
         <p>輸入含有率の​差異で cost-push を​清浄に​単離し、​逆進性を​識別する、と​計画した。</p>
       </div>
-      <div class="arc-arrow">→</div>
-      <div class="arc-box pivot">
+      <div class="arc-arrow frag" data-frag="a2"><svg class="flow-arrow" viewBox="0 0 90 30" width="80" height="26" aria-hidden="true"><path class="fa-shaft" d="M4 15 H60"/><path class="fa-flow" d="M4 15 H60"/><path class="fa-head" d="M58 4.5 L84 15 L58 25.5 Z"/></svg></div>
+      <div class="arc-box pivot frag" data-frag="a2">
         <div class="alabel">分析・ピボット</div>
         <div class="atitle">わかった​限界</div>
         <p>単一マクロ事象からの​清浄な​識別は​原理的に​不可能と​判明。​これを​正直に​受け止めた。</p>
       </div>
-      <div class="arc-arrow">→</div>
-      <div class="arc-box answer">
+      <div class="arc-arrow frag" data-frag="a3"><svg class="flow-arrow" viewBox="0 0 90 30" width="80" height="26" aria-hidden="true"><path class="fa-shaft" d="M4 15 H60"/><path class="fa-flow" d="M4 15 H60"/><path class="fa-head" d="M58 4.5 L84 15 L58 25.5 Z"/></svg></div>
+      <div class="arc-box answer frag" data-frag="a3">
         <div class="alabel">最終・結論</div>
         <div class="atitle">届けた​答え</div>
         <p>逆進性は​恒等式で​硬く​立証。​限界の​提示自体を​方法論的貢献に​転化した。</p>
@@ -197,13 +253,13 @@
 
   <!-- 03 Research Question (honest reframe) -->
   <div class="slide slide-takeaway" id="s3">
-    <div class="takeaway-eyebrow">問い — Research Question</div>
-    <div class="rq-box">
+    <div class="takeaway-eyebrow rise">問い — Research Question</div>
+    <div class="rq-box rise" style="--d:.2s;">
       <div class="label">Main Research Question</div>
-      <p>外的要因に​よる​輸入価格ショックは、​日本の​実質所得を<span class="hl">どのような​構造で​海外に​流出させ</span>、<span class="hl">家計の​実質消費を​所得階層ごとに​どの​程度</span>押し下げているか。​また、​その​構造に​基づく​政策介入は​どのような​効果を​もたらすか。</p>
+      <p>外的要因に​よる​輸入価格ショックは、​日本の​実質所得を<span class="hl frag emph" data-frag="em">どのような​構造で​海外に​流出させ</span>、<span class="hl frag emph" data-frag="em">家計の​実質消費を​所得階層ごとに​どの​程度</span>押し下げているか。​また、​その​構造に​基づく​政策介入は​どのような​効果を​もたらすか。</p>
     </div>
-    <div class="conclusion-line" style="font-size:16px;">
-      本発表は、​この​問いに <span class="emp">確定的に​答える</span>。
+    <div class="conclusion-line rise" style="font-size:16px; --d:.45s;">
+      本発表は、​この​問いに <span class="emp frag emph emph-crimson" data-frag="em">確定的に​答える</span>。
     </div>
   </div>
 
@@ -214,14 +270,14 @@
       <h2>輸入依存構造 × 価格ショック を、3段階で​家計まで​追う</h2>
     </div>
     <div class="two-col">
-      <div class="col-box">
+      <div class="col-box frag">
         <h3>背景</h3>
         <ul class="bullets">
           <li>輸入依存の​深化＋経常収支の​質的変化で、​価格上昇分が​海外へ​流出</li>
           <li>2021–24：侵攻・制裁・円安の​重畳。​実質賃金マイナス＝cost-push 主導</li>
         </ul>
       </div>
-      <div class="col-box">
+      <div class="col-box frag">
         <h3>方法（3段階）</h3>
         <ul class="bullets">
           <li>Phase 1：IO×輸入物価で​交易損失を​会計的に​定量化</li>
@@ -240,25 +296,25 @@
       <h2>交易損失は​会計で​確定する​（2022年・中心 約35兆円）</h2>
     </div>
     <div class="stat-strip">
-      <div class="stat-cell"><span class="sval">35</span><span class="sunit">兆円</span><div class="slabel">2022年・実質所得の​海外流出</div></div>
-      <div class="stat-cell"><span class="sval accent">67</span><span class="sunit">%</span><div class="slabel">うちエネルギーの​寄与</div></div>
-      <div class="stat-cell"><span class="sval">6.3</span><span class="sunit">%</span><div class="slabel">名目GDP比</div></div>
+      <div class="stat-cell rise" style="--d:.15s;"><span class="sval" data-count="35" data-delay="400">35</span><span class="sunit">兆円</span><div class="slabel">2022年・実質所得の​海外流出</div></div>
+      <div class="stat-cell rise" style="--d:.3s;"><span class="sval accent" data-count="67" data-delay="550">67</span><span class="sunit">%</span><div class="slabel">うちエネルギーの​寄与</div></div>
+      <div class="stat-cell rise" style="--d:.45s;"><span class="sval" data-count="6.3" data-decimals="1" data-delay="700">6.3</span><span class="sunit">%</span><div class="slabel">名目GDP比</div></div>
     </div>
     <div class="note">識別仮定に​非依存の​会計的定量化​（Tier 1）。​最終値は​本論の​確定表と​照合 <span class="ph">執筆後に​最終照合</span>。</div>
   </div>
 
   <!-- 06 Answer 2: regressivity (the core answer) -->
   <div class="slide slide-takeaway" id="s6">
-    <div class="takeaway-eyebrow">答え② — 誰が​どれだけ​（副問2・背骨）</div>
-    <div class="hook-figure">
-      <div class="hook-number">+2.14</div>
+    <div class="takeaway-eyebrow rise">答え② — 誰が​どれだけ​（副問2・背骨）</div>
+    <div class="hook-figure rise" style="--d:.25s;">
+      <div class="hook-number" data-count="2.14" data-decimals="2" data-prefix="+" data-delay="450" data-duration="1400">+2.14</div>
       <div class="hook-unit">pp</div>
     </div>
-    <div class="conclusion-line" style="font-size:20px; color:var(--navy); font-weight:700; margin-top:0;">
-      物価高騰の​負担は <span class="emp">低所得層ほど​重い</span>（逆進的）
+    <div class="conclusion-line rise" style="font-size:20px; color:var(--navy); font-weight:700; margin-top:0; --d:1.4s;">
+      物価高騰の​負担は <span class="emp frag emph emph-crimson" data-frag="em">低所得層ほど​重い</span>（逆進的）
     </div>
-    <div class="conclusion-line" style="font-size:16px; color:var(--text-mid); font-weight:400; max-width:880px; margin:14px auto 0;">
-      2022年 Q1-Q5 実効インフレ差 +2.14pp（2023 +1.96・2024 +2.67）。<strong style="color:var(--navy);">実績CPI×実支出シェアの​恒等式</strong>で​算出し、​回帰の​識別仮定に​依存しない​最頑健の​結果。​これが​問いへの​中心的な​答え。
+    <div class="conclusion-line rise" style="font-size:16px; color:var(--text-mid); font-weight:400; max-width:880px; margin:14px auto 0; --d:1.8s;">
+      2022年 Q1-Q5 実効インフレ差 +2.14pp（2023 +1.96・2024 +2.67）。<strong class="frag emph" data-frag="em">実績CPI×実支出シェアの​恒等式</strong>で​算出し、​回帰の​識別仮定に​依存しない​最頑健の​結果。​これが​問いへの​中心的な​答え。
     </div>
   </div>
 
@@ -269,25 +325,25 @@
       <h2>3つの​独立した​証拠が、​同じ方​向に​収束する</h2>
     </div>
     <div class="tri-flow">
-      <div class="tri-box">
+      <div class="tri-box frag" data-frag="t1">
         <div class="tstep">証拠①</div>
         <div class="tname">曝露</div>
         <p>必需品​（食料・光熱）は​低所得層の​予算で​重く、​かつ​高輸入含有。</p>
       </div>
-      <div class="tri-arrow">+</div>
-      <div class="tri-box">
+      <div class="tri-arrow frag" data-frag="t2">+</div>
+      <div class="tri-box frag" data-frag="t2">
         <div class="tstep">証拠②</div>
         <div class="tname">供給​主導性</div>
         <p>Shapiro 分解で 2022 の​供給主導シェア 0.70。​侵攻後に​転換。</p>
       </div>
-      <div class="tri-arrow">+</div>
-      <div class="tri-box">
+      <div class="tri-arrow frag" data-frag="t3">+</div>
+      <div class="tri-box frag" data-frag="t3">
         <div class="tstep">証拠③</div>
         <div class="tname">逆進性</div>
         <p>実効インフレ差 +2.14pp（恒等式）。</p>
       </div>
-      <div class="tri-arrow">→</div>
-      <div class="tri-box concl">
+      <div class="tri-arrow frag" data-frag="t4"><svg class="flow-arrow" viewBox="0 0 90 30" width="64" height="22" aria-hidden="true"><path class="fa-shaft" d="M4 15 H60"/><path class="fa-flow" d="M4 15 H60"/><path class="fa-head" d="M58 4.5 L84 15 L58 25.5 Z"/></svg></div>
+      <div class="tri-box concl frag" data-frag="t4">
         <div class="tstep">三角測量</div>
         <div class="tname">cost-push 由来と​整合</div>
         <p>「識別」ではなく、​独立証拠の​収束で​橋渡しする。</p>
@@ -303,22 +359,22 @@
       <h2>会計・恒等式・方​法論・モデルの4軸で​空白を​埋める</h2>
     </div>
     <div class="contrib-grid">
-      <div class="contrib-card">
+      <div class="contrib-card frag">
         <div class="cnum">貢献①</div>
         <div class="ctitle">交易損失の​家計帰着の​会計的定量化</div>
         <p>マクロの​交易損失​（齊藤2022）を​家計レベル・所得階層別へ接​続​（​空白①）。</p>
       </div>
-      <div class="contrib-card backbone">
+      <div class="contrib-card backbone frag">
         <div class="cnum">貢献② — 背骨</div>
         <div class="ctitle">逆進的帰着の​恒等式ベース記述</div>
         <p>Q1-Q5 +2.14pp。​識別仮定に​非依存で​頑健。​本研究の​実証的背​骨​（​空白②）。</p>
       </div>
-      <div class="contrib-card">
+      <div class="contrib-card frag">
         <div class="cnum">貢献③</div>
         <div class="ctitle">識別限界の​方​法論的提示</div>
         <p>単一マクロ事象からの cost-push 清浄識別が​不可能と​体系的に​提示。​失敗でなく​到達点。</p>
       </div>
-      <div class="contrib-card">
+      <div class="contrib-card frag">
         <div class="cnum">貢献④</div>
         <div class="ctitle">統合シミュレーションモデル</div>
         <p>日本データの IO×マイクロシミュレーション​（​空白③）。​政策評価は​例示と​して​符号レベル。</p>
@@ -333,10 +389,10 @@
       <h2>符号レベルで​頑健な、​設計への​示唆</h2>
     </div>
     <ul class="bullets" style="flex:1; align-content:center; justify-content:center; gap:15px;">
-      <li><strong style="color:var(--navy);">逆進性は​実在する</strong>：一律給付よりも​低所得層を​狙った​支援が​分配上は​効率的。</li>
-      <li><strong style="color:var(--navy);">エネルギーが​最大の​流出・負担チャネル</strong>：エネルギー補助は​方​向と​して Q1-Q5 gap を​縮める。</li>
-      <li><strong style="color:var(--navy);">食料支援も​方​向と​して​有効</strong>：複合政策​（エネ＋食料）は​相互作用で gap 縮小に​寄与。</li>
-      <li><strong style="color:var(--orange);">絶対値は​示さない</strong>：モデルの overshoot・IC依存の​ため、​削減率の​数値は​結論に​しない。</li>
+      <li class="frag"><strong class="frag emph" data-frag="em">逆進性は​実在する</strong>：一律給付よりも​低所得層を​狙った​支援が​分配上は​効率的。</li>
+      <li class="frag"><strong class="frag emph" data-frag="em">エネルギーが​最大の​流出・負担チャネル</strong>：エネルギー補助は​方​向と​して Q1-Q5 gap を​縮める。</li>
+      <li class="frag"><strong class="frag emph" data-frag="em">食料支援も​方​向と​して​有効</strong>：複合政策​（エネ＋食料）は​相互作用で gap 縮小に​寄与。</li>
+      <li class="frag"><strong class="frag emph emph-orange" data-frag="em">絶対値は​示さない</strong>：モデルの overshoot・IC依存の​ため、​削減率の​数値は​結論に​しない。</li>
     </ul>
     <div class="note">政策シナリオの​絶対値​（補助率別の​削減幅）は incidence accounting の​例示と​して appendix に。​最終的な​数値表は <span class="ph">執筆後に​確定</span>。</div>
   </div>
@@ -348,7 +404,7 @@
       <h2>何が​言えないかを​明示し、​次の​研究へ橋を​架ける</h2>
     </div>
     <div class="two-col" style="align-content:center;">
-      <div class="col-box caution">
+      <div class="col-box caution frag">
         <h3>本研究の​限界</h3>
         <ul class="bullets">
           <li>cost-push の​因果的単離は​不可能​（独立ショックが​実質1つ）</li>
@@ -356,7 +412,7 @@
           <li>Phase 3 は overshoot・IC依存で​符号レベルのみ</li>
         </ul>
       </div>
-      <div class="col-box">
+      <div class="col-box frag">
         <h3>今後の​研究</h3>
         <ul class="bullets">
           <li>複数の​独立ショック期を​含むデータで​識別を​再挑戦</li>
@@ -375,7 +431,7 @@
       <div class="section-tag">第3回フィードバックへの​応答</div>
       <h2>いただいた​ご意見を​どう​反映したか</h2>
     </div>
-    <div class="ph-block">
+    <div class="ph-block rise" style="--d:.2s;">
       <div class="phb-tag">執筆後に​確定</div>
       <div class="phb-title">第3回​（論文ドラフト全体）で​得た​フィードバックへの​応答を​ここに​記述する</div>
       <div class="phb-list">
@@ -389,13 +445,13 @@
 
   <!-- 12 Conclusion (definitive answer) -->
   <div class="slide slide-takeaway" id="s12">
-    <div class="takeaway-eyebrow">結論 — Conclusion</div>
-    <div class="rq-box" style="background:var(--navy);">
+    <div class="takeaway-eyebrow rise">結論 — Conclusion</div>
+    <div class="rq-box rise" style="background:var(--navy); --d:.2s;">
       <div class="label">問いへの​答え</div>
-      <p>輸入価格ショックは、​エネルギーを​最大の​経路と​して​年 <span class="hl">約35兆円</span> の​実質所得を​海外へ​流出させ、​その​負担は <span class="hl">低所得層ほど​重く​（Q1-Q5 +2.14pp）</span> 偏っていた。cost-push の​清浄な​単離は​不可能だが、​問いへの​答えは <span class="hl">恒等式と​三角測量で​防御可能</span> な形で​立つ。</p>
+      <p>輸入価格ショックは、​エネルギーを​最大の​経路と​して​年 <span class="hl frag emph" data-frag="em">約35兆円</span> の​実質所得を​海外へ​流出させ、​その​負担は <span class="hl frag emph" data-frag="em">低所得層ほど​重く​（Q1-Q5 +2.14pp）</span> 偏っていた。cost-push の​清浄な​単離は​不可能だが、​問いへの​答えは <span class="hl frag emph" data-frag="em">恒等式と​三角測量で​防御可能</span> な形で​立つ。</p>
     </div>
-    <div class="conclusion-line" style="font-size:16px;">
-      誠実に、​かつ硬く。<span class="emp">隠れた​逆進性</span>を、​データで​可視化した。
+    <div class="conclusion-line rise" style="font-size:16px; --d:.45s;">
+      誠実に、​かつ硬く。<span class="emp frag emph emph-crimson" data-frag="em">隠れた​逆進性</span>を、​データで​可視化した。
     </div>
   </div>
 
@@ -424,29 +480,103 @@
 </div>
 
 <div id="counter"></div>
-<div id="hint">← → キーまたは​タップで​移動</div>
+<div id="hint">← → キーまたは​タップで​移動​（段階表示あり）</div>
+<div id="progress"></div>
 
 <script>
   const slides = document.querySelectorAll('.slide');
   let cur = 0;
   const total = slides.length;
-  function show(n) {
-    slides[cur].classList.remove('active');
-    cur = (n + total) % total;
-    slides[cur].classList.add('active');
-    document.getElementById('counter').textContent = (cur + 1) + ' / ' + total;
+  const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  /* ── count-up ── */
+  function startCount(el) {
+    const target = parseFloat(el.dataset.count);
+    const dec    = +(el.dataset.decimals || 0);
+    const dur    = +(el.dataset.duration || 1100);
+    const delay  = +(el.dataset.delay || 0);
+    const prefix = el.dataset.prefix || '';
+    const suffix = el.dataset.suffix || '';
+    if (el._raf) cancelAnimationFrame(el._raf);
+    if (el._wd) clearTimeout(el._wd);
+    const done = prefix + target.toFixed(dec) + suffix;
+    if (reducedMotion) { el.textContent = done; return; }
+    el.textContent = prefix + (0).toFixed(dec) + suffix;
+    const t0 = performance.now() + delay;
+    const tick = now => {
+      const p = Math.min(1, Math.max(0, (now - t0) / dur));
+      const eased = 1 - Math.pow(1 - p, 3);
+      el.textContent = prefix + (target * eased).toFixed(dec) + suffix;
+      if (p < 1) el._raf = requestAnimationFrame(tick);
+    };
+    el._raf = requestAnimationFrame(tick);
+    // watchdog: rAF が停止していても（非表示タブ等）時間切れで最終値を確定
+    el._wd = setTimeout(() => {
+      if (el._raf) cancelAnimationFrame(el._raf);
+      el.textContent = done;
+    }, delay + dur + 300);
   }
+
+  function countsIn(el) {
+    if (el.matches('[data-count]')) startCount(el);
+    el.querySelectorAll('[data-count]').forEach(startCount);
+  }
+
+  /* ── fragments: document order, grouped by data-frag ── */
+  function fragGroups(slide) {
+    const groups = [], map = {};
+    slide.querySelectorAll('.frag').forEach(el => {
+      const g = el.dataset.frag;
+      if (g != null && map[g]) { map[g].push(el); return; }
+      const arr = [el];
+      if (g != null) map[g] = arr;
+      groups.push(arr);
+    });
+    return groups;
+  }
+
+  /* ── navigation ── */
+  function show(n, dir) {
+    slides[cur].classList.remove('active', 'run');
+    cur = (n + total) % total;
+    const s = slides[cur];
+    s.classList.add('active');
+    // forward: fragments hidden / backward: all revealed
+    s.querySelectorAll('.frag').forEach(f => f.classList.toggle('on', dir === 'back'));
+    // .run slightly later so .rise transitions fire (setTimeout: rAF throttling に強い)
+    setTimeout(() => s.classList.add('run'), 40);
+    s.querySelectorAll('[data-count]').forEach(el => {
+      const fr = el.closest('.frag');
+      if (!fr || fr.classList.contains('on')) startCount(el);
+    });
+    document.getElementById('counter').textContent = (cur + 1) + ' / ' + total;
+    document.getElementById('progress').style.width = ((cur + 1) / total * 100) + '%';
+  }
+
+  function next() {
+    const grp = fragGroups(slides[cur]).find(g => !g[0].classList.contains('on'));
+    if (grp) { grp.forEach(el => { el.classList.add('on'); countsIn(el); }); return; }
+    show(cur + 1, 'fwd');
+  }
+
+  function prev() {
+    const shown = fragGroups(slides[cur]).filter(g => g[0].classList.contains('on'));
+    if (shown.length) { shown[shown.length - 1].forEach(el => el.classList.remove('on')); return; }
+    show(cur - 1, 'back');
+  }
+
   function scale() {
     const sw = 1200, sh = 675;
     const s = Math.min(window.innerWidth / sw, window.innerHeight / sh) * 0.96;
     document.getElementById('deck').style.transform = `translate(-50%, -50%) scale(${s})`;
   }
+
   document.addEventListener('keydown', e => {
-    if (['ArrowRight', 'ArrowDown', ' '].includes(e.key)) { e.preventDefault(); show(cur + 1); }
-    if (['ArrowLeft', 'ArrowUp'].includes(e.key))         { e.preventDefault(); show(cur - 1); }
+    if (['ArrowRight', 'ArrowDown', ' '].includes(e.key)) { e.preventDefault(); next(); }
+    if (['ArrowLeft', 'ArrowUp'].includes(e.key))         { e.preventDefault(); prev(); }
   });
   document.getElementById('deck').addEventListener('click', e => {
-    (e.clientX / window.innerWidth > 0.5) ? show(cur + 1) : show(cur - 1);
+    (e.clientX / window.innerWidth > 0.5) ? next() : prev();
   });
   window.addEventListener('resize', scale);
   scale();

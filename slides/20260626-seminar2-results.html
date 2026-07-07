@@ -901,7 +901,9 @@
     const prefix = el.dataset.prefix || '';
     const suffix = el.dataset.suffix || '';
     if (el._raf) cancelAnimationFrame(el._raf);
-    if (reducedMotion) { el.textContent = prefix + target.toFixed(dec) + suffix; return; }
+    if (el._wd) clearTimeout(el._wd);
+    const done = prefix + target.toFixed(dec) + suffix;
+    if (reducedMotion) { el.textContent = done; return; }
     el.textContent = prefix + (0).toFixed(dec) + suffix;
     const t0 = performance.now() + delay;
     const tick = now => {
@@ -911,6 +913,11 @@
       if (p < 1) el._raf = requestAnimationFrame(tick);
     };
     el._raf = requestAnimationFrame(tick);
+    // watchdog: rAF が停止していても（非表示タブ等）時間切れで最終値を確定
+    el._wd = setTimeout(() => {
+      if (el._raf) cancelAnimationFrame(el._raf);
+      el.textContent = done;
+    }, delay + dur + 300);
   }
 
   function countsIn(el) {
