@@ -70,7 +70,7 @@ _実装: `src/analysis/shapiro_quintile.py` / 出力: `data/processed/shapiro/qu
 P=national CPI は**全 quintile 共通**→ ν^p は全 group 同一系列（コードで assert・GATE OK）、group 差は **sign(ν^q_g)＝数量応答の差のみ**。∴測るのは「共通価格ショックを数量削減で吸収するか消費拡大で吸収するか」＝**差別的消費応答**。
 - ✅「Q1 の共通価格ショックへの消費応答がより収縮的/不本意(supply-like)、Q5 は維持/拡大(demand-like)」
 - ❌「Q1 はより供給駆動/cost-push インフレに直面」（誤り・価格共通）
-- 位置づけ: Phase 2b 背骨（Q1-Q5 実効インフレ格差 +2.14pp）の**メカニズム**を探る三角測量。
+- 位置づけ: Phase 2b 背骨（Q1-Q5 実効インフレ格差 +2.01pp（2022・暦年DEC-023））の**メカニズム**を探る三角測量。
 
 ## spec（exploratory・1 spec のみ）
 五分位数量 `0003348236`（年次2000-2024=25点・crosswalk 116品目再利用）×national CPI 年次。残差化=**(group,item)別 YoY demean のみ**（VAR は24点で不可）。ウェイト=五分位金額 `0003348240`。headline=**shock years 2021-24 pooled の group別 supply share**。

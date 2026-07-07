@@ -109,6 +109,16 @@ def compute_annual_price_index(force: bool = False) -> pd.DataFrame:
     # Filter to 5 groups
     prices = prices[prices["group"].isin(GROUPS)].copy()
 
+    # 不完全な年（12ヶ月そろっていない年）を除外。CGPI は最新年が途中月まで先行公表
+    # されるため（例: 2026年が1-3月のみ）、その年平均は偽値（3ヶ月平均）になる。
+    # 年平均の概念が壊れないよう、月数<12 の年は落とす。
+    months_per_year = prices.groupby("year")["date"].nunique()
+    full_years = months_per_year[months_per_year >= 12].index
+    dropped = sorted(set(months_per_year.index) - set(full_years))
+    if dropped:
+        print(f"  [annual_price_index] 月数<12 の不完全年を除外: {dropped}")
+    prices = prices[prices["year"].isin(full_years)].copy()
+
     annual = (
         prices.groupby(["year", "group", "group_ja"])["value"]
         .mean()
