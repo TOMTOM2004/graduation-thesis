@@ -1,12 +1,21 @@
 # TODO — 卒業論文（案B）
 
-_Last updated: 2026-07-07 / session: 第3・4回スライドを草案→完成形（データ駆動チャート追加・placeholder解消）。main 統合済み（merge c0b779f）_
+_Last updated: 2026-07-07 / session: 2025年データ取り込み + CPI集計を年度→暦年へ統一（DEC-023）・全docs/paper/README/CLAUDE 伝播・main 統合済み（merge 90069b7）_
 
 ## 🎯 Next action（1つだけ、具体的に）
-- What: **論文執筆着手**（実証3本柱を結果章に統合）。数値は必ず DEC-021 の再生成値を使う: 交易損失 中心~35兆/上限40.7兆・Q1-Q5 **+2.14pp**(2022)・β=**0.425 (p=0.047)**・Shapiro 0.41→0.70→0.83・RMSE 10.00pp。goods-services分解（DEC-022）は §5 のとおり research-design.md/decision-log.md/第2回スライドに反映済
+- What: **論文執筆着手**（実証3本柱を結果章に統合）。⚠️**数値は必ず DEC-023 の暦年再生成値を使う**（DEC-021 の年度値は撤回）: 交易損失 中心~35兆/**2025年24.8兆**・Q1-Q5 **+2.01pp**(2022)/**+3.36pp**(2025)・β=**0.373 (p=0.089)**・Shapiro 0.41→0.70→0.83（不変）・Koyck RMSE **9.24pp**。goods-services分解（DEC-022）も暦年再生成済（S0 shock +0.08〜+0.41）。全 golden 値は decision-log DEC-023 参照
+- Where: `paper/`（outline.md が章割り。01-introduction はドラフト済・DEC-015 準拠に修正済）
 - Where: `paper/`（outline.md が章割り。01-introduction はドラフト済・DEC-015 準拠に修正済）
 - Done when: 先行研究 or 方法論の章が1本ドラフトされ、数値が全て repo 再現値と一致
-- 別線: ① ~~main push~~（完了・origin=09ff542） ② ~~AKM SE の R 再実行~~（DEC-021補遺で消化・p≈0.15 再現） ③ ~~財/サービス分解（DEC-022）~~（実装・doc反映・§4官公表突合とも完了。突合2件差異は価格決定メカニズム基準の事前定義として意図的差異と明記しクローズ済＝09ff542） ④ shapiro_decomp の e-Stat 品目名をキャッシュ化（現状 API キー必須＝再現性の残穴） ⑤ GDP 561兆の vintage 確定（trade_loss.py TODO） ⑥ data/processed_stale_20260706/ の削除判断（新キャッシュ安定後） ⑦ ~~第2回スライド s7 改行位置が不自然~~（完了・2026-07-07: budoux ZWSP 361箇所を全文焼き込み＋監査修正一式=bdc15c2。スクリプトはグローバル `~/.claude/skills/slide-design/scripts/apply_budoux.py`）
+- 別線: ① ~~main push~~（完了・origin=09ff542） ② ~~AKM SE の R 再実行~~（DEC-021補遺で消化・p≈0.15 再現） ③ ~~財/サービス分解（DEC-022）~~（実装・doc反映・§4官公表突合とも完了。突合2件差異は価格決定メカニズム基準の事前定義として意図的差異と明記しクローズ済＝09ff542） ④ shapiro_decomp の e-Stat 品目名をキャッシュ化（現状 API キー必須＝再現性の残穴） ⑤ GDP 561兆の vintage 確定（trade_loss.py TODO） ⑥ data/processed_stale_20260706/ の削除判断（新キャッシュ安定後。※本セッションで main の data/processed を暦年で再生成済） ⑦ ~~第2回スライド s7 改行位置が不自然~~（完了＝bdc15c2） ⑧ ⚠️**第3・4回スライド（slides/20261101-seminar3*・20270115-seminar4*）が旧年度値（2.14pp・β=0.425・RMSE10.00・policy gap 1.05→…）のまま暦年docsと乖離** → 発表前に暦年値（DEC-023）へ更新要（slide-design/motion スキル経由。原稿 script.md も同様）。※前セッション未同期の「原稿 script.md」課題とも合流
+
+## ✅ 直近完了（2026-07-07・このセッション・2025年延長 + 暦年統一 DEC-023）
+- **2025年データ取り込み**: 調査の結果、輸入物価(2026-03まで)・CPI月次(2025まで)は既に手元にあり、真に不足していたのはCPIの集計方法だけと判明。Phase1交易損失 **+2025=24.8兆(GDP比4.4%・フロー減衰)**、Phase2 Q1-Q5格差 **+2025=3.36pp(拡大継続)**。Phase3(IO2020表)は延長不可。詳細=`docs/data-sources/2025-data-availability.md`
+- **潜在バグ発見→暦年統一(DEC-023)**: CPI月次抽出 `str[4:6]`(6桁YYYYMM前提)が実データ10桁YYYY00MMMMでは年度行だけ拾い、記載値は実は「年度ベース」だった。GDP・Phase1が暦年ゆえ**暦年へ統一(ユーザー承認)**。3コード修正(cost_push_id/cost_push_panel/quintile)+trade_lossに不完全年ガード
+- **全下流を暦年再生成**: Q1-Q5格差 2.14/1.96/2.67→**2.01/2.06/2.45**、β(iii) 0.425/p.047→**0.373/p.089**(cluster p .002→.366・同一仕様プラセボ -0.226→-1.38 ill-cond=識別さらに脆弱化・貢献③補強・結論不変)、Koyck RMSE 10.00→**9.24**、Phase3 gap 0.37-1.33→0.32-1.17(補助率44.8%/57.7%不変)、DEC-022 S0 shock +0.06-0.39→+0.08-0.41(判定(a)不変)、Shapiro 0.41/0.70/0.83 不変(月次分解ゆえ無関係)
+- **伝播**: 16ファイル(paper/outline・README・CLAUDE・docs 11件・code2)へ暦年値。design-review.md は歴史記録として非改変+DEC-023ポインタ、inflation-timeline は前年比YoYゆえ対象外。DEC-023 起票
+- **安全策**: 出力回帰ガード(交易損失2022-24=35.3/28.4/29.1兆 完全一致)、check_golden PASS、旧値残存grep=ゼロ(「旧年度X」provenance注記のみ)。取りこぼし2件(×0.425・literature β=0.431)も是正
+- **merge + main整合**: --no-ff で main統合(90069b7)→ main の stale processed キャッシュを暦年で再生成し headline一致確認(格差2.01/2.06/2.45/3.36・交易損失35.3/28.4/29.1/24.8・β(iii)0.373・golden OK)→ worktree削除
 
 ## ✅ 直近完了（2026-07-07・このセッション・第3・4回スライド完成形）
 - **第3回デッキ（15→17枚）**: s6 交易損失の年次推移バー（35.3/28.4/29.1兆・エネ寄与重ね棒＝`trade_loss_total.csv` 転記）／s7b 五分位別実効インフレ縦棒図 新設（2022-24×Q1-Q5・gap +2.14/+1.96/+2.67pp＝`quintile_inflation_burden.csv` 転記）／s8 Shapiro 2023 (0.60) 追記／s10 比較表の「数値要照合」ph 解消（Yagi=品目別転嫁率の異質性・Amiti=自社コスト弾力性≈0.6・Amores=EUROMOD逆進性、docs/literature 照合。βの同一 estimand 直接比較対象なしと明記）／巻末 b1 政策シナリオ例示チャート新設（`policy_comparison_2022.csv`: gap 1.05→エネ0.58(−44.8%)/食料0.91(−13.0%)/複合0.44(−57.7%)pp・incidence accounting caveat 明記＝DEC-014 準拠で絶対値は結論にしない）
