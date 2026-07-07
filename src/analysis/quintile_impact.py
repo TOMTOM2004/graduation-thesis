@@ -230,9 +230,11 @@ def compute_gdp_aggregate_impact(force: bool = False) -> pd.DataFrame:
     cpi_file = DATA_RAW / "cpi" / "cpi_category_2015_2025.csv"
     cpi = pd.read_csv(cpi_file)
     cpi_general = cpi[cpi["cat01_code"] == 1].copy()
-    cpi_general["year"] = cpi_general["time_code"].astype(str).str[:4].astype(int)
-    cpi_general["month"] = cpi_general["time_code"].astype(str).str[4:6].astype(int)
-    cpi_monthly = cpi_general[cpi_general["month"].between(1, 12)]
+    _tc = cpi_general["time_code"].astype(str)
+    cpi_general["year"] = _tc.str[:4].astype(int)
+    # time_code=YYYY00MMMM（月は末尾[6:8]=[8:10]）。暦年月次のみで暦年平均（年度・年計を除外）。
+    _mm = [f"{i:02d}" for i in range(1, 13)]
+    cpi_monthly = cpi_general[_tc.str[8:10].isin(_mm) & _tc.str[6:8].isin(_mm)]
     cpi_annual = cpi_monthly.groupby("year")["value"].mean()
     baseline_2020 = cpi_annual.get(2020, cpi_annual.get(2020))
     cpi_delta = (cpi_annual - baseline_2020).rename("actual_cpi_pp")

@@ -37,11 +37,13 @@ def _load_cpi_annual_mid() -> pd.DataFrame:
     cpi_file = DATA_RAW / "cpi" / "cpi_category_2015_2025.csv"
     cpi = pd.read_csv(cpi_file)
 
-    # time_code: 201501 - 202512 形式
-    cpi["year"] = cpi["time_code"].astype(str).str[:4].astype(int)
-    monthly_mask = cpi["time_code"].astype(str).str[4:6].isin(
-        ["01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12"]
-    )
+    # time_code は10桁形式 YYYY00MMMM（月は末尾[6:8]=[8:10]=MM、年度=YYYY100000、年計=YYYY000000）。
+    # 暦年（calendar-year）で集計する（GDP・Phase1と統一, DEC 2026-07-07）。
+    # 旧実装 str[4:6] は6桁 YYYYMM 前提で、10桁形式では年度行のみを拾い実質「年度ベース」だった。
+    _tc = cpi["time_code"].astype(str)
+    cpi["year"] = _tc.str[:4].astype(int)
+    _mm = [f"{i:02d}" for i in range(1, 13)]
+    monthly_mask = _tc.str[8:10].isin(_mm) & _tc.str[6:8].isin(_mm)
     cpi_monthly = cpi[monthly_mask].copy()
 
     # cat01_code を 4 桁文字列に統一

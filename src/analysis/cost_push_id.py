@@ -77,33 +77,34 @@ def load_cpi_by_major_category() -> pd.DataFrame:
     # Parse time code to year
     cpi["year"] = cpi["time_code"].astype(str).str[:4].astype(int)
 
-    # Filter to annual data (monthly time codes end with 01-12, annual with 00)
-    # Annual codes: YYYYMM format, we want the annual-average concept
-    # From fetch_cpi.py, time_from = "201500" and time_to = "202512"
-    # Monthly codes are like 201501...202512, annual codes might be 201500
-    # Let's filter to months and compute annual average
-    monthly_mask = cpi["time_code"].astype(str).str[4:6].isin([
-        "01","02","03","04","05","06","07","08","09","10","11","12"
-    ])
+    # e-Stat の time_code は10桁形式 YYYY00MMMM（月は末尾[6:8]=[8:10]=MM、
+    # 暦年計=YYYY000000、年度=YYYY100000）。暦年（calendar-year）で集計する
+    # ため、月位置がともに 01-12 の暦年月次のみ選択し、年度・年計を除外する。
+    # ※ GDP・Phase 1（交易損失）が暦年基準のため Phase 2 も暦年に統一（DEC 起票, 2026-07-07）。
+    #   旧実装は str[4:6]（6桁 YYYYMM 前提）が10桁形式では年度行 YYYY100000 のみを拾い、
+    #   実質「年度ベース」の集計になっていた（記載値2.14/1.96/2.67 は年度値）。
+    tc = cpi["time_code"].astype(str)
+    mm = [f"{i:02d}" for i in range(1, 13)]
+    monthly_mask = tc.str[8:10].isin(mm) & tc.str[6:8].isin(mm)
     cpi_monthly = cpi[monthly_mask].copy()
+
+    # cat01_name の先頭コード（例 "0002 "）を除いた費目名で厳密一致。
+    # 旧実装の contains + iloc[0] は行順依存（DEC-011/021 と同型の脆さ）だったため排除。
+    cpi_monthly["cat01_clean"] = (
+        cpi_monthly["cat01_name"].astype(str).str.replace(r"^\d+\s*", "", regex=True)
+    )
 
     rows = []
     for hh_code, cpi_name in HH_TO_CPI_CODE.items():
-        # Match by name
-        matched = cpi_monthly[cpi_monthly["cat01_name"] == cpi_name]
-        if matched.empty:
-            # Try partial match
-            matched = cpi_monthly[cpi_monthly["cat01_name"].str.contains(cpi_name[:3], na=False)]
+        matched = cpi_monthly[cpi_monthly["cat01_clean"] == cpi_name]
 
         if matched.empty:
             print(f"  Warning: No CPI match for '{cpi_name}' (hh_code={hh_code})")
             continue
 
-        # Use the first (broadest) match
-        matched = matched[matched["cat01_name"] == matched["cat01_name"].iloc[0]]
         cpi_name_matched = matched["cat01_name"].iloc[0]
 
-        # Annual average
+        # 暦年12ヶ月平均
         annual = (
             matched.groupby("year")["value"]
             .mean()
