@@ -186,10 +186,10 @@
   .lt-legend .sw { width: 13px; height: 13px; border-radius: 3px; display: inline-block; }
 
   /* 五分位別実効インフレ（年グループ×Q1–Q5 縦棒） */
-  .qchart { flex: 1; display: flex; align-items: center; justify-content: center; gap: 54px; padding: 0 8px; }
+  .qchart { flex: 1; display: flex; align-items: center; justify-content: center; gap: 34px; padding: 0 4px; }
   .qgroup { display: flex; flex-direction: column; align-items: center; gap: 10px; }
-  .qbars { display: flex; align-items: flex-end; gap: 7px; height: 280px; }
-  .qbar { width: 46px; display: flex; flex-direction: column; align-items: center; justify-content: flex-end; height: 100%; }
+  .qbars { display: flex; align-items: flex-end; gap: 6px; height: 280px; }
+  .qbar { width: 36px; display: flex; flex-direction: column; align-items: center; justify-content: flex-end; height: 100%; }
   .qbar .qv { font-size: 13px; font-weight: 700; color: var(--text-mid); margin-bottom: 4px; font-variant-numeric: tabular-nums; }
   .qbar .qcol { width: 100%; height: 0; border-radius: 3px 3px 0 0; background: var(--blue-soft);
                 transition: height .8s cubic-bezier(.22,.61,.36,1) var(--bd, .1s); }
@@ -440,13 +440,18 @@
         <div class="lt-track"><div class="lt-bar lt-other" style="--w:82.6%;"></div><div class="lt-bar lt-energy" style="--w:47.3%;"></div></div>
         <div class="lt-val"><span data-count="29.1" data-decimals="1" data-duration="900" data-delay="850">29.1</span>兆円 <small>エネ 16.7兆</small></div>
       </div>
+      <div class="lt-row frag" data-frag="yr" style="--rd:1.2s;">
+        <div class="lt-year">2025年</div>
+        <div class="lt-track"><div class="lt-bar lt-other" style="--w:70.2%;"></div><div class="lt-bar lt-energy" style="--w:34.6%;"></div></div>
+        <div class="lt-val"><span data-count="24.8" data-decimals="1" data-duration="900" data-delay="1200">24.8</span>兆円 <small>エネ 12.2兆</small></div>
+      </div>
       <div class="lt-legend frag" data-frag="yr">
         <span class="lg"><span class="sw lt-energy"></span>エネルギー​（石油・石炭・天然ガス）</span>
         <span class="lg"><span class="sw lt-other"></span>その他4グループ​（食料・金属・木材・化学）</span>
         <span style="color:var(--text-light);">バー長は​損失額に​比例</span>
       </div>
     </div>
-    <div class="note">出所: 総務省 産業連関表​（2020年表）+ 日本銀行 CGPI 輸入物価指数。​中心推計は 2015–19 平均を​正常基準（上限 40.7兆円＝2020基準）。​会計的積み上げの​ため回帰の​識別問題から​独立して​頑健。</div>
+    <div class="note">出所: 総務省 産業連関表​（2020年表）+ 日本銀行 CGPI 輸入物価指数。​中心推計は 2015–19 平均を​正常基準（上限 40.7兆円＝2020基準）。2025年（GDP比4.4%）は​電気・ガス補助の​間欠実施を​含む値で、​フローは​減衰しつつ継続。​会計的積み上げの​ため回帰の​識別問題から​独立して​頑健。</div>
   </div>
 
   <!-- 07 Result 2: exposure + regressivity -->
@@ -467,57 +472,68 @@
       <div class="col-box frag" data-frag="g2" style="background:#fdf3f5;">
         <h3 style="color:var(--crimson); border-bottom-color:#e0b8c2;">柱③ 逆進性​（恒等式・背骨）</h3>
         <ul class="bullets">
-          <li>2022年 Q1-Q5 実効インフレ差 <span class="emp" style="font-size:20px;" data-count="2.14" data-decimals="2" data-prefix="+" data-suffix="pp" data-duration="1100">+2.14pp</span></li>
-          <li>2023年 +1.96pp・2024年 +2.67pp（全ショック年で​逆進）</li>
+          <li>2022年 Q1-Q5 実効インフレ差 <span class="emp" style="font-size:20px;" data-count="2.01" data-decimals="2" data-prefix="+" data-suffix="pp" data-duration="1100">+2.01pp</span></li>
+          <li>2023年 +2.06pp・2024年 +2.45pp・2025年 +3.36pp（全ショック年で​逆進・差は​拡大）</li>
           <li>実績CPI×実支出シェアの​恒等式＝識別仮定に​非依存・​最頑健</li>
         </ul>
       </div>
     </div>
-    <div class="note">五分位＝世帯を​所得順に5等分した​区分​（Q1=下位20%・Q5=上位20%）。​出所: 総務省 家計調査​（2022年・​二人以上​世帯）。+2.14pp は​実効インフレ​（cost-push＋demand-pull 込み）の​逆進性であり、cost-push 単独ではない​（橋渡しは​結果③）。</div>
+    <div class="note">五分位＝世帯を​所得順に5等分した​区分​（Q1=下位20%・Q5=上位20%）。CPI集計は​暦年​（第2回の +2.14pp は​年度集計・結論​不変）。​出所: 総務省 家計調査​（2022年・​二人以上​世帯）。+2.01pp は​実効インフレ​（cost-push＋demand-pull 込み）の​逆進性であり、cost-push 単独ではない​（橋渡しは​結果③）。</div>
   </div>
 
   <!-- 07b Figure: quintile effective inflation -->
   <div class="slide" id="s7b">
     <div class="slide-header">
       <div class="section-tag">結果② — 図</div>
-      <h2>全ショック年で Q1 が Q5 を​上回る ── 逆進性は​一貫して​持続</h2>
+      <h2>全ショック年で Q1 が Q5 を​上回る ── 差は2025年に​最大の+3.36pp</h2>
     </div>
     <div class="qchart">
       <div class="qgroup frag" data-frag="y22">
         <div class="qbars">
-          <div class="qbar q1"><span class="qv">5.2</span><div class="qcol" style="--h:43.6%; --bd:.08s;"></div><span class="qlab">Q1</span></div>
-          <div class="qbar"><span class="qv">4.6</span><div class="qcol" style="--h:38.7%; --bd:.2s;"></div><span class="qlab">Q2</span></div>
-          <div class="qbar"><span class="qv">4.1</span><div class="qcol" style="--h:34.1%; --bd:.32s;"></div><span class="qlab">Q3</span></div>
-          <div class="qbar"><span class="qv">3.7</span><div class="qcol" style="--h:30.6%; --bd:.44s;"></div><span class="qlab">Q4</span></div>
-          <div class="qbar"><span class="qv">3.1</span><div class="qcol" style="--h:25.8%; --bd:.56s;"></div><span class="qlab">Q5</span></div>
+          <div class="qbar q1"><span class="qv">4.4</span><div class="qcol" style="--h:29.1%; --bd:.08s;"></div><span class="qlab">Q1</span></div>
+          <div class="qbar"><span class="qv">3.8</span><div class="qcol" style="--h:25.4%; --bd:.2s;"></div><span class="qlab">Q2</span></div>
+          <div class="qbar"><span class="qv">3.3</span><div class="qcol" style="--h:21.9%; --bd:.32s;"></div><span class="qlab">Q3</span></div>
+          <div class="qbar"><span class="qv">2.9</span><div class="qcol" style="--h:19.2%; --bd:.44s;"></div><span class="qlab">Q4</span></div>
+          <div class="qbar"><span class="qv">2.3</span><div class="qcol" style="--h:15.6%; --bd:.56s;"></div><span class="qlab">Q5</span></div>
         </div>
         <div class="qyear">2022年</div>
-        <div class="qgap">Q1−Q5 <span data-count="2.14" data-decimals="2" data-prefix="+" data-suffix="pp" data-delay="750" data-duration="800">+2.14pp</span></div>
+        <div class="qgap">Q1−Q5 <span data-count="2.01" data-decimals="2" data-prefix="+" data-suffix="pp" data-delay="750" data-duration="800">+2.01pp</span></div>
       </div>
       <div class="qgroup frag" data-frag="y23">
         <div class="qbars">
-          <div class="qbar q1"><span class="qv">8.2</span><div class="qcol" style="--h:68.3%; --bd:.08s;"></div><span class="qlab">Q1</span></div>
-          <div class="qbar"><span class="qv">7.7</span><div class="qcol" style="--h:63.9%; --bd:.2s;"></div><span class="qlab">Q2</span></div>
-          <div class="qbar"><span class="qv">7.1</span><div class="qcol" style="--h:59.5%; --bd:.32s;"></div><span class="qlab">Q3</span></div>
-          <div class="qbar"><span class="qv">6.8</span><div class="qcol" style="--h:56.7%; --bd:.44s;"></div><span class="qlab">Q4</span></div>
-          <div class="qbar"><span class="qv">6.2</span><div class="qcol" style="--h:52.0%; --bd:.56s;"></div><span class="qlab">Q5</span></div>
+          <div class="qbar q1"><span class="qv">7.7</span><div class="qcol" style="--h:51.2%; --bd:.08s;"></div><span class="qlab">Q1</span></div>
+          <div class="qbar"><span class="qv">7.1</span><div class="qcol" style="--h:47.5%; --bd:.2s;"></div><span class="qlab">Q2</span></div>
+          <div class="qbar"><span class="qv">6.6</span><div class="qcol" style="--h:43.8%; --bd:.32s;"></div><span class="qlab">Q3</span></div>
+          <div class="qbar"><span class="qv">6.2</span><div class="qcol" style="--h:41.4%; --bd:.44s;"></div><span class="qlab">Q4</span></div>
+          <div class="qbar"><span class="qv">5.6</span><div class="qcol" style="--h:37.5%; --bd:.56s;"></div><span class="qlab">Q5</span></div>
         </div>
         <div class="qyear">2023年</div>
-        <div class="qgap">Q1−Q5 <span data-count="1.96" data-decimals="2" data-prefix="+" data-suffix="pp" data-delay="750" data-duration="800">+1.96pp</span></div>
+        <div class="qgap">Q1−Q5 <span data-count="2.06" data-decimals="2" data-prefix="+" data-suffix="pp" data-delay="750" data-duration="800">+2.06pp</span></div>
       </div>
       <div class="qgroup frag" data-frag="y24">
         <div class="qbars">
-          <div class="qbar q1"><span class="qv">11.9</span><div class="qcol" style="--h:99.5%; --bd:.08s;"></div><span class="qlab">Q1</span></div>
-          <div class="qbar"><span class="qv">11.2</span><div class="qcol" style="--h:93.2%; --bd:.2s;"></div><span class="qlab">Q2</span></div>
-          <div class="qbar"><span class="qv">10.5</span><div class="qcol" style="--h:87.6%; --bd:.32s;"></div><span class="qlab">Q3</span></div>
-          <div class="qbar"><span class="qv">10.1</span><div class="qcol" style="--h:84.0%; --bd:.44s;"></div><span class="qlab">Q4</span></div>
-          <div class="qbar"><span class="qv">9.3</span><div class="qcol" style="--h:77.3%; --bd:.56s;"></div><span class="qlab">Q5</span></div>
+          <div class="qbar q1"><span class="qv">10.9</span><div class="qcol" style="--h:72.7%; --bd:.08s;"></div><span class="qlab">Q1</span></div>
+          <div class="qbar"><span class="qv">10.2</span><div class="qcol" style="--h:68.1%; --bd:.2s;"></div><span class="qlab">Q2</span></div>
+          <div class="qbar"><span class="qv">9.6</span><div class="qcol" style="--h:63.9%; --bd:.32s;"></div><span class="qlab">Q3</span></div>
+          <div class="qbar"><span class="qv">9.2</span><div class="qcol" style="--h:61.2%; --bd:.44s;"></div><span class="qlab">Q4</span></div>
+          <div class="qbar"><span class="qv">8.5</span><div class="qcol" style="--h:56.4%; --bd:.56s;"></div><span class="qlab">Q5</span></div>
         </div>
         <div class="qyear">2024年</div>
-        <div class="qgap">Q1−Q5 <span data-count="2.67" data-decimals="2" data-prefix="+" data-suffix="pp" data-delay="750" data-duration="800">+2.67pp</span></div>
+        <div class="qgap">Q1−Q5 <span data-count="2.45" data-decimals="2" data-prefix="+" data-suffix="pp" data-delay="750" data-duration="800">+2.45pp</span></div>
+      </div>
+      <div class="qgroup frag" data-frag="y25">
+        <div class="qbars">
+          <div class="qbar q1"><span class="qv">14.8</span><div class="qcol" style="--h:99.0%; --bd:.08s;"></div><span class="qlab">Q1</span></div>
+          <div class="qbar"><span class="qv">13.9</span><div class="qcol" style="--h:92.8%; --bd:.2s;"></div><span class="qlab">Q2</span></div>
+          <div class="qbar"><span class="qv">13.1</span><div class="qcol" style="--h:87.2%; --bd:.32s;"></div><span class="qlab">Q3</span></div>
+          <div class="qbar"><span class="qv">12.5</span><div class="qcol" style="--h:83.6%; --bd:.44s;"></div><span class="qlab">Q4</span></div>
+          <div class="qbar"><span class="qv">11.5</span><div class="qcol" style="--h:76.6%; --bd:.56s;"></div><span class="qlab">Q5</span></div>
+        </div>
+        <div class="qyear">2025年</div>
+        <div class="qgap">Q1−Q5 <span data-count="3.36" data-decimals="2" data-prefix="+" data-suffix="pp" data-delay="750" data-duration="800">+3.36pp</span></div>
       </div>
     </div>
-    <div class="note">縦軸: 五分位別の​実効インフレ率​（2015–19年平均基準からの​累積・%）。​赤＝Q1（低所得層）。​実績CPI×実支出シェアの​恒等式に​よる​算出で、​識別仮定に​非依存。​出所: 総務省 家計調査・消費者物価指数より​筆者作成。</div>
+    <div class="note">縦軸: 五分位別の​実効インフレ率​（2015–19年平均基準からの​累積・%・​暦年）。​赤＝Q1（低所得層）。​実績CPI×実支出シェアの​恒等式に​よる​算出で、​識別仮定に​非依存。2025年は​電気・ガス補助の​間欠実施を​含む値。​出所: 総務省 家計調査・消費者物価指数より​筆者作成。</div>
   </div>
 
   <!-- 07c Concept: what triangulation is -->
@@ -533,7 +549,7 @@
       <div class="conv-evs">
         <div class="conv-ev frag" data-frag="e1"><span class="cel">証拠①</span>必需品​（食料・光熱）は​低所得層の​予算で​重く、​輸入依存度も​高い​（曝露）</div>
         <div class="conv-ev frag" data-frag="e2"><span class="cel">証拠②</span>この​時期の​物価高は​原価側​（供給）が​主導​（Shapiro 分解）</div>
-        <div class="conv-ev frag" data-frag="e3"><span class="cel">証拠③</span>実効インフレは​低所得層ほど​高い​（恒等式・+2.14pp）</div>
+        <div class="conv-ev frag" data-frag="e3"><span class="cel">証拠③</span>実効インフレは​低所得層ほど​高い​（恒等式・+2.01pp）</div>
       </div>
       <div class="conv-arrow frag" data-frag="c"><svg class="flow-arrow" viewBox="0 0 90 30" width="72" height="24" aria-hidden="true"><path class="fa-shaft" d="M4 15 H60"/><path class="fa-flow" d="M4 15 H60"/><path class="fa-head" d="M58 4.5 L84 15 L58 25.5 Z"/></svg></div>
       <div class="conv-concl frag" data-frag="c">
@@ -567,7 +583,7 @@
         <h3>識別の​到達点​（正直な​報告）</h3>
         <ul class="bullets">
           <li>独立な​輸入物価ショックが​実質1つ → ショックの​数に​正直な​誤差評価​（exposure-robust）では​非有意</li>
-          <li>点推定 β=0.425 は「cost-push と​整合的」​止まり​（因果識別ではない）</li>
+          <li>点推定 β=0.373 は「cost-push と​整合的」​止まり​（因果識別ではない）</li>
           <li>→ <strong class="frag emph emph-orange" data-frag="em">「識別」ではなく​三角測量</strong>と明示</li>
         </ul>
       </div>
@@ -620,13 +636,13 @@
         </tr>
         <tr class="frag">
           <td class="hl">価格転嫁率 β</td>
-          <td>0.425（p=0.047・点推定は​整合的、exposure-robust では​非有意）</td>
+          <td>0.373（p=0.089・点推定は​整合的、exposure-robust では​非有意）</td>
           <td>Yagi et al.(2022)：日本・​品目レベルで​転嫁率は​大きく​異なり近年上昇／Amiti et al.(2019)：自社コストへの​価格​弾力性は​典型企業で​約0.6</td>
           <td>部​分転嫁​（β&lt;1）と​品目間​異質性の​知見に​整合。​同じ​定義の​推定値を​出した​直接比較対象は​なし</td>
         </tr>
         <tr class="frag">
           <td class="hl">分配・​逆進性</td>
-          <td class="emp">Q1-Q5 +2.14pp（恒等式）</td>
+          <td class="emp">Q1-Q5 +2.01pp（恒等式・暦年）</td>
           <td>Amores et al.(2025)：ユーロ圏6ヶ国で​低所得層ほど​大きな​厚生損失​（EUROMOD・​逆進的）</td>
           <td>欧州で​確立した​逆進性を​日本データで​定量化​（本研究が​初）</td>
         </tr>
@@ -642,7 +658,7 @@
       <h2>背骨の​結果は​仕様変更に​対して​頑健</h2>
     </div>
     <ul class="bullets" style="flex:1; align-content:center; justify-content:center; gap:16px;">
-      <li class="frag" data-frag="b12"><strong class="frag emph" data-frag="em">逆進性​（+2.14pp）</strong>：実績CPIと​実支出シェアの​恒等式の​ため、​回帰の​識別仮定に​そもそも​依存しない。​対象世帯の​範囲​（二人以上​世帯）を​固定しても​不変。</li>
+      <li class="frag" data-frag="b12"><strong class="frag emph" data-frag="em">逆進性（+2.01pp）</strong>：実績CPIと​実支出シェアの​恒等式の​ため、​回帰の​識別仮定に​そもそも​依存しない。​対象世帯の​範囲​（二人以上​世帯）を​固定しても​不変。</li>
       <li class="frag" data-frag="b12"><strong class="frag emph" data-frag="em">供給​主導性​（Shapiro）</strong>：残差の​取り方を​変えた5通りの​仕様すべてで 2022>2021 の​上昇が​保たれる。</li>
       <li class="frag"><strong class="frag emph" data-frag="em">交易損失​（35兆）</strong>：基準年の​取り方で​中心35兆〜上限40.7兆。​オーダーは​安定。</li>
       <li class="frag"><strong class="frag emph emph-orange" data-frag="em">非​有意性​（β）</strong>：これも​頑健 ── 期間延長でも​救えない。​原因は​設定に​内在​（独立ショックが​実質1つ）。</li>
@@ -685,7 +701,7 @@
     </div>
     <ul class="openq-list">
       <li class="frag"><span class="qmark">?</span><span class="qt"><strong>三角測量と​識別の​線引き</strong>：複数の​整合的証拠で cost-push へ​橋渡しする​論法を、​論文で​どこまで​強く​主張して​よいか。</span></li>
-      <li class="frag"><span class="qmark">?</span><span class="qt"><strong>恒等式1本への​集約</strong>：heterogeneity の核を +2.14pp の​恒等式に​集約する​構成は、​説得力と​して​十分か。​補強すべき副次分析は。</span></li>
+      <li class="frag"><span class="qmark">?</span><span class="qt"><strong>恒等式1本への​集約</strong>：heterogeneity の核を +2.01pp の​恒等式に​集約する​構成は、​説得力と​して​十分か。​補強すべき副次分析は。</span></li>
       <li class="frag"><span class="qmark">?</span><span class="qt"><strong>政策含意の​出し方</strong>：絶対値を​出さず​符号レベルに​留める​方​針で、​政策的インプリケーションは​説得的に​書けるか。</span></li>
     </ul>
     <div class="note">これらは​欠陥ではなく、​研究の​誠実さの​表れと​して​晒している。​建設的な​ご批判を​歓迎します。</div>
@@ -741,27 +757,27 @@
     </div>
     <div class="pol-chart">
       <div class="pol-row base frag" data-frag="p1">
-        <div class="pol-name">ベースライン​（政策なし）<small>コストプッシュの​機械的帰着</small></div>
+        <div class="pol-name">ベースライン​（政策なし）<small>コストプッシュの​機械的帰着・Q1−Q5 gap</small></div>
         <div class="pol-track"><div class="pol-bar" style="--w:100%;"></div></div>
-        <div class="pol-val"><span data-count="1.05" data-decimals="2" data-duration="800">1.05</span>pp</div>
+        <div class="pol-val"><span data-count="0.92" data-decimals="2" data-duration="800">0.92</span>pp</div>
       </div>
       <div class="pol-row frag" data-frag="p2">
         <div class="pol-name">エネルギー補助<small>光熱50%補填</small></div>
         <div class="pol-track"><div class="pol-bar" style="--w:55.2%;"></div></div>
-        <div class="pol-val"><span data-count="0.58" data-decimals="2" data-duration="800">0.58</span>pp <small>gap −44.8%</small></div>
+        <div class="pol-val"><span data-count="44.8" data-decimals="1" data-prefix="−" data-suffix="%" data-duration="800">−44.8%</span> <small>gap 削減</small></div>
       </div>
       <div class="pol-row frag" data-frag="p3">
         <div class="pol-name">食料価格支援<small>食料30%補填</small></div>
-        <div class="pol-track"><div class="pol-bar" style="--w:87.0%;"></div></div>
-        <div class="pol-val"><span data-count="0.91" data-decimals="2" data-duration="800">0.91</span>pp <small>gap −13.0%</small></div>
+        <div class="pol-track"><div class="pol-bar" style="--w:87.1%;"></div></div>
+        <div class="pol-val"><span data-count="12.9" data-decimals="1" data-prefix="−" data-suffix="%" data-duration="800">−12.9%</span> <small>gap 削減</small></div>
       </div>
       <div class="pol-row frag" data-frag="p4">
         <div class="pol-name">複合介入<small>エネルギー50% + 食料30%</small></div>
         <div class="pol-track"><div class="pol-bar" style="--w:42.3%;"></div></div>
-        <div class="pol-val"><span data-count="0.44" data-decimals="2" data-duration="800">0.44</span>pp <small>gap −57.7%</small></div>
+        <div class="pol-val"><span data-count="57.7" data-decimals="1" data-prefix="−" data-suffix="%" data-duration="800">−57.7%</span> <small>gap 削減</small></div>
       </div>
     </div>
-    <div class="note">バーは​シナリオ別の Q1−Q5 実効インフレ gap（2022年・pp・β非依存の​機械的計算）。​数値は IO/Leontief 構築前提に​依存し、​モデルの overshoot に​より​上方​バイアス ── 例示と​して appendix 扱い。​頑健なのは​符号​（Q1&gt;Q5・エネ最大寄与・補助は gap 縮小方​向・δ=0.4〜1.0 で​方​向不変）​のみ。</div>
+    <div class="note">バーは​シナリオ後に​残る Q1−Q5 gap の​比率​（2022年・​暦年基準・ベースライン=0.92pp・β非依存の​機械的計算）。​数値は​産業連関表の​構築前提に​依存し、​モデルの​過剰伝播に​より​上方​バイアス ── 例示と​して appendix 扱い。​頑健なのは​符号​（Q1&gt;Q5・エネ最大寄与・補助は gap 縮小方​向・δ=0.4〜1.0 で​方​向不変）​のみ。</div>
   </div>
 
 </div>
