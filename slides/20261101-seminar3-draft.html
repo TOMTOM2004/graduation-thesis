@@ -164,6 +164,68 @@
 
   .conclusion-line { margin-top: 18px; font-size: 16px; font-weight: 600; color: var(--text-dark); text-align: center; line-height: 1.6; }
   .conclusion-line .emp { color: var(--crimson); }
+
+  /* ══ Motion system（第2回デッキから移植） ══ */
+
+  /* slide transition: fade + slight upward drift */
+  .slide.active { animation: slideIn .5s cubic-bezier(.22,.61,.36,1) both; }
+  @keyframes slideIn {
+    from { opacity: 0; transform: translateY(16px); }
+    to   { opacity: 1; transform: none; }
+  }
+
+  /* auto-staged entrance (fires on slide activation, per-element delay via --d) */
+  .rise {
+    opacity: 0; transform: translateY(14px);
+    transition: opacity .55s ease var(--d, 0s), transform .55s cubic-bezier(.22,.61,.36,1) var(--d, 0s);
+  }
+  .slide.run .rise { opacity: 1; transform: none; }
+
+  /* key-driven fragments (revealed one group at a time with → key) */
+  .frag {
+    opacity: 0; transform: translateY(12px);
+    transition: opacity .4s ease, transform .4s cubic-bezier(.22,.61,.36,1);
+  }
+  .frag.on { opacity: 1; transform: none; }
+  /* table rows: transform は使わずフェードのみ（table-row の transform は描画が不安定） */
+  tr.frag { transform: none; }
+
+  /* two-step bold emphasis: 表示時は通常ウェイト → 次のキー送りで太字+色 */
+  .frag.emph {
+    opacity: 1; transform: none; font-weight: 400; color: inherit;
+    transition: color .35s ease;
+  }
+  .frag.emph.on { font-weight: 700; color: var(--navy); }
+  .frag.emph.emph-orange.on { color: var(--orange); }
+  .frag.emph.emph-crimson.on { color: var(--crimson); }
+  /* rq-box（紺地）内は 白 → 黄ハイライト */
+  .rq-box .frag.emph { color: var(--white); }
+  .rq-box .frag.emph.on { color: #ffd9a0; }
+
+  /* animated flow arrows: 破線がシャフトを矢頭方向へ流れ続ける */
+  .flow-arrow { display: block; }
+  .flow-arrow .fa-shaft { stroke: var(--border); stroke-width: 7; stroke-linecap: round; fill: none; }
+  .flow-arrow .fa-flow  { stroke: var(--blue-soft); stroke-width: 7; stroke-linecap: round; fill: none;
+                          stroke-dasharray: 13 15; animation: dashflow 1s linear infinite; }
+  .flow-arrow .fa-head  { fill: var(--blue-soft); }
+  @keyframes dashflow { to { stroke-dashoffset: -28; } }
+
+  /* roadmap: 現在地（第3回）はフラグメント表示後にハイライト */
+  .rm-step.now { transition: box-shadow .5s ease .5s; }
+  .rm-step.now.frag.on { box-shadow: 0 0 0 3px #f0d0ac; }
+
+  /* bottom progress bar (current position in deck) */
+  #progress {
+    position: fixed; bottom: 0; left: 0; height: 3px; width: 0;
+    background: var(--blue-soft); transition: width .35s ease; z-index: 100;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .slide.active { animation: none; }
+    .rise, .frag { transition: none; }
+    .rise { opacity: 1; transform: none; }
+    .flow-arrow .fa-flow { animation: none; }
+  }
 </style>
 </head>
 <body>
@@ -173,11 +235,11 @@
   <!-- 01 Title -->
   <div class="slide slide-title active" id="s1">
     <div>
-      <div class="label">卒業論文 — 第3回ゼミ発表 / 論文ドラフト全体​（フィードバック募集）</div>
-      <h1>輸入価格ショックに​よる​実質所得の​海外流出と<br>
-          <em>家計消費への​異質な​影響</em><br>
-          — 論文ドラフトの​全体​像と、​考察 —</h1>
-      <div class="meta">
+      <div class="label rise">卒業論文 — 第3回ゼミ発表 / 論文ドラフト全体​（フィードバック募集）</div>
+      <h1><span class="rise" style="--d:.15s; display:inline-block;">輸入価格ショックに​よる​実質所得の​海外流出と</span><br>
+          <em class="rise" style="--d:.35s; display:inline-block;">家計消費への​異質な​影響</em><br>
+          <span class="rise" style="--d:.55s; display:inline-block;">— 論文ドラフトの​全体​像と、​考察 —</span></h1>
+      <div class="meta rise" style="--d:.8s;">
         <strong>石田智識</strong>　専修大学経済学部<br>
         2026年秋​（日程調整中）
       </div>
@@ -190,29 +252,29 @@
       <div class="section-tag">本日の​位置づけ</div>
       <h2>計画 → 結果 → 今回は​論文全体を​通しで​お見せする</h2>
     </div>
-    <div class="key-message">
+    <div class="key-message rise">
       第1回で​計画を、​第2回で​第一次の​結果を​発表した。​今回は<strong>論文の​論証全体を​通しで​提示</strong>し、​特に<strong>考察と​限界</strong>に​ついて​皆さんの​フィードバックを​いただきたい。
     </div>
     <div class="roadmap">
-      <div class="rm-step done">
+      <div class="rm-step done frag" data-frag="r1">
         <div class="rmlabel">第1回</div>
         <div class="rmtitle">研究計画</div>
         <div class="rmstate">問い・仮説・分析設計を​提示</div>
       </div>
-      <div class="rm-arrow">→</div>
-      <div class="rm-step done">
+      <div class="rm-arrow frag" data-frag="r2"><svg class="flow-arrow" viewBox="0 0 90 30" width="56" height="20" aria-hidden="true"><path class="fa-shaft" d="M4 15 H60"/><path class="fa-flow" d="M4 15 H60"/><path class="fa-head" d="M58 4.5 L84 15 L58 25.5 Z"/></svg></div>
+      <div class="rm-step done frag" data-frag="r2">
         <div class="rmlabel">第2回</div>
         <div class="rmtitle">第一次分析結果</div>
         <div class="rmstate">3本柱＋識別の​到達点を​報告</div>
       </div>
-      <div class="rm-arrow">→</div>
-      <div class="rm-step now">
+      <div class="rm-arrow frag" data-frag="r3"><svg class="flow-arrow" viewBox="0 0 90 30" width="56" height="20" aria-hidden="true"><path class="fa-shaft" d="M4 15 H60"/><path class="fa-flow" d="M4 15 H60"/><path class="fa-head" d="M58 4.5 L84 15 L58 25.5 Z"/></svg></div>
+      <div class="rm-step now frag" data-frag="r3">
         <div class="rmlabel">第3回​（本日）</div>
         <div class="rmtitle">論文ドラフト全体</div>
-        <div class="rmstate">考察・先行研究対比・限界・未解決点</div>
+        <div class="rmstate">考察・​先行研究対比・​限界・​未解決点</div>
       </div>
-      <div class="rm-arrow">→</div>
-      <div class="rm-step">
+      <div class="rm-arrow frag" data-frag="r4"><svg class="flow-arrow" viewBox="0 0 90 30" width="56" height="20" aria-hidden="true"><path class="fa-shaft" d="M4 15 H60"/><path class="fa-flow" d="M4 15 H60"/><path class="fa-head" d="M58 4.5 L84 15 L58 25.5 Z"/></svg></div>
+      <div class="rm-step frag" data-frag="r4">
         <div class="rmlabel">第4回</div>
         <div class="rmtitle">最終発表</div>
         <div class="rmstate">結論の​確定​（2027年1月）</div>
@@ -228,7 +290,7 @@
       <h2>輸入依存構造のもとで、​価格ショックが​実質所得を​海外へ​流出させた</h2>
     </div>
     <div class="two-col">
-      <div class="col-box">
+      <div class="col-box frag">
         <h3>構造的背景</h3>
         <ul class="bullets">
           <li>製造業の​海外移転で​エネルギー・​食料・素材の​輸入依存が​深化​（Thorbecke 2024）</li>
@@ -236,10 +298,10 @@
           <li>輸入価格上昇分は​国内に​還流せず海外へ​流出＝交易条件悪化</li>
         </ul>
       </div>
-      <div class="col-box">
+      <div class="col-box frag">
         <h3>2021–2024年の​ショック</h3>
         <ul class="bullets">
-          <li>ウクライナ侵攻・対ロシア制裁・円安が​重畳</li>
+          <li>ウクライナ侵攻・​対ロシア制裁・​円安が​重畳</li>
           <li>エネルギーが​突出​（2020→22で約2〜3倍）、​食料も5〜6割上昇</li>
           <li>日本は​実質賃金3年連続マイナス＝デマンドプル不在の​コストプッシュ主導</li>
         </ul>
@@ -250,12 +312,12 @@
 
   <!-- 04 Research Question (honest reframe) -->
   <div class="slide slide-takeaway" id="s4">
-    <div class="takeaway-eyebrow">研究質問 — Research Question</div>
-    <div class="rq-box">
+    <div class="takeaway-eyebrow rise">研究質問 — Research Question</div>
+    <div class="rq-box rise" style="--d:.2s;">
       <div class="label">Main Research Question</div>
-      <p>外的要因に​よる​輸入価格ショックは、​日本の​実質所得を<span class="hl">どのような​構造で​海外に​流出させ</span>、<span class="hl">家計の​実質消費を​所得階層ごとに​どの​程度</span>押し下げているか。​また、​その​構造に​基づく​政策介入は​どのような​効果を​もたらすか。</p>
+      <p>外的要因に​よる​輸入価格ショックは、​日本の​実質所得を<span class="hl frag emph" data-frag="em">どのような​構造で​海外に​流出させ</span>、<span class="hl frag emph" data-frag="em">家計の​実質消費を​所得階層ごとに​どの​程度</span>押し下げているか。​また、​その​構造に​基づく​政策介入は​どのような​効果を​もたらすか。</p>
     </div>
-    <div class="conclusion-line" style="margin-top:6px; font-size:16px; color:var(--text-mid); font-weight:400;">
+    <div class="conclusion-line rise" style="margin-top:6px; font-size:16px; color:var(--text-mid); font-weight:400; --d:.45s;">
       副問1：所得流出の​構造定量化　／　副問2：家計消費への​帰着​（​異質性）​　／　副問3：政策シミュレーション<br>
       <span style="color:var(--orange);">※ コストプッシュの​「清浄な​単離」は​研究の​過程で​原理的に​不可能と​判明 → 問いの​答え方を honest に​再定義​（後述）</span>
     </div>
@@ -268,19 +330,19 @@
       <h2>3段階の​積み上げ — 各段階が​独立した​貢献を​持つ</h2>
     </div>
     <div class="tri-flow">
-      <div class="tri-box">
+      <div class="tri-box frag" data-frag="p1">
         <div class="tstep">Phase 1</div>
         <div class="tname">所得流出の​定量化</div>
         <p>産業連関表 × 輸入物価指数で​交易損失を​会計的に​積み上げ。​識別仮定に​非依存。</p>
       </div>
-      <div class="tri-arrow">→</div>
-      <div class="tri-box">
+      <div class="tri-arrow frag" data-frag="p2"><svg class="flow-arrow" viewBox="0 0 90 30" width="72" height="24" aria-hidden="true"><path class="fa-shaft" d="M4 15 H60"/><path class="fa-flow" d="M4 15 H60"/><path class="fa-head" d="M58 4.5 L84 15 L58 25.5 Z"/></svg></div>
+      <div class="tri-box frag" data-frag="p2">
         <div class="tstep">Phase 2</div>
         <div class="tname">家計への​帰着</div>
         <p>家計調査 × 所得五分位。​実績CPI×実支出シェアの​恒等式で​逆進性を​分解​（背骨）。​回帰に​よる cost-push 単離は​到達点を​明示。</p>
       </div>
-      <div class="tri-arrow">→</div>
-      <div class="tri-box">
+      <div class="tri-arrow frag" data-frag="p3"><svg class="flow-arrow" viewBox="0 0 90 30" width="72" height="24" aria-hidden="true"><path class="fa-shaft" d="M4 15 H60"/><path class="fa-flow" d="M4 15 H60"/><path class="fa-head" d="M58 4.5 L84 15 L58 25.5 Z"/></svg></div>
+      <div class="tri-box frag" data-frag="p3">
         <div class="tstep">Phase 3</div>
         <div class="tname">統合シミュレーション</div>
         <p>IO×マイクロシミュレーション。​政策評価。​数値は​例示​（incidence accounting）と​して​符号レベルで​扱う。</p>
@@ -296,13 +358,13 @@
       <h2>交易損失は​会計恒等式で​確定​（2022年・中心推計 約35兆円）</h2>
     </div>
     <div class="stat-strip">
-      <div class="stat-cell"><span class="sval">35</span><span class="sunit">兆円</span><div class="slabel">2022年・実質所得の​海外流出<br>（5グループ合計・中心推計）</div></div>
-      <div class="stat-cell"><span class="sval accent">67</span><span class="sunit">%</span><div class="slabel">うちエネルギーの​寄与</div></div>
-      <div class="stat-cell"><span class="sval">6.3</span><span class="sunit">%</span><div class="slabel">名目GDP比</div></div>
+      <div class="stat-cell rise" style="--d:.15s;"><span class="sval" data-count="35" data-delay="400">35</span><span class="sunit">兆円</span><div class="slabel">2022年・実質所得の​海外流出<br>（5グループ合計・中心推計）</div></div>
+      <div class="stat-cell rise" style="--d:.3s;"><span class="sval accent" data-count="67" data-delay="550">67</span><span class="sunit">%</span><div class="slabel">うちエネルギーの​寄与</div></div>
+      <div class="stat-cell rise" style="--d:.45s;"><span class="sval" data-count="6.3" data-decimals="1" data-delay="700">6.3</span><span class="sunit">%</span><div class="slabel">名目GDP比</div></div>
     </div>
     <ul class="bullets" style="margin-top:18px; gap:9px;">
-      <li>2023年 約28兆円・2024年 約29兆円 ── 複数年継続</li>
-      <li>会計的積み上げの​ため回帰の​識別問題から​独立して​頑健​（Tier 1）</li>
+      <li class="frag">2023年 約28兆円・2024年 約29兆円 ── 複数年継続</li>
+      <li class="frag">会計的積み上げの​ため回帰の​識別問題から​独立して​頑健​（Tier 1）</li>
     </ul>
     <div class="note">出所: 総務省 産業連関表​（2020年表）+ 日本銀行 CGPI 輸入物価指数。​中心推計は 2015–19 平均を​正常基準（上限 40.7兆円＝2020基準）。</div>
   </div>
@@ -314,18 +376,18 @@
       <h2>必需品は​低所得層に​偏在し、​実効インフレは​逆進的だった</h2>
     </div>
     <div class="two-col" style="align-content:center;">
-      <div class="col-box">
+      <div class="col-box frag" data-frag="g1">
         <h3>柱② 曝露​（家計調査・実測）</h3>
         <ul class="bullets">
-          <li>食料支出割合：Q1 31.1% vs Q5 22.9%（<span class="emp">+8.3pp</span>）</li>
-          <li>光熱・​水道：Q1 11.2% vs Q5 6.4%（<span class="emp">+4.8pp</span>）</li>
+          <li>食料支出割合：Q1 31.1% vs Q5 22.9%（<span class="emp" data-count="8.3" data-decimals="1" data-prefix="+" data-suffix="pp" data-duration="800">+8.3pp</span>）</li>
+          <li>光熱・​水道：Q1 11.2% vs Q5 6.4%（<span class="emp" data-count="4.8" data-decimals="1" data-prefix="+" data-suffix="pp" data-duration="800" data-delay="300">+4.8pp</span>）</li>
           <li>必需品＝高輸入含有＝ショックの​通り道</li>
         </ul>
       </div>
-      <div class="col-box" style="background:#fdf3f5;">
+      <div class="col-box frag" data-frag="g2" style="background:#fdf3f5;">
         <h3 style="color:var(--crimson); border-bottom-color:#e0b8c2;">柱③ 逆進性​（恒等式・背骨）</h3>
         <ul class="bullets">
-          <li>2022年 Q1-Q5 実効インフレ差 <span class="emp" style="font-size:20px;">+2.14pp</span></li>
+          <li>2022年 Q1-Q5 実効インフレ差 <span class="emp" style="font-size:20px;" data-count="2.14" data-decimals="2" data-prefix="+" data-suffix="pp" data-duration="1100">+2.14pp</span></li>
           <li>2023年 +1.96pp・2024年 +2.67pp（全ショック年で​逆進）</li>
           <li>実績CPI×実支出シェアの​恒等式＝識別仮定に​非依存・​最頑健</li>
         </ul>
@@ -341,7 +403,7 @@
       <h2>供給​主導性で cost-push へ​橋渡し ── 清浄識別は​不可能と​確認</h2>
     </div>
     <div class="two-col" style="align-content:center;">
-      <div class="col-box">
+      <div class="col-box frag" data-frag="g1">
         <h3>三角測量​（Shapiro 分解）</h3>
         <ul class="bullets">
           <li>供給主導シェア：2021 <strong>0.41</strong>（需要）→ 2022 <strong>0.70</strong> → 2024 <strong>0.83</strong></li>
@@ -349,12 +411,12 @@
           <li>① 高輸入含有​（柱②）＋② 供給主導 → 逆進性は cost-push 由来と​整合的</li>
         </ul>
       </div>
-      <div class="col-box caution">
+      <div class="col-box caution frag" data-frag="g2">
         <h3>識別の​到達点​（正直な​報告）</h3>
         <ul class="bullets">
           <li>独立な​輸入物価ショックが​実質1つ → exposure-robust で​非有意</li>
           <li>点推定 β=0.425 は「cost-push と​整合的」​止まり​（因果識別ではない）</li>
-          <li>→ <strong style="color:var(--orange);">「識別」ではなく​三角測量</strong>と明示</li>
+          <li>→ <strong class="frag emph emph-orange" data-frag="em">「識別」ではなく​三角測量</strong>と明示</li>
         </ul>
       </div>
     </div>
@@ -368,17 +430,17 @@
       <h2>結果は​何を​意味するか ── 集計では​隠れる​分配の​偏り</h2>
     </div>
     <div class="disc-grid">
-      <div class="disc-card">
+      <div class="disc-card frag">
         <div class="dnum">解釈①</div>
         <div class="dtitle">隠れた​逆進性</div>
         <p>GDP集計の​消費減は​小さく​見えても、​所得階層別には​負担が​大きく​偏る。​マクロ平均は​分配の​偏りを​隠す。</p>
       </div>
-      <div class="disc-card">
+      <div class="disc-card frag">
         <div class="dnum">解釈②</div>
         <div class="dtitle">メカニズムの​一貫性</div>
         <p>エンゲル法則→必需品の​高輸入含有→供給主導インフレ、と​独立な​証拠が​同じ方​向を​指す​（三角測量の​収束）。</p>
       </div>
-      <div class="disc-card">
+      <div class="disc-card frag">
         <div class="dnum">解釈③</div>
         <div class="dtitle">先行研究との​対話</div>
         <p>齊藤(2022)の​マクロ規模感を​家計レベルへ接続。Amores et al.(2025)の​欧州型分析を​日本データで​初めて​実装。</p>
@@ -398,19 +460,19 @@
         <tr><th>論点</th><th>本研究</th><th>先行研究</th><th>関係</th></tr>
       </thead>
       <tbody>
-        <tr>
+        <tr class="frag">
           <td class="hl">交易損失の​規模</td>
           <td class="emp">約35兆円（2022・GDP比6.3%）</td>
           <td>内閣府SNA 交易利得・損失 2022年度 −16.4兆円​（実質・2015暦年連鎖価格、2023年度年次推計）</td>
           <td>グロス積上げ vs ネット概念の​差を​踏まえ同一オーダー。​家計分解は​本研究が​追加</td>
         </tr>
-        <tr>
+        <tr class="frag">
           <td class="hl">価格転嫁率 β</td>
           <td>0.425（p=0.047・点推定は​整合的、exposure-robust では​非有意）</td>
           <td>Yagi et al.(2022) ／ Amiti et al.(2019) <span class="ph">数値要照合</span></td>
           <td>転嫁の​異質性の​知見と​整合</td>
         </tr>
-        <tr>
+        <tr class="frag">
           <td class="hl">分配・​逆進性</td>
           <td class="emp">Q1-Q5 +2.14pp（恒等式）</td>
           <td>Amores et al.(2025) 欧州 <span class="ph">数値要照合</span></td>
@@ -428,10 +490,10 @@
       <h2>背骨の​結果は​仕様変更に​対して​頑健</h2>
     </div>
     <ul class="bullets" style="flex:1; align-content:center; justify-content:center; gap:16px;">
-      <li><strong style="color:var(--navy);">逆進性​（+2.14pp）</strong>：実績CPIと​実支出シェアの​恒等式の​ため、​回帰の​識別仮定に​そもそも​依存しない。​世帯universe（二人以上）​固定でも​不変。</li>
-      <li><strong style="color:var(--navy);">供給​主導性​（Shapiro）</strong>：{VAR, AR}×{3, 12 lag}＋primary の5仕様で 2022>2021 の​上昇が​頑健。near-zero 由来の​汚染は5.5%のみ。</li>
-      <li><strong style="color:var(--navy);">交易損失​（35兆）</strong>：基準年の​取り方で​中心35兆〜上限40.7兆。​オーダーは​安定。</li>
-      <li><strong style="color:var(--orange);">非​有意性​（β）</strong>：これも​頑健 ── 期間延長でも​救えない。​原因は​設定に​内在​（独立ショックが​実質1つ）。</li>
+      <li class="frag"><strong class="frag emph" data-frag="em">逆進性​（+2.14pp）</strong>：実績CPIと​実支出シェアの​恒等式の​ため、​回帰の​識別仮定に​そもそも​依存しない。​世帯universe（二人以上）​固定でも​不変。</li>
+      <li class="frag"><strong class="frag emph" data-frag="em">供給​主導性​（Shapiro）</strong>：{VAR, AR}×{3, 12 lag}＋primary の5仕様で 2022>2021 の​上昇が​頑健。near-zero 由来の​汚染は5.5%のみ。</li>
+      <li class="frag"><strong class="frag emph" data-frag="em">交易損失​（35兆）</strong>：基準年の​取り方で​中心35兆〜上限40.7兆。​オーダーは​安定。</li>
+      <li class="frag"><strong class="frag emph emph-orange" data-frag="em">非​有意性​（β）</strong>：これも​頑健 ── 期間延長でも​救えない。​原因は​設定に​内在​（独立ショックが​実質1つ）。</li>
     </ul>
     <div class="note">感度分析の​図表​（δ=0.4〜1.0 の​方​向​不変性等）は appendix。​本スライドは​結論​レベルのみ。</div>
   </div>
@@ -443,7 +505,7 @@
       <h2>何が​言えて、​何が​言えないかを​明確に​切り分ける</h2>
     </div>
     <div class="two-col" style="align-content:center;">
-      <div class="col-box caution">
+      <div class="col-box caution frag">
         <h3>識別の​限界</h3>
         <ul class="bullets">
           <li>cost-push の​因果的単離は​単一マクロ事象では​不可能​（exposure-robust で​非有意）</li>
@@ -451,7 +513,7 @@
           <li>年次相関コントラストは​財/サービス分解で​相当部​分が​構成差由来と​判明​（within-goods では IC 勾配が​消失・DEC-022）​＝交絡の​所在を​定量化</li>
         </ul>
       </div>
-      <div class="col-box caution">
+      <div class="col-box caution frag">
         <h3>モデルの​限界</h3>
         <ul class="bullets">
           <li>Phase 3 IOモデルは​実績CPI比で​過剰伝播​（overshoot）</li>
@@ -470,9 +532,9 @@
       <h2>皆さんの​ご意見を​いただきたい3つの​論点</h2>
     </div>
     <ul class="openq-list">
-      <li><span class="qmark">?</span><span class="qt"><strong>三角測量と​識別の​線引き</strong>：複数の​整合的証拠で cost-push へ​橋渡しする​論法を、​論文で​どこまで​強く​主張して​よいか。</span></li>
-      <li><span class="qmark">?</span><span class="qt"><strong>恒等式1本への​集約</strong>：heterogeneity の核を +2.14pp の​恒等式に​集約する​構成は、​説得力と​して​十分か。​補強すべき副次分析は。</span></li>
-      <li><span class="qmark">?</span><span class="qt"><strong>政策含意の​出し方</strong>：絶対値を​出さず​符号レベルに​留める​方​針で、​政策的インプリケーションは​説得的に​書けるか。</span></li>
+      <li class="frag"><span class="qmark">?</span><span class="qt"><strong>三角測量と​識別の​線引き</strong>：複数の​整合的証拠で cost-push へ​橋渡しする​論法を、​論文で​どこまで​強く​主張して​よいか。</span></li>
+      <li class="frag"><span class="qmark">?</span><span class="qt"><strong>恒等式1本への​集約</strong>：heterogeneity の核を +2.14pp の​恒等式に​集約する​構成は、​説得力と​して​十分か。​補強すべき副次分析は。</span></li>
+      <li class="frag"><span class="qmark">?</span><span class="qt"><strong>政策含意の​出し方</strong>：絶対値を​出さず​符号レベルに​留める​方​針で、​政策的インプリケーションは​説得的に​書けるか。</span></li>
     </ul>
     <div class="note">これらは​欠陥ではなく、​研究の​誠実さの​表れと​して​晒している。​建設的な​ご批判を​歓迎します。</div>
   </div>
@@ -483,13 +545,13 @@
       <div class="section-tag">結論の​方​向性​（暫定）& 今後</div>
       <h2>誠実かつ​防御可能な​形で、​問いに​答える</h2>
     </div>
-    <div class="key-message" style="font-size:18px;">
-      物価高騰の​負担は<strong style="color:var(--crimson);">低所得層ほど​重い​（逆進的）</strong>＝恒等式で​硬く​立証。cost-push の​清浄単離は​不可能と​判明し、<strong style="color:var(--navy);">その​限界の​提示自体を​方法論的貢献</strong>に​転化する。
+    <div class="key-message rise" style="font-size:18px;">
+      物価高騰の​負担は<strong class="frag emph emph-crimson" data-frag="em">低所得層ほど​重い​（逆進的）</strong>＝恒等式で​硬く​立証。cost-push の​清浄単離は​不可能と​判明し、<strong class="frag emph" data-frag="em">その​限界の​提示自体を​方法論的貢献</strong>に​転化する。
     </div>
     <ul class="bullets" style="gap:10px;">
-      <li>第3回の​フィードバックを​反映し、​考察・限界・政策含意の​記述を​確定させる</li>
-      <li>先行研究比較表の​数値を​一次ソースで​確定​（ロバストネス appendix）</li>
-      <li>第4回（2027年1月）で​結論を​確定 → 論文提出</li>
+      <li class="frag">第3回の​フィードバックを​反映し、​考察・限界・政策含意の​記述を​確定させる</li>
+      <li class="frag">先行研究比較表の​数値を​一次ソースで​確定​（ロバストネス appendix）</li>
+      <li class="frag">第4回（2027年1月）で​結論を​確定 → 論文提出</li>
     </ul>
     <div class="note">最終提出目標：2027年1月末。</div>
   </div>
@@ -519,29 +581,103 @@
 </div>
 
 <div id="counter"></div>
-<div id="hint">← → キーまたは​タップで​移動</div>
+<div id="hint">← → キーまたは​タップで​移動​（段階表示​あり）</div>
+<div id="progress"></div>
 
 <script>
   const slides = document.querySelectorAll('.slide');
   let cur = 0;
   const total = slides.length;
-  function show(n) {
-    slides[cur].classList.remove('active');
-    cur = (n + total) % total;
-    slides[cur].classList.add('active');
-    document.getElementById('counter').textContent = (cur + 1) + ' / ' + total;
+  const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  /* ── count-up ── */
+  function startCount(el) {
+    const target = parseFloat(el.dataset.count);
+    const dec    = +(el.dataset.decimals || 0);
+    const dur    = +(el.dataset.duration || 1100);
+    const delay  = +(el.dataset.delay || 0);
+    const prefix = el.dataset.prefix || '';
+    const suffix = el.dataset.suffix || '';
+    if (el._raf) cancelAnimationFrame(el._raf);
+    if (el._wd) clearTimeout(el._wd);
+    const done = prefix + target.toFixed(dec) + suffix;
+    if (reducedMotion) { el.textContent = done; return; }
+    el.textContent = prefix + (0).toFixed(dec) + suffix;
+    const t0 = performance.now() + delay;
+    const tick = now => {
+      const p = Math.min(1, Math.max(0, (now - t0) / dur));
+      const eased = 1 - Math.pow(1 - p, 3);
+      el.textContent = prefix + (target * eased).toFixed(dec) + suffix;
+      if (p < 1) el._raf = requestAnimationFrame(tick);
+    };
+    el._raf = requestAnimationFrame(tick);
+    // watchdog: rAF が停止していても（非表示タブ等）時間切れで最終値を確定
+    el._wd = setTimeout(() => {
+      if (el._raf) cancelAnimationFrame(el._raf);
+      el.textContent = done;
+    }, delay + dur + 300);
   }
+
+  function countsIn(el) {
+    if (el.matches('[data-count]')) startCount(el);
+    el.querySelectorAll('[data-count]').forEach(startCount);
+  }
+
+  /* ── fragments: document order, grouped by data-frag ── */
+  function fragGroups(slide) {
+    const groups = [], map = {};
+    slide.querySelectorAll('.frag').forEach(el => {
+      const g = el.dataset.frag;
+      if (g != null && map[g]) { map[g].push(el); return; }
+      const arr = [el];
+      if (g != null) map[g] = arr;
+      groups.push(arr);
+    });
+    return groups;
+  }
+
+  /* ── navigation ── */
+  function show(n, dir) {
+    slides[cur].classList.remove('active', 'run');
+    cur = (n + total) % total;
+    const s = slides[cur];
+    s.classList.add('active');
+    // forward: fragments hidden / backward: all revealed
+    s.querySelectorAll('.frag').forEach(f => f.classList.toggle('on', dir === 'back'));
+    // .run slightly later so .rise transitions fire (setTimeout: rAF throttling に強い)
+    setTimeout(() => s.classList.add('run'), 40);
+    s.querySelectorAll('[data-count]').forEach(el => {
+      const fr = el.closest('.frag');
+      if (!fr || fr.classList.contains('on')) startCount(el);
+    });
+    document.getElementById('counter').textContent = (cur + 1) + ' / ' + total;
+    document.getElementById('progress').style.width = ((cur + 1) / total * 100) + '%';
+  }
+
+  function next() {
+    const grp = fragGroups(slides[cur]).find(g => !g[0].classList.contains('on'));
+    if (grp) { grp.forEach(el => { el.classList.add('on'); countsIn(el); }); return; }
+    show(cur + 1, 'fwd');
+  }
+
+  function prev() {
+    const shown = fragGroups(slides[cur]).filter(g => g[0].classList.contains('on'));
+    if (shown.length) { shown[shown.length - 1].forEach(el => el.classList.remove('on')); return; }
+    show(cur - 1, 'back');
+  }
+
   function scale() {
     const sw = 1200, sh = 675;
     const s = Math.min(window.innerWidth / sw, window.innerHeight / sh) * 0.96;
     document.getElementById('deck').style.transform = `translate(-50%, -50%) scale(${s})`;
   }
+
   document.addEventListener('keydown', e => {
-    if (['ArrowRight', 'ArrowDown', ' '].includes(e.key)) { e.preventDefault(); show(cur + 1); }
-    if (['ArrowLeft', 'ArrowUp'].includes(e.key))         { e.preventDefault(); show(cur - 1); }
+    if (['ArrowRight', 'ArrowDown', ' '].includes(e.key)) { e.preventDefault(); next(); }
+    if (['ArrowLeft', 'ArrowUp'].includes(e.key))         { e.preventDefault(); prev(); }
   });
   document.getElementById('deck').addEventListener('click', e => {
-    (e.clientX / window.innerWidth > 0.5) ? show(cur + 1) : show(cur - 1);
+    (e.clientX / window.innerWidth > 0.5) ? next() : prev();
   });
   window.addEventListener('resize', scale);
   scale();
