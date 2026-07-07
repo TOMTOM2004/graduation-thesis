@@ -10,12 +10,12 @@
   :root {
     --navy:      #1a2e4a;
     --blue-mid:  #2c5282;
-    --blue-soft: #4a7fa5;
+    --blue-soft: #3f6f95;  /* 4.5:1+ on white/muted (audit fix) */
     --muted-bg:  #f5f7fa;
     --border:    #d0d8e4;
     --text-dark: #1a1a2e;
     --text-mid:  #3a4a5c;
-    --text-light:#6b7c93;
+    --text-light:#5f7088;  /* 4.5:1+ on white/muted (audit fix) */
     --orange:    #b85c1a;
     --crimson:   #b03050;
     --white:     #ffffff;
@@ -44,9 +44,10 @@
   }
   .slide.active { display: flex; }
 
-  .slide p, .slide li, .slide td, .slide th,
-  .slide h2, .slide h3, .slide .phase-label, .slide .question, .slide .detail {
-    word-break: keep-all; overflow-wrap: break-word; line-break: strict;
+  .slide {
+    word-break: keep-all;      /* CJK は文節 ZWSP の位置でのみ改行（budoux 焼き込み） */
+    overflow-wrap: break-word;
+    line-break: strict;
   }
 
   #counter { position: fixed; bottom: 50px; left: 50%; transform: translateX(-50%); color: #aaa; font-size: 13px; font-variant-numeric: tabular-nums; letter-spacing: 0.06em; z-index: 100; }
@@ -54,40 +55,43 @@
 
   .slide-header { border-left: 5px solid var(--navy); padding-left: 18px; margin-bottom: 28px; }
   .slide-header h2 { font-size: 26px; font-weight: 700; color: var(--navy); line-height: 1.3; }
-  .slide-header .section-tag { font-size: 12px; font-weight: 600; color: var(--blue-soft); text-transform: uppercase; letter-spacing: 0.12em; margin-bottom: 6px; }
+  .slide-header .section-tag { font-size: 13px; font-weight: 600; color: var(--blue-soft); text-transform: uppercase; letter-spacing: 0.12em; margin-bottom: 6px; }
 
-  .key-message { background: var(--muted-bg); border-left: 4px solid var(--blue-mid); padding: 14px 20px; margin-bottom: 24px; font-size: 16px; color: var(--text-mid); line-height: 1.6; }
+  .key-message { background: var(--muted-bg); border-left: 4px solid var(--blue-mid); padding: 14px 20px; margin-bottom: 24px; font-size: 18px; color: var(--text-mid); line-height: 1.6; }
 
   ul.bullets { list-style: none; padding: 0; display: flex; flex-direction: column; gap: 12px; }
-  ul.bullets li { display: flex; align-items: flex-start; gap: 12px; font-size: 16px; line-height: 1.55; color: var(--text-mid); }
-  ul.bullets li::before { content: '—'; color: var(--blue-soft); flex-shrink: 0; margin-top: 1px; font-weight: 700; }
+  ul.bullets li { position: relative; padding-left: 32px; font-size: 18px; line-height: 1.55; color: var(--text-mid); }
+  ul.bullets li::before { content: '—'; color: var(--blue-soft); position: absolute; left: 0; top: 0; font-weight: 700; }
 
-  .note { margin-top: auto; font-size: 12px; color: var(--text-light); border-top: 1px solid var(--border); padding-top: 10px; }
+  .note { margin-top: auto; font-size: 14px; color: var(--text-light); border-top: 1px solid var(--border); padding-top: 10px; }
   .nowrap { white-space: nowrap; }
+  .hang { display: flex; }  /* ラベル+コロン段落: <span class="hang-label">…：</span><span class="hang-body">…</span> */
+  .hang > .hang-label { flex: 0 0 auto; white-space: nowrap; }
+  .hang > .hang-body { flex: 1 1 auto; min-width: 0; }
   .emp { color: var(--crimson); font-weight: 700; }
 
   /* Title */
   .slide-title { justify-content: center; }
-  .slide-title .label { font-size: 13px; letter-spacing: 0.14em; color: var(--blue-mid); margin-bottom: 20px; text-transform: uppercase; font-weight: 600; }
-  .slide-title h1 { font-size: 31px; font-weight: 700; line-height: 1.5; color: var(--navy); margin-bottom: 28px; }
+  .slide-title .label { font-size: 14px; letter-spacing: 0.14em; color: var(--blue-mid); margin-bottom: 20px; text-transform: uppercase; font-weight: 600; }
+  .slide-title h1 { font-size: 32px; font-weight: 700; line-height: 1.5; color: var(--navy); margin-bottom: 28px; }
   .slide-title h1 em { color: var(--blue-mid); font-style: normal; }
-  .slide-title .meta { font-size: 15px; color: var(--text-mid); line-height: 2.1; }
+  .slide-title .meta { font-size: 16px; color: var(--text-mid); line-height: 2.1; }
   .slide-title .meta strong { color: var(--navy); }
 
   /* Takeaway / anchor */
   .slide-takeaway { justify-content: center; }
-  .takeaway-eyebrow { font-size: 13px; font-weight: 600; color: var(--blue-soft); text-transform: uppercase; letter-spacing: 0.16em; margin-bottom: 24px; text-align: center; }
+  .takeaway-eyebrow { font-size: 14px; font-weight: 600; color: var(--blue-soft); text-transform: uppercase; letter-spacing: 0.16em; margin-bottom: 24px; text-align: center; }
   .rq-box { background: var(--navy); border-radius: 6px; padding: 30px 40px; max-width: 960px; margin: 0 auto 24px; }
-  .rq-box .label { font-size: 12px; letter-spacing: 0.12em; color: #8ab4d4; text-transform: uppercase; margin-bottom: 12px; font-weight: 600; }
+  .rq-box .label { font-size: 13px; letter-spacing: 0.12em; color: #8ab4d4; text-transform: uppercase; margin-bottom: 12px; font-weight: 600; }
   .rq-box p { font-size: 20px; line-height: 1.7; color: var(--white); }
   .rq-box p .hl { color: #ffd9a0; font-weight: 700; }
 
   /* Roadmap (horizontal phase status) */
   .roadmap { display: flex; align-items: stretch; gap: 0; flex: 0 0 auto; margin: auto 0; }
   .rm-step { flex: 1; border: 1px solid var(--border); border-radius: 4px; padding: 14px 16px; }
-  .rm-step .rmlabel { font-size: 11px; font-weight: 700; color: var(--blue-soft); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 7px; }
-  .rm-step .rmtitle { font-size: 15px; font-weight: 700; color: var(--navy); line-height: 1.35; margin-bottom: 6px; }
-  .rm-step .rmstate { font-size: 12px; color: var(--text-mid); line-height: 1.4; }
+  .rm-step .rmlabel { font-size: 12px; font-weight: 700; color: var(--blue-soft); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 7px; }
+  .rm-step .rmtitle { font-size: 16px; font-weight: 700; color: var(--navy); line-height: 1.35; margin-bottom: 6px; }
+  .rm-step .rmstate { font-size: 13px; color: var(--text-mid); line-height: 1.4; }
   .rm-step.done { background: var(--muted-bg); border-color: var(--blue-soft); }
   .rm-step.now { background: #fff8f2; border-color: var(--orange); }
   .rm-step.now .rmlabel { color: var(--orange); }
@@ -96,10 +100,10 @@
   /* Two-col */
   .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 26px; flex: 1; align-content: center; }
   .col-box { background: var(--muted-bg); border-radius: 4px; padding: 20px 22px; }
-  .col-box h3 { font-size: 13px; font-weight: 700; color: var(--navy); margin-bottom: 12px; padding-bottom: 8px; border-bottom: 2px solid var(--border); text-transform: uppercase; letter-spacing: 0.06em; }
+  .col-box h3 { font-size: 14px; font-weight: 700; color: var(--navy); margin-bottom: 12px; padding-bottom: 8px; border-bottom: 2px solid var(--border); text-transform: uppercase; letter-spacing: 0.06em; }
   .col-box.caution { background: #fff8f2; }
   .col-box.caution h3 { color: var(--orange); border-bottom-color: #e8c4a0; }
-  .col-box ul.bullets li { font-size: 15px; }
+  .col-box ul.bullets li { font-size: 16px; }
 
   /* Stat strip */
   .stat-strip { display: grid; grid-template-columns: repeat(3, 1fr); gap: 22px; flex: 0 0 auto; align-content: center; margin: 6px 0; }
@@ -110,8 +114,8 @@
   .stat-cell .slabel { font-size: 14px; color: var(--text-mid); margin-top: 10px; line-height: 1.5; }
 
   /* Data / comparison table */
-  table.data-table { width: 100%; border-collapse: collapse; font-size: 15px; flex: 0 0 auto; margin: auto 0; }
-  table.data-table th { background: var(--navy); color: var(--white); padding: 10px 14px; text-align: left; font-weight: 600; font-size: 13px; }
+  table.data-table { width: 100%; border-collapse: collapse; font-size: 16px; flex: 0 0 auto; margin: auto 0; }
+  table.data-table th { background: var(--navy); color: var(--white); padding: 10px 14px; text-align: left; font-weight: 600; font-size: 14px; }
   table.data-table td { padding: 10px 14px; border-bottom: 1px solid var(--border); color: var(--text-mid); vertical-align: top; }
   table.data-table tr:nth-child(even) td { background: var(--muted-bg); }
   table.data-table td.hl { color: var(--navy); font-weight: 700; }
@@ -120,16 +124,16 @@
   /* Discussion / interpretation cards */
   .disc-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 18px; flex: 1; align-content: center; }
   .disc-card { border: 1px solid var(--border); border-top: 4px solid var(--blue-mid); border-radius: 4px; padding: 18px 18px; display: flex; flex-direction: column; gap: 8px; }
-  .disc-card .dnum { font-size: 11px; font-weight: 700; color: var(--blue-soft); text-transform: uppercase; letter-spacing: 0.1em; }
+  .disc-card .dnum { font-size: 12px; font-weight: 700; color: var(--blue-soft); text-transform: uppercase; letter-spacing: 0.1em; }
   .disc-card .dtitle { font-size: 16px; font-weight: 700; color: var(--navy); line-height: 1.4; }
-  .disc-card p { font-size: 13.5px; color: var(--text-mid); line-height: 1.6; }
+  .disc-card p { font-size: 14px; color: var(--text-mid); line-height: 1.6; }
 
   /* Contribution cards */
   .contrib-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; flex: 1; align-content: center; }
   .contrib-card { border: 1px solid var(--border); border-left: 4px solid var(--blue-mid); border-radius: 4px; padding: 16px 18px; }
-  .contrib-card .cnum { font-size: 11px; font-weight: 700; color: var(--blue-soft); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 5px; }
+  .contrib-card .cnum { font-size: 12px; font-weight: 700; color: var(--blue-soft); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 5px; }
   .contrib-card .ctitle { font-size: 16px; font-weight: 700; color: var(--navy); line-height: 1.4; margin-bottom: 5px; }
-  .contrib-card p { font-size: 13px; color: var(--text-mid); line-height: 1.55; }
+  .contrib-card p { font-size: 14px; color: var(--text-mid); line-height: 1.55; }
   .contrib-card.backbone { border-left-color: var(--crimson); background: #fdf3f5; }
   .contrib-card.backbone .ctitle { color: var(--crimson); }
 
@@ -145,9 +149,9 @@
   /* Triangulation flow (reused) */
   .tri-flow { display: flex; align-items: center; gap: 0; flex: 1; }
   .tri-box { flex: 1; border: 1px solid var(--border); border-radius: 4px; padding: 16px 16px; }
-  .tri-box .tstep { font-size: 11px; font-weight: 700; color: var(--blue-soft); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 7px; }
-  .tri-box .tname { font-size: 15px; font-weight: 700; color: var(--navy); line-height: 1.35; margin-bottom: 5px; }
-  .tri-box p { font-size: 13px; color: var(--text-mid); line-height: 1.5; }
+  .tri-box .tstep { font-size: 12px; font-weight: 700; color: var(--blue-soft); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 7px; }
+  .tri-box .tname { font-size: 16px; font-weight: 700; color: var(--navy); line-height: 1.35; margin-bottom: 5px; }
+  .tri-box p { font-size: 14px; color: var(--text-mid); line-height: 1.5; }
   .tri-box.concl { background: var(--navy); border-color: var(--navy); }
   .tri-box.concl .tstep { color: #8ab4d4; }
   .tri-box.concl .tname, .tri-box.concl p { color: var(--white); }
@@ -155,7 +159,7 @@
 
   /* References */
   .refs { columns: 2; gap: 32px; flex: 1; }
-  .refs p { font-size: 12px; color: var(--text-mid); line-height: 1.6; margin-bottom: 8px; break-inside: avoid; }
+  .refs p { font-size: 13px; color: var(--text-mid); line-height: 1.6; margin-bottom: 8px; break-inside: avoid; }
   .refs p strong { color: var(--navy); }
 
   .conclusion-line { margin-top: 18px; font-size: 16px; font-weight: 600; color: var(--text-dark); text-align: center; line-height: 1.6; }
@@ -169,13 +173,13 @@
   <!-- 01 Title -->
   <div class="slide slide-title active" id="s1">
     <div>
-      <div class="label">卒業論文 — 第3回ゼミ発表 / 論文ドラフト全体（フィードバック募集）</div>
-      <h1>輸入価格ショックによる実質所得の海外流出と<br>
-          <em>家計消費への異質な影響</em><br>
-          — 論文ドラフトの全体像と、考察 —</h1>
+      <div class="label">卒業論文 — 第3回ゼミ発表 / 論文ドラフト全体​（フィードバック募集）</div>
+      <h1>輸入価格ショックに​よる​実質所得の​海外流出と<br>
+          <em>家計消費への​異質な​影響</em><br>
+          — 論文ドラフトの​全体​像と、​考察 —</h1>
       <div class="meta">
         <strong>石田智識</strong>　専修大学経済学部<br>
-        2026年秋（日程調整中）
+        2026年秋​（日程調整中）
       </div>
     </div>
   </div>
@@ -183,27 +187,27 @@
   <!-- 02 Roadmap: where we are -->
   <div class="slide" id="s2">
     <div class="slide-header">
-      <div class="section-tag">本日の位置づけ</div>
-      <h2>計画 → 結果 → 今回は論文全体を通しでお見せする</h2>
+      <div class="section-tag">本日の​位置づけ</div>
+      <h2>計画 → 結果 → 今回は​論文全体を​通しで​お見せする</h2>
     </div>
     <div class="key-message">
-      第1回で計画を、第2回で第一次の結果を発表した。今回は<strong>論文の論証全体を通しで提示</strong>し、特に<strong>考察と限界</strong>について皆さんのフィードバックをいただきたい。
+      第1回で​計画を、​第2回で​第一次の​結果を​発表した。​今回は<strong>論文の​論証全体を​通しで​提示</strong>し、​特に<strong>考察と​限界</strong>に​ついて​皆さんの​フィードバックを​いただきたい。
     </div>
     <div class="roadmap">
       <div class="rm-step done">
         <div class="rmlabel">第1回</div>
         <div class="rmtitle">研究計画</div>
-        <div class="rmstate">問い・仮説・分析設計を提示</div>
+        <div class="rmstate">問い・仮説・分析設計を​提示</div>
       </div>
       <div class="rm-arrow">→</div>
       <div class="rm-step done">
         <div class="rmlabel">第2回</div>
         <div class="rmtitle">第一次分析結果</div>
-        <div class="rmstate">3本柱＋識別の到達点を報告</div>
+        <div class="rmstate">3本柱＋識別の​到達点を​報告</div>
       </div>
       <div class="rm-arrow">→</div>
       <div class="rm-step now">
-        <div class="rmlabel">第3回（本日）</div>
+        <div class="rmlabel">第3回​（本日）</div>
         <div class="rmtitle">論文ドラフト全体</div>
         <div class="rmstate">考察・先行研究対比・限界・未解決点</div>
       </div>
@@ -211,37 +215,37 @@
       <div class="rm-step">
         <div class="rmlabel">第4回</div>
         <div class="rmtitle">最終発表</div>
-        <div class="rmstate">結論の確定（2027年1月）</div>
+        <div class="rmstate">結論の​確定​（2027年1月）</div>
       </div>
     </div>
-    <div class="note">本日は完成形のドラフトですが、考察と限界の記述はまだ wet です。叩いていただくことを歓迎します。</div>
+    <div class="note">本日は​完成形の​ドラフトですが、​考察と​限界の​記述は​まだ wet です。​叩いていただく​ことを​歓迎します。</div>
   </div>
 
   <!-- 03 Background (compressed) -->
   <div class="slide" id="s3">
     <div class="slide-header">
       <div class="section-tag">背景・問題設定</div>
-      <h2>輸入依存構造のもとで、価格ショックが実質所得を海外へ流出させた</h2>
+      <h2>輸入依存構造のもとで、​価格ショックが​実質所得を​海外へ​流出させた</h2>
     </div>
     <div class="two-col">
       <div class="col-box">
         <h3>構造的背景</h3>
         <ul class="bullets">
-          <li>製造業の海外移転でエネルギー・食料・素材の輸入依存が深化（Thorbecke 2024）</li>
-          <li>経常収支が貿易黒字型→第一次所得収支依存型へ（Miwa 2024）</li>
-          <li>輸入価格上昇分は国内に還流せず海外へ流出＝交易条件悪化</li>
+          <li>製造業の​海外移転で​エネルギー・​食料・素材の​輸入依存が​深化​（Thorbecke 2024）</li>
+          <li>経常収支が​貿易黒字型→第一次所得収支依存型へ​（Miwa 2024）</li>
+          <li>輸入価格上昇分は​国内に​還流せず海外へ​流出＝交易条件悪化</li>
         </ul>
       </div>
       <div class="col-box">
-        <h3>2021–2024年のショック</h3>
+        <h3>2021–2024年の​ショック</h3>
         <ul class="bullets">
-          <li>ウクライナ侵攻・対ロシア制裁・円安が重畳</li>
-          <li>エネルギーが突出（2020→22で約2〜3倍）、食料も5〜6割上昇</li>
-          <li>日本は実質賃金3年連続マイナス＝デマンドプル不在のコストプッシュ主導</li>
+          <li>ウクライナ侵攻・対ロシア制裁・円安が​重畳</li>
+          <li>エネルギーが​突出​（2020→22で約2〜3倍）、​食料も5〜6割上昇</li>
+          <li>日本は​実質賃金3年連続マイナス＝デマンドプル不在の​コストプッシュ主導</li>
         </ul>
       </div>
     </div>
-    <div class="note">産業構造変化の原因分析はスコープ外（先行研究から所与として引用）。</div>
+    <div class="note">産業構造変化の​原因分析は​スコープ外​（先行研究から​所与と​して​引用）。</div>
   </div>
 
   <!-- 04 Research Question (honest reframe) -->
@@ -249,145 +253,145 @@
     <div class="takeaway-eyebrow">研究質問 — Research Question</div>
     <div class="rq-box">
       <div class="label">Main Research Question</div>
-      <p>外的要因による輸入価格ショックは、日本の実質所得を<span class="hl">どのような構造で海外に流出させ</span>、<span class="hl">家計の実質消費を所得階層ごとにどの程度</span>押し下げているか。また、その構造に基づく政策介入はどのような効果をもたらすか。</p>
+      <p>外的要因に​よる​輸入価格ショックは、​日本の​実質所得を<span class="hl">どのような​構造で​海外に​流出させ</span>、<span class="hl">家計の​実質消費を​所得階層ごとに​どの​程度</span>押し下げているか。​また、​その​構造に​基づく​政策介入は​どのような​効果を​もたらすか。</p>
     </div>
-    <div class="conclusion-line" style="margin-top:6px; font-size:15px; color:var(--text-mid); font-weight:400;">
-      副問1：所得流出の構造定量化　／　副問2：家計消費への帰着（異質性）　／　副問3：政策シミュレーション<br>
-      <span style="color:var(--orange);">※ コストプッシュの「清浄な単離」は研究の過程で原理的に不可能と判明 → 問いの答え方を honest に再定義（後述）</span>
+    <div class="conclusion-line" style="margin-top:6px; font-size:16px; color:var(--text-mid); font-weight:400;">
+      副問1：所得流出の​構造定量化　／　副問2：家計消費への​帰着​（​異質性）​　／　副問3：政策シミュレーション<br>
+      <span style="color:var(--orange);">※ コストプッシュの​「清浄な​単離」は​研究の​過程で​原理的に​不可能と​判明 → 問いの​答え方を honest に​再定義​（後述）</span>
     </div>
   </div>
 
   <!-- 05 Method overview -->
   <div class="slide" id="s5">
     <div class="slide-header">
-      <div class="section-tag">方法の全体像</div>
-      <h2>3段階の積み上げ — 各段階が独立した貢献を持つ</h2>
+      <div class="section-tag">方​法の​全体​像</div>
+      <h2>3段階の​積み上げ — 各段階が​独立した​貢献を​持つ</h2>
     </div>
     <div class="tri-flow">
       <div class="tri-box">
         <div class="tstep">Phase 1</div>
-        <div class="tname">所得流出の定量化</div>
-        <p>産業連関表 × 輸入物価指数で交易損失を会計的に積み上げ。識別仮定に非依存。</p>
+        <div class="tname">所得流出の​定量化</div>
+        <p>産業連関表 × 輸入物価指数で​交易損失を​会計的に​積み上げ。​識別仮定に​非依存。</p>
       </div>
       <div class="tri-arrow">→</div>
       <div class="tri-box">
         <div class="tstep">Phase 2</div>
-        <div class="tname">家計への帰着</div>
-        <p>家計調査 × 所得五分位。実績CPI×実支出シェアの恒等式で逆進性を分解（背骨）。回帰による cost-push 単離は到達点を明示。</p>
+        <div class="tname">家計への​帰着</div>
+        <p>家計調査 × 所得五分位。​実績CPI×実支出シェアの​恒等式で​逆進性を​分解​（背骨）。​回帰に​よる cost-push 単離は​到達点を​明示。</p>
       </div>
       <div class="tri-arrow">→</div>
       <div class="tri-box">
         <div class="tstep">Phase 3</div>
         <div class="tname">統合シミュレーション</div>
-        <p>IO×マイクロシミュレーション。政策評価。数値は例示（incidence accounting）として符号レベルで扱う。</p>
+        <p>IO×マイクロシミュレーション。​政策評価。​数値は​例示​（incidence accounting）と​して​符号レベルで​扱う。</p>
       </div>
     </div>
-    <div class="note">識別戦略：当初は輸入含有率の財間差異で cost-push を分離する計画。検証の結果、単一マクロ事象からの清浄識別は不可能と判明（識別の到達点は結果③で詳述）。</div>
+    <div class="note">識別​戦略：当初は​輸入含有率の​財間差異で cost-push を​分離する​計画。​検証の​結果、​単一マクロ事象からの​清浄識別は​不可能と​判明​（識別の​到達点は​結果③で​詳述）。</div>
   </div>
 
   <!-- 06 Result 1: trade-loss -->
   <div class="slide" id="s6">
     <div class="slide-header">
       <div class="section-tag">結果① — 柱1・会計</div>
-      <h2>交易損失は会計恒等式で確定（2022年・中心推計 約35兆円）</h2>
+      <h2>交易損失は​会計恒等式で​確定​（2022年・中心推計 約35兆円）</h2>
     </div>
     <div class="stat-strip">
-      <div class="stat-cell"><span class="sval">35</span><span class="sunit">兆円</span><div class="slabel">2022年・実質所得の海外流出<br>（5グループ合計・中心推計）</div></div>
-      <div class="stat-cell"><span class="sval accent">67</span><span class="sunit">%</span><div class="slabel">うちエネルギーの寄与</div></div>
+      <div class="stat-cell"><span class="sval">35</span><span class="sunit">兆円</span><div class="slabel">2022年・実質所得の​海外流出<br>（5グループ合計・中心推計）</div></div>
+      <div class="stat-cell"><span class="sval accent">67</span><span class="sunit">%</span><div class="slabel">うちエネルギーの​寄与</div></div>
       <div class="stat-cell"><span class="sval">6.3</span><span class="sunit">%</span><div class="slabel">名目GDP比</div></div>
     </div>
     <ul class="bullets" style="margin-top:18px; gap:9px;">
       <li>2023年 約28兆円・2024年 約29兆円 ── 複数年継続</li>
-      <li>会計的積み上げのため回帰の識別問題から独立して頑健（Tier 1）</li>
+      <li>会計的積み上げの​ため回帰の​識別問題から​独立して​頑健​（Tier 1）</li>
     </ul>
-    <div class="note">出所: 総務省 産業連関表（2020年表）+ 日本銀行 CGPI 輸入物価指数。中心推計は 2015–19 平均を正常基準（上限 40.7兆円＝2020基準）。</div>
+    <div class="note">出所: 総務省 産業連関表​（2020年表）+ 日本銀行 CGPI 輸入物価指数。​中心推計は 2015–19 平均を​正常基準（上限 40.7兆円＝2020基準）。</div>
   </div>
 
   <!-- 07 Result 2: exposure + regressivity -->
   <div class="slide" id="s7">
     <div class="slide-header">
       <div class="section-tag">結果② — 柱2・柱3</div>
-      <h2>必需品は低所得層に偏在し、実効インフレは逆進的だった</h2>
+      <h2>必需品は​低所得層に​偏在し、​実効インフレは​逆進的だった</h2>
     </div>
     <div class="two-col" style="align-content:center;">
       <div class="col-box">
-        <h3>柱② 曝露（家計調査・実測）</h3>
+        <h3>柱② 曝露​（家計調査・実測）</h3>
         <ul class="bullets">
           <li>食料支出割合：Q1 31.1% vs Q5 22.9%（<span class="emp">+8.3pp</span>）</li>
-          <li>光熱・水道：Q1 11.2% vs Q5 6.4%（<span class="emp">+4.8pp</span>）</li>
-          <li>必需品＝高輸入含有＝ショックの通り道</li>
+          <li>光熱・​水道：Q1 11.2% vs Q5 6.4%（<span class="emp">+4.8pp</span>）</li>
+          <li>必需品＝高輸入含有＝ショックの​通り道</li>
         </ul>
       </div>
       <div class="col-box" style="background:#fdf3f5;">
-        <h3 style="color:var(--crimson); border-bottom-color:#e0b8c2;">柱③ 逆進性（恒等式・背骨）</h3>
+        <h3 style="color:var(--crimson); border-bottom-color:#e0b8c2;">柱③ 逆進性​（恒等式・背骨）</h3>
         <ul class="bullets">
           <li>2022年 Q1-Q5 実効インフレ差 <span class="emp" style="font-size:20px;">+2.14pp</span></li>
-          <li>2023年 +1.96pp・2024年 +2.67pp（全ショック年で逆進）</li>
-          <li>実績CPI×実支出シェアの恒等式＝識別仮定に非依存・最頑健</li>
+          <li>2023年 +1.96pp・2024年 +2.67pp（全ショック年で​逆進）</li>
+          <li>実績CPI×実支出シェアの​恒等式＝識別仮定に​非依存・​最頑健</li>
         </ul>
       </div>
     </div>
-    <div class="note">出所: 総務省 家計調査（2022年・二人以上世帯・所得五分位）。+2.14pp は実効インフレ（cost-push＋demand-pull 込み）の逆進性であり、cost-push 単独ではない（橋渡しは結果③）。</div>
+    <div class="note">出所: 総務省 家計調査​（2022年・​二人以上​世帯・所得五分位）。+2.14pp は​実効インフレ​（cost-push＋demand-pull 込み）の​逆進性であり、cost-push 単独ではない​（橋渡しは​結果③）。</div>
   </div>
 
   <!-- 08 Result 3: triangulation + identification reach -->
   <div class="slide" id="s8">
     <div class="slide-header">
-      <div class="section-tag">結果③ — 三角測量 & 識別の到達点</div>
-      <h2>供給主導性で cost-push へ橋渡し ── 清浄識別は不可能と確認</h2>
+      <div class="section-tag">結果③ — 三角測量 & 識別の​到達点</div>
+      <h2>供給​主導性で cost-push へ​橋渡し ── 清浄識別は​不可能と​確認</h2>
     </div>
     <div class="two-col" style="align-content:center;">
       <div class="col-box">
-        <h3>三角測量（Shapiro 分解）</h3>
+        <h3>三角測量​（Shapiro 分解）</h3>
         <ul class="bullets">
           <li>供給主導シェア：2021 <strong>0.41</strong>（需要）→ 2022 <strong>0.70</strong> → 2024 <strong>0.83</strong></li>
-          <li>侵攻後に供給主導へ転換＝cost-push チャネルと整合</li>
-          <li>① 高輸入含有（柱②）＋② 供給主導 → 逆進性は cost-push 由来と整合的</li>
+          <li>侵攻後に​供給主導へ​転換＝cost-push チャネルと​整合</li>
+          <li>① 高輸入含有​（柱②）＋② 供給主導 → 逆進性は cost-push 由来と​整合的</li>
         </ul>
       </div>
       <div class="col-box caution">
-        <h3>識別の到達点（正直な報告）</h3>
+        <h3>識別の​到達点​（正直な​報告）</h3>
         <ul class="bullets">
-          <li>独立な輸入物価ショックが実質1つ → exposure-robust で非有意</li>
-          <li>点推定 β=0.425 は「cost-push と整合的」止まり（因果識別ではない）</li>
-          <li>→ <strong style="color:var(--orange);">「識別」ではなく三角測量</strong>と明示</li>
+          <li>独立な​輸入物価ショックが​実質1つ → exposure-robust で​非有意</li>
+          <li>点推定 β=0.425 は「cost-push と​整合的」​止まり​（因果識別ではない）</li>
+          <li>→ <strong style="color:var(--orange);">「識別」ではなく​三角測量</strong>と明示</li>
         </ul>
       </div>
     </div>
-    <div class="note">Shapiro 分解は5仕様で 2022>2021 の供給シェア上昇が頑健。識別限界の詳細は限界の節（s12）。</div>
+    <div class="note">Shapiro 分解は5仕様で 2022>2021 の​供給シェア上昇が​頑健。​識別限界の​詳細は​限界の​節​（s12）。</div>
   </div>
 
   <!-- 09 Discussion (NEW layer) -->
   <div class="slide" id="s9">
     <div class="slide-header">
       <div class="section-tag">考察 — Discussion</div>
-      <h2>結果は何を意味するか ── 集計では隠れる分配の偏り</h2>
+      <h2>結果は​何を​意味するか ── 集計では​隠れる​分配の​偏り</h2>
     </div>
     <div class="disc-grid">
       <div class="disc-card">
         <div class="dnum">解釈①</div>
-        <div class="dtitle">隠れた逆進性</div>
-        <p>GDP集計の消費減は小さく見えても、所得階層別には負担が大きく偏る。マクロ平均は分配の偏りを隠す。</p>
+        <div class="dtitle">隠れた​逆進性</div>
+        <p>GDP集計の​消費減は​小さく​見えても、​所得階層別には​負担が​大きく​偏る。​マクロ平均は​分配の​偏りを​隠す。</p>
       </div>
       <div class="disc-card">
         <div class="dnum">解釈②</div>
-        <div class="dtitle">メカニズムの一貫性</div>
-        <p>エンゲル法則→必需品の高輸入含有→供給主導インフレ、と独立な証拠が同じ方向を指す（三角測量の収束）。</p>
+        <div class="dtitle">メカニズムの​一貫性</div>
+        <p>エンゲル法則→必需品の​高輸入含有→供給主導インフレ、と​独立な​証拠が​同じ方​向を​指す​（三角測量の​収束）。</p>
       </div>
       <div class="disc-card">
         <div class="dnum">解釈③</div>
-        <div class="dtitle">先行研究との対話</div>
-        <p>齊藤(2022)のマクロ規模感を家計レベルへ接続。Amores et al.(2025)の欧州型分析を日本データで初めて実装。</p>
+        <div class="dtitle">先行研究との​対話</div>
+        <p>齊藤(2022)の​マクロ規模感を​家計レベルへ接続。Amores et al.(2025)の​欧州型分析を​日本データで​初めて​実装。</p>
       </div>
     </div>
-    <div class="note">考察はドラフト段階。特に解釈②の「三角測量を識別とどこまで読み替えてよいか」の線引きにご意見をいただきたい。</div>
+    <div class="note">考察は​ドラフト段階。​特に​解釈②の​「三角測量を​識別と​どこまで​読み替えて​よいか」の​線引きに​ご意見を​いただきたい。</div>
   </div>
 
   <!-- 10 Prior research numeric comparison (placeholder slots) -->
   <div class="slide" id="s10">
     <div class="slide-header">
-      <div class="section-tag">先行研究との数値比較</div>
-      <h2>本研究の推計を既存研究の中に位置づける</h2>
+      <div class="section-tag">先行研究との​数値比較</div>
+      <h2>本研究の​推計を​既存研究の​中に​位置づける</h2>
     </div>
     <table class="data-table">
       <thead>
@@ -395,97 +399,97 @@
       </thead>
       <tbody>
         <tr>
-          <td class="hl">交易損失の規模</td>
+          <td class="hl">交易損失の​規模</td>
           <td class="emp">約35兆円（2022・GDP比6.3%）</td>
-          <td>内閣府SNA 交易利得・損失 2022年度 −16.4兆円（実質・2015暦年連鎖価格、2023年度年次推計）</td>
-          <td>グロス積上げ vs ネット概念の差を踏まえ同一オーダー。家計分解は本研究が追加</td>
+          <td>内閣府SNA 交易利得・損失 2022年度 −16.4兆円​（実質・2015暦年連鎖価格、2023年度年次推計）</td>
+          <td>グロス積上げ vs ネット概念の​差を​踏まえ同一オーダー。​家計分解は​本研究が​追加</td>
         </tr>
         <tr>
           <td class="hl">価格転嫁率 β</td>
-          <td>0.425（p=0.047・点推定は整合的、exposure-robust では非有意）</td>
+          <td>0.425（p=0.047・点推定は​整合的、exposure-robust では​非有意）</td>
           <td>Yagi et al.(2022) ／ Amiti et al.(2019) <span class="ph">数値要照合</span></td>
-          <td>転嫁の異質性の知見と整合</td>
+          <td>転嫁の​異質性の​知見と​整合</td>
         </tr>
         <tr>
-          <td class="hl">分配・逆進性</td>
+          <td class="hl">分配・​逆進性</td>
           <td class="emp">Q1-Q5 +2.14pp（恒等式）</td>
           <td>Amores et al.(2025) 欧州 <span class="ph">数値要照合</span></td>
-          <td>日本データでの定量化は本研究が初</td>
+          <td>日本データでの​定量化は​本研究が​初</td>
         </tr>
       </tbody>
     </table>
-    <div class="note"><span class="ph">要照合</span> ＝ 論文執筆時に docs/literature の原典から数値を確定（recall でなく一次ソース照合）。比較表はロバストネス appendix の中核。</div>
+    <div class="note"><span class="ph">要照合</span> ＝ 論文執筆時に docs/literature の​原典から​数値を​確定​（recall でなく​一次ソース照合）。​比較表は​ロバストネス appendix の​中核。</div>
   </div>
 
   <!-- 11 Robustness -->
   <div class="slide" id="s11">
     <div class="slide-header">
       <div class="section-tag">ロバストネス</div>
-      <h2>背骨の結果は仕様変更に対して頑健</h2>
+      <h2>背骨の​結果は​仕様変更に​対して​頑健</h2>
     </div>
     <ul class="bullets" style="flex:1; align-content:center; justify-content:center; gap:16px;">
-      <li><strong style="color:var(--navy);">逆進性（+2.14pp）</strong>：実績CPIと実支出シェアの恒等式のため、回帰の識別仮定にそもそも依存しない。世帯universe（二人以上）固定でも不変。</li>
-      <li><strong style="color:var(--navy);">供給主導性（Shapiro）</strong>：{VAR, AR}×{3, 12 lag}＋primary の5仕様で 2022>2021 の上昇が頑健。near-zero 由来の汚染は5.5%のみ。</li>
-      <li><strong style="color:var(--navy);">交易損失（35兆）</strong>：基準年の取り方で中心35兆〜上限40.7兆。オーダーは安定。</li>
-      <li><strong style="color:var(--orange);">非有意性（β）</strong>：これも頑健 ── 期間延長でも救えない。原因は設定に内在（独立ショックが実質1つ）。</li>
+      <li><strong style="color:var(--navy);">逆進性​（+2.14pp）</strong>：実績CPIと​実支出シェアの​恒等式の​ため、​回帰の​識別仮定に​そもそも​依存しない。​世帯universe（二人以上）​固定でも​不変。</li>
+      <li><strong style="color:var(--navy);">供給​主導性​（Shapiro）</strong>：{VAR, AR}×{3, 12 lag}＋primary の5仕様で 2022>2021 の​上昇が​頑健。near-zero 由来の​汚染は5.5%のみ。</li>
+      <li><strong style="color:var(--navy);">交易損失​（35兆）</strong>：基準年の​取り方で​中心35兆〜上限40.7兆。​オーダーは​安定。</li>
+      <li><strong style="color:var(--orange);">非​有意性​（β）</strong>：これも​頑健 ── 期間延長でも​救えない。​原因は​設定に​内在​（独立ショックが​実質1つ）。</li>
     </ul>
-    <div class="note">感度分析の図表（δ=0.4〜1.0 の方向不変性等）は appendix。本スライドは結論レベルのみ。</div>
+    <div class="note">感度分析の​図表​（δ=0.4〜1.0 の​方​向​不変性等）は appendix。​本スライドは​結論​レベルのみ。</div>
   </div>
 
   <!-- 12 Limitations (formalized) -->
   <div class="slide" id="s12">
     <div class="slide-header">
       <div class="section-tag">限界 — Limitations</div>
-      <h2>何が言えて、何が言えないかを明確に切り分ける</h2>
+      <h2>何が​言えて、​何が​言えないかを​明確に​切り分ける</h2>
     </div>
     <div class="two-col" style="align-content:center;">
       <div class="col-box caution">
-        <h3>識別の限界</h3>
+        <h3>識別の​限界</h3>
         <ul class="bullets">
-          <li>cost-push の因果的単離は単一マクロ事象では不可能（exposure-robust で非有意）</li>
-          <li>五分位別 group-specific 分解は inconclusive（年次×五分位の粗さで消費応答を解像できず）</li>
-          <li>年次相関コントラストは財/サービス分解で相当部分が構成差由来と判明（within-goods では IC 勾配が消失・DEC-022）＝交絡の所在を定量化</li>
+          <li>cost-push の​因果的単離は​単一マクロ事象では​不可能​（exposure-robust で​非有意）</li>
+          <li>五分位別 group-specific 分解は inconclusive（年次×五分位の​粗さで​消費応答を​解像できず）</li>
+          <li>年次相関コントラストは​財/サービス分解で​相当部​分が​構成差由来と​判明​（within-goods では IC 勾配が​消失・DEC-022）​＝交絡の​所在を​定量化</li>
         </ul>
       </div>
       <div class="col-box caution">
-        <h3>モデルの限界</h3>
+        <h3>モデルの​限界</h3>
         <ul class="bullets">
-          <li>Phase 3 IOモデルは実績CPI比で過剰伝播（overshoot）</li>
-          <li>政策削減率が産業連関表の構築前提に依存 → 絶対値は結論にせず符号レベルのみ</li>
-          <li>交易損失は固定数量（Laspeyres）近似 → 数量データ取得後に Paasche/Fisher 化が課題</li>
+          <li>Phase 3 IOモデルは​実績CPI比で​過剰伝播​（overshoot）</li>
+          <li>政策削減率が​産業連関表の​構築前提に​依存 → 絶対値は​結論に​せず符号レベルのみ</li>
+          <li>交易損失は​固定数量​（Laspeyres）近似 → 数量データ取得後に Paasche/Fisher 化が​課題</li>
         </ul>
       </div>
     </div>
-    <div class="note">これらの限界の提示自体が方法論的貢献（貢献③）。失敗ではなく到達点の明確化として位置づける。</div>
+    <div class="note">これらの​限界の​提示自体が​方​法論的貢献​（貢献③）。​失敗ではなく​到達点の​明確化と​して​位置づける。</div>
   </div>
 
   <!-- 13 Open questions (feature, not bug) -->
   <div class="slide" id="s13">
     <div class="slide-header">
       <div class="section-tag">未解決点 — フィードバック募集</div>
-      <h2>皆さんのご意見をいただきたい3つの論点</h2>
+      <h2>皆さんの​ご意見を​いただきたい3つの​論点</h2>
     </div>
     <ul class="openq-list">
-      <li><span class="qmark">?</span><span class="qt"><strong>三角測量と識別の線引き</strong>：複数の整合的証拠で cost-push へ橋渡しする論法を、論文でどこまで強く主張してよいか。</span></li>
-      <li><span class="qmark">?</span><span class="qt"><strong>恒等式1本への集約</strong>：heterogeneity の核を +2.14pp の恒等式に集約する構成は、説得力として十分か。補強すべき副次分析は。</span></li>
-      <li><span class="qmark">?</span><span class="qt"><strong>政策含意の出し方</strong>：絶対値を出さず符号レベルに留める方針で、政策的インプリケーションは説得的に書けるか。</span></li>
+      <li><span class="qmark">?</span><span class="qt"><strong>三角測量と​識別の​線引き</strong>：複数の​整合的証拠で cost-push へ​橋渡しする​論法を、​論文で​どこまで​強く​主張して​よいか。</span></li>
+      <li><span class="qmark">?</span><span class="qt"><strong>恒等式1本への​集約</strong>：heterogeneity の核を +2.14pp の​恒等式に​集約する​構成は、​説得力と​して​十分か。​補強すべき副次分析は。</span></li>
+      <li><span class="qmark">?</span><span class="qt"><strong>政策含意の​出し方</strong>：絶対値を​出さず​符号レベルに​留める​方​針で、​政策的インプリケーションは​説得的に​書けるか。</span></li>
     </ul>
-    <div class="note">これらは欠陥ではなく、研究の誠実さの表れとして晒している。建設的なご批判を歓迎します。</div>
+    <div class="note">これらは​欠陥ではなく、​研究の​誠実さの​表れと​して​晒している。​建設的な​ご批判を​歓迎します。</div>
   </div>
 
   <!-- 14 Tentative conclusion + next -->
   <div class="slide" id="s14">
     <div class="slide-header">
-      <div class="section-tag">結論の方向性（暫定）& 今後</div>
-      <h2>誠実かつ防御可能な形で、問いに答える</h2>
+      <div class="section-tag">結論の​方​向性​（暫定）& 今後</div>
+      <h2>誠実かつ​防御可能な​形で、​問いに​答える</h2>
     </div>
-    <div class="key-message" style="font-size:17px;">
-      物価高騰の負担は<strong style="color:var(--crimson);">低所得層ほど重い（逆進的）</strong>＝恒等式で硬く立証。cost-push の清浄単離は不可能と判明し、<strong style="color:var(--navy);">その限界の提示自体を方法論的貢献</strong>に転化する。
+    <div class="key-message" style="font-size:18px;">
+      物価高騰の​負担は<strong style="color:var(--crimson);">低所得層ほど​重い​（逆進的）</strong>＝恒等式で​硬く​立証。cost-push の​清浄単離は​不可能と​判明し、<strong style="color:var(--navy);">その​限界の​提示自体を​方法論的貢献</strong>に​転化する。
     </div>
     <ul class="bullets" style="gap:10px;">
-      <li>第3回のフィードバックを反映し、考察・限界・政策含意の記述を確定させる</li>
-      <li>先行研究比較表の数値を一次ソースで確定（ロバストネス appendix）</li>
-      <li>第4回（2027年1月）で結論を確定 → 論文提出</li>
+      <li>第3回の​フィードバックを​反映し、​考察・限界・政策含意の​記述を​確定させる</li>
+      <li>先行研究比較表の​数値を​一次ソースで​確定​（ロバストネス appendix）</li>
+      <li>第4回（2027年1月）で​結論を​確定 → 論文提出</li>
     </ul>
     <div class="note">最終提出目標：2027年1月末。</div>
   </div>
@@ -508,14 +512,14 @@
       <p><strong>Thorbecke, W. (2024)</strong>. Investigating Japan's Machinery and Equipment Exports. <em>RIETI Discussion Paper</em> 24-E-033.</p>
       <p><strong>Miwa, T. (2024)</strong>. Issues Surrounding Japan's Balance of Payments. <em>Nomura Foundation Conference Paper</em>.</p>
       <p><strong>Yagi, M. et al. (2022)</strong>. Cost-push inflation and pass-through heterogeneity. <em>Bank of Japan Working Paper</em>.</p>
-      <p><strong>齊藤誠（2022）</strong>「交易条件の悪化と賃上げ」<em>日本経済研究センター コラム</em>.</p>
+      <p><strong>齊藤誠​（2022）</strong>「交易条件の​悪化と​賃上げ」<em>日本経済研究センター コラム</em>.</p>
     </div>
   </div>
 
 </div>
 
 <div id="counter"></div>
-<div id="hint">← → キーまたはタップで移動</div>
+<div id="hint">← → キーまたは​タップで​移動</div>
 
 <script>
   const slides = document.querySelectorAll('.slide');
