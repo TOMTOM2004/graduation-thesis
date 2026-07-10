@@ -1,5 +1,5 @@
 # Handoff — graduation-thesis 卒業論文（案B・論文執筆フェーズ）
-_Last updated: 2026-07-07 20:44 / session: 識別戦略 DEC-024（GPSS share外生位置づけ）→ロバストネスプラン ITEM-001 化→ITEM 方式移行→handoff_
+_Last updated: 2026-07-11 / session: 第2回デッキ p1/p2 グラフ修正（横軸・国名左揃え/列入替/点・回帰線の視認性）→ ITEM-021 起票（柱②多年度化＋五分位DiD検討）→ handoff_
 
 ## 📇 案件 index（自動生成・SSOT = `tasks/items/*.md` / 再生成 = `item_indexer.py`・手書き禁止）
 <!-- item_indexer.py が tasks/items/INDEX.md を生成。下表はその転記
@@ -19,6 +19,7 @@ _Last updated: 2026-07-07 20:44 / session: 識別戦略 DEC-024（GPSS share外�
 ## 🎯 Next actions（優先順・直近の作業ポインタ。詳細は各 ITEM ファイル）
 - **ITEM-002**: `paper/03a-identification-strategy.md` 骨子6段落（DEC-024 準拠）のユーザー合意 → 合意後に本文ドラフト＋先行研究章の shift-share 2経路導入。⚠数値は暦年（DEC-023）・thesis-writing スキル必須
 - **ITEM-001**: プラン承認済み・実装は後日（ユーザー指示 2026-07-07）。着手宣言があってから
+- **ITEM-021**: 第一アクション＝家計調査の年次公表性を e-Stat で確認（2023-2025 の五分位別支出表が入手可能か・2022と費目接続可か）。可なら スライド7を多年度化。並行して五分位DiDの証明可能性を DEC-013/015/024 との整合で検討。⚠ ユーザーが「今すぐ e-Stat 調査着手するか」保留中
 - 受動待ち（外部条件）: なし
 
 ## 📥 Inbox（未triage）
