@@ -17,6 +17,7 @@
     --text-mid:  #3a4a5c;
     --text-light:#5f7088;  /* 4.5:1+ on white/muted (audit fix) */
     --orange:    #b85c1a;
+    --orange-deep: #c2540a;  /* 散布図の回帰直線用・濃いオレンジ（ユーザー要望 2026-07-10） */
     --crimson:   #b03050;
     --green:     #2e7d54;  /* 交易利得バー・散布図の利得点 */
     --white:     #ffffff;
@@ -367,7 +368,7 @@
   .slide.run .rank-note { opacity: 1; }
   .rank-axis { display: grid; grid-template-columns: 124px 1fr; gap: 8px; margin-top: 5px; }
   .rank-axis .ax { position: relative; height: 15px; font-size: 12px; color: var(--text-light); }
-  .rank-axis .ax span { position: absolute; transform: translateX(-50%); }
+  .rank-axis .ax span { position: absolute; }  /* 目盛りは左揃え（左端を tick 位置に合わせる・ユーザー要望 2026-07-10） */
 
   /* ── animated scatter (p2, PNG置換) ── */
   .scatter-svg { width: 100%; height: auto; max-height: 408px; }
@@ -379,11 +380,11 @@
   .scatter-svg .pt { transform: scale(0); transform-origin: center; transform-box: fill-box;
                      transition: transform .45s cubic-bezier(.34,1.56,.64,1) var(--d, 0s); }
   .scatter-svg .frag.on .pt { transform: scale(1); }
-  .scatter-svg .fitline { fill: none; stroke: var(--orange); stroke-width: 2.4;
+  .scatter-svg .fitline { fill: none; stroke: var(--orange-deep); stroke-width: 2.8;
                           stroke-dasharray: var(--len); stroke-dashoffset: var(--len);
                           transition: stroke-dashoffset .9s ease .15s; }
   .scatter-svg .frag.on .fitline { stroke-dashoffset: 0; }
-  .scatter-svg .fitlab { font-size: 14px; font-weight: 700; fill: var(--orange); }
+  .scatter-svg .fitlab { font-size: 14px; font-weight: 700; fill: var(--orange-deep); }
   .scatter-svg .clab { font-size: 13px; fill: var(--text-mid); opacity: 0; transition: opacity .4s ease var(--d, 0s);
                        stroke: #fff; stroke-width: 3px; paint-order: stroke; }
   .scatter-svg .frag.on .clab { opacity: 1; }
@@ -791,17 +792,25 @@
     if (!wrap) return;
     const min = -15.5, max = 10.6, range = max - min;
     const zero = (0 - min) / range * 100;
-    const half = Math.ceil(RANK.length / 2);
-    [RANK.slice(0, half), RANK.slice(half)].forEach((seg, ci) => {
+    const N = RANK.length;
+    const half = Math.ceil(N / 2);
+    // 左列=低順位（24〜46位）・右列=高順位（1〜23位）に入替（ユーザー要望 2026-07-10）
+    // rankBase = その列の先頭が全体で何位から始まるか（rank = rankBase + i + 1）
+    const columns = [
+      { seg: RANK.slice(half), rankBase: half },  // 左: 低順位
+      { seg: RANK.slice(0, half), rankBase: 0 }   // 右: 高順位
+    ];
+    columns.forEach(({ seg, rankBase }) => {
       const col = document.createElement('div');
       col.className = 'rank-col';
       seg.forEach((r, i) => {
-        const rank = ci * half + i + 1;
+        const rank = rankBase + i + 1;
         const isJp = r.iso === 'JPN';
         const w = Math.abs(r.loss) / range * 100;
         const cls = isJp ? 'jpbar' : (r.loss >= 0 ? 'loss' : 'gain');
         const pos = r.loss >= 0 ? `left:${zero}%` : `right:${(100 - zero).toFixed(3)}%`;
-        const d = (0.35 + rank * 0.028).toFixed(2);
+        // アニメは低順位（大 rank）を先に→高順位（1位）を最後に出す（低→高・ユーザー要望 2026-07-10）
+        const d = (0.35 + (N - rank) * 0.028).toFixed(2);
         const row = document.createElement('div');
         row.className = 'rank-row' + (isJp ? ' jp' : '');
         row.innerHTML =
@@ -860,7 +869,8 @@
       const c = el('circle', {
         class:'pt', cx:X(r.eimp), cy:Y(r.loss), r: isJp ? 8 : 5,
         fill: isJp ? '#1a2e4a' : (r.loss >= 0 ? '#b03050' : '#2e7d54'),  // = :root の --navy / --crimson / --green
-        'fill-opacity': isJp ? 1 : 0.72, stroke:'#fff', 'stroke-width': isJp ? 1.4 : 0.7
+        // 点を濃く（不透明度1）＋白枠を太く＝濃色でも隣接点と分離（ユーザー要望 2026-07-10）
+        'fill-opacity': 1, stroke:'#fff', 'stroke-width': isJp ? 1.6 : 1.4
       });
       c.style.setProperty('--d', (i * 0.03) + 's');
       if (isJp) { jpCircle = c; return; }
