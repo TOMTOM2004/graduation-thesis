@@ -6,7 +6,7 @@ priority: P2
 source: self
 context: personal
 created: 2026-07-10
-updated: 2026-07-10
+updated: 2026-07-24
 links: [slides/20260626-seminar2-results.html, docs/decision-log.md]
 ---
 
@@ -44,6 +44,7 @@ links: [slides/20260626-seminar2-results.html, docs/decision-log.md]
    - アウトプット: 採否判断の前に「DiD で何が言えて何が言えないか」を1〜2段落で整理 → 採用なら証明の仕方(スライド/論文の logic)へ反映、不採用なら却下理由を下記 Decision log へ。
 
 ## Decision log
-<!-- 判断が下されたら都度追記。現時点は未判断。 -->
-- (未判断) 五分位DiD を証明の仕方に採用するか。DEC-013/015(識別限界)・DEC-024(exposure design)との整合が採否の鍵。
+- (2026-07-24) **手順1 前提ゲート通過**: 家計調査年報 2023○/2024○/2025○(2026-02-06公表)。表ID 0002070005 単一DB・分類断絶なし(10大費目レベル)。詳細 `docs/data-sources/kakei-chosa-quintile-annual-availability.md`。付帯: 2025年値はエネ補助金間欠実施の「政策込み」注記必須。
+- (2026-07-24) **手順3 DiD 実証調査完了**(branch worktree-item021-quintile-did): 40費目×五分位×2015-2024 で (A)価格伝播 event-study と (B)シェア triple-diff を実施。①現状結果を覆さない ②識別は改善されず、独立設計での失敗により DEC-015 の識別限界貢献がむしろ強化 ③因果推定量としての DiD は信頼性で現行に劣る(β_2022≈0・プレ期プラセボ汚染・IO由来IC がエネルギー小売の輸入燃料チャネルを捕捉せず)。詳細 `docs/quintile-did-investigation.md`、コード `src/analysis/quintile_did.py`、出力 `data/processed/did/`。
+- (未判断・ユーザー承認待ち) 推奨 = DiD は回帰係数として不採用、記述的三重コントラスト(曝露×分位×時点)としてスライド7多年度化に統合。副産物として「2設計での識別失敗」を論文の識別限界節に追記。
 - (記録) ITEM番号は個人系列(現状007まで)の次番ではなくユーザー明示指定の021で採番。
