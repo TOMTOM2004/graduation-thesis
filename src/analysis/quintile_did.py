@@ -247,6 +247,72 @@ def share_event_study(panel: pd.DataFrame) -> tuple[pd.DataFrame, dict]:
     return coefs, pre
 
 
+def slide7_multiyear_shares() -> pd.DataFrame:
+    """
+    スライド7多年度化用: 10大費目 × 五分位 × 年（2015-2025）の支出シェア。
+    2015_2025 キャッシュ（e-Stat 表 0002070005 再取得）を使用。DEC-021 事故防止のため
+    スライド転記はこの生成CSVのみを正とする（手打ち禁止）。
+    """
+    hh_file = DATA_RAW / "household-survey" / "household_quintile_2015_2025.csv"
+    hh = pd.read_csv(hh_file)
+    hh = hh[hh["cat02_code"] == HOUSEHOLD_TYPE].copy()
+    hh["year"] = hh["time_code"].astype(str).str[:4].astype(int)
+
+    major = {
+        60: "食料", 102: "住居", 107: "光熱・水道", 112: "家具・家事用品",
+        122: "被服及び履物", 140: "保健医療", 145: "交通・通信",
+        152: "教育", 156: "教養娯楽", 165: "その他の消費支出",
+    }
+    total = (
+        hh[hh["cat01_code"] == TOTAL_CONS_CODE]
+        .set_index(["year", "cat03_code"])["value"]
+        .rename("total_cons")
+    )
+    rows = []
+    for code, name in major.items():
+        sub = hh[hh["cat01_code"] == code].set_index(["year", "cat03_code"])["value"]
+        df = pd.concat([sub.rename("spend"), total], axis=1, join="inner").reset_index()
+        df["category"] = name
+        df["share_pct"] = (df["spend"] / df["total_cons"] * 100).round(1)
+        rows.append(df)
+    out = pd.concat(rows, ignore_index=True).rename(columns={"cat03_code": "quintile"})
+    out = out[out["quintile"].between(1, 5)][
+        ["year", "quintile", "category", "share_pct"]
+    ].sort_values(["category", "year", "quintile"])
+
+    # golden 検証: 2022 年既出値（スライド7・DEC-021 転記規律）
+    g = out.set_index(["year", "quintile", "category"])["share_pct"]
+    golden = {
+        (2022, 1, "食料"): 31.1, (2022, 5, "食料"): 22.9,
+        (2022, 1, "光熱・水道"): 11.2, (2022, 5, "光熱・水道"): 6.4,
+    }
+    for key, want in golden.items():
+        got = g.loc[key]
+        if abs(got - want) > 0.05:
+            raise AssertionError(f"golden 不一致 {key}: got {got}, want {want}")
+    print("golden 2022 一致 (食料/光熱・水道 × Q1/Q5)")
+
+    OUT_DIR.mkdir(parents=True, exist_ok=True)
+    out.to_csv(OUT_DIR / "slide7_multiyear_shares.csv", index=False)
+
+    # Q1/Q5 と差の転記用テーブル（差は非丸め値から算出して1桁丸め。丸め後同士の
+    # 引き算だと 2022 食料 31.1−22.9=8.2 となり既出 +8.3pp と食い違うため）
+    raw = pd.concat(rows, ignore_index=True).rename(columns={"cat03_code": "quintile"})
+    raw["share_raw"] = raw["spend"] / raw["total_cons"] * 100
+    piv = raw[raw["quintile"].isin([1, 5])].pivot_table(
+        index=["category", "year"], columns="quintile", values="share_raw"
+    )
+    gap = pd.DataFrame(
+        {
+            "q1_pct": piv[1].round(1),
+            "q5_pct": piv[5].round(1),
+            "gap_pp": (piv[1] - piv[5]).round(1),
+        }
+    ).reset_index()
+    gap.to_csv(OUT_DIR / "slide7_gap_table.csv", index=False)
+    return out
+
+
 def main() -> None:
     OUT_DIR.mkdir(parents=True, exist_ok=True)
     panel = build_panel()
