@@ -415,7 +415,7 @@
       <div class="tri-box frag" data-frag="p2">
         <div class="tstep">Phase 2</div>
         <div class="tname">家計への​帰着</div>
-        <p>家計調査 × 所得五分位。​実績CPIと​実支出シェアの​掛け算・足し算だけ​（恒等式）で​逆進性を​分解​（背骨）。​回帰に​よる​コストプッシュ単離は​到達点を​明示。</p>
+        <p>家計調査 × 所得五分位。​実績CPIと​支出シェア​（2019年固定）の​掛け算・足し算だけ​（恒等式）で​逆進性を​分解​（背骨）。​回帰に​よる​コストプッシュ単離は​到達点を​明示。</p>
       </div>
       <div class="tri-arrow frag" data-frag="p3"><svg class="flow-arrow" style="--ad:0.35s" viewBox="0 0 90 30" width="72" height="24" aria-hidden="true"><path class="fa-shaft" d="M4 15 H60"/><path class="fa-flow" d="M4 15 H60"/><path class="fa-head" d="M58 4.5 L84 15 L58 25.5 Z"/></svg></div>
       <div class="tri-box frag" data-frag="p3">
@@ -489,7 +489,7 @@
         <ul class="bullets">
           <li>2022年 Q1-Q5 実効インフレ差 <span class="emp" style="font-size:20px;" data-count="2.01" data-decimals="2" data-prefix="+" data-suffix="pp" data-duration="1100">+2.01pp</span></li>
           <li>2023年 +2.06pp・2024年 +2.45pp・2025年 +3.36pp（全ショック年で​逆進・差は​拡大）</li>
-          <li>実績CPI×実支出シェアの​恒等式＝識別仮定に​非依存・​最頑健</li>
+          <li>実績CPI×2019年固定シェアの​恒等式＝識別仮定に​非依存・​最頑健</li>
         </ul>
       </div>
     </div>
@@ -548,7 +548,7 @@
         <div class="qgap">Q1−Q5 <span data-count="3.36" data-decimals="2" data-prefix="+" data-suffix="pp" data-delay="750" data-duration="800">+3.36pp</span></div>
       </div>
     </div>
-    <div class="note">縦軸: 五分位別の​実効インフレ率​（2015–19年平均基準からの​累積・%・​暦年）。​赤＝Q1（低所得層）。​実績CPI×実支出シェアの​恒等式に​よる​算出で、​識別仮定に​非依存。2025年は​電気・ガス補助の​間欠実施を​含む値。​出所: 総務省 家計調査・消費者物価指数より​筆者作成。</div>
+    <div class="note">縦軸: 五分位別の​実効インフレ率​（2015–19年平均基準からの​累積・%・​暦年）。​赤＝Q1（低所得層）。​実績CPI×支出シェア​（2019年＝コロナ前で​固定）の​恒等式に​よる​算出で、​識別仮定に​非依存。2025年は​電気・ガス補助の​間欠実施を​含む値。​出所: 総務省 家計調査・消費者物価指数より​筆者作成。</div>
   </div>
 
   <!-- 07c Concept: what triangulation is -->
@@ -707,7 +707,7 @@
       <h2>背骨の​結果は​仕様変更に​対して​頑健</h2>
     </div>
     <ul class="bullets" style="flex:1; align-content:center; justify-content:center; gap:16px;">
-      <li class="frag" data-frag="b12"><strong class="frag emph" data-frag="em">逆進性​（+2.01pp）</strong>：実績CPIと​実支出シェアの​恒等式の​ため、​回帰の​識別仮定に​そもそも​依存しない。​対象世帯の​範囲​（二人以上​世帯）を​固定しても​不変。</li>
+      <li class="frag" data-frag="b12"><strong class="frag emph" data-frag="em">逆進性​（+2.01pp）</strong>：実績CPIと​2019年固定シェアの​恒等式の​ため、​回帰の​識別仮定に​そもそも​依存しない。​対象世帯の​範囲​（二人以上​世帯）を​固定しても​不変。</li>
       <li class="frag" data-frag="b12"><strong class="frag emph" data-frag="em">供給​主導性​（Shapiro）</strong>：残差の​取り方を​変えた5通りの​仕様すべてで 2022>2021 の​上昇が​保たれる。</li>
       <li class="frag"><strong class="frag emph" data-frag="em">交易損失​（35兆）</strong>：基準年の​取り方で​中心35兆〜上限40.7兆。​オーダーは​安定。</li>
       <li class="frag"><strong class="frag emph emph-orange" data-frag="em">非​有意性​（β）</strong>：これも​頑健 ── 期間延長でも​救えない。​原因は​設定に​内在​（独立ショックが​実質1つ）。</li>
