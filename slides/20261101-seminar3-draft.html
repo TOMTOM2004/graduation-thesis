@@ -329,7 +329,7 @@
       <h2>計画 → 結果 → 今回は​論文全体を​通しで​お見せする</h2>
     </div>
     <div class="key-message rise">
-      第1回で​計画を、​第2回で​第一次の​結果を​発表した。​今回は<strong>論文の​論証全体を​通しで​提示</strong>し、​特に<strong>考察と​限界</strong>に​ついて​皆さんの​フィードバックを​いただきたい。
+      第1回で​計画を、​第2回で​第一次の​結果を​発表した。​今回は<strong>論文の​論証全体を​通しで​提示</strong>し、​特に<strong>考察と​限界</strong>に​ついて​皆さんの​フィードバックを​いただきたい。​前回いただいた<strong>DiD の​ご指摘への​回答</strong>も​用意した。
     </div>
     <div class="roadmap">
       <div class="rm-step done frag" data-frag="r1">
@@ -604,6 +604,40 @@
       </div>
     </div>
     <div class="note">供給主導シェア＝物価上昇の​うち原価側​（供給）​要因が​主導した​割合​（Shapiro 2022 の​手法）。5仕様で 2022>2021 の​上昇が​頑健。​識別限界の​詳細は​限界の​節。</div>
+  </div>
+
+  <!-- 08b Answer to professor's DiD suggestion (2nd seminar) -->
+  <div class="slide" id="s8b">
+    <div class="slide-header">
+      <div class="section-tag">前回ご指摘への​回答 — DiD の検証</div>
+      <h2>DiD も​検証した ── 識別は​改善せず、​識別限界の​結論を​独立に​補強</h2>
+    </div>
+    <div class="key-message rise">
+      第2回で​「曝露と​五分位の​データで<strong>差の​差分法​（DiD）</strong>が​組めるのでは」と​ご指摘を​いただいた。​実装して​検証した​結果を​報告する。
+    </div>
+    <div class="two-col">
+      <div class="col-box frag" data-frag="g1">
+        <h3>検証の​設計</h3>
+        <ul class="bullets">
+          <li>曝露＝費目別の​輸入含有率​（産業連関表・直接＋間接）</li>
+          <li>40費目 × 五分位 × 2015–24年の​パネルを​構築</li>
+          <li>価格への​伝播と、Q1 vs Q5 の​支出シェア反応​（三重差）を​推定</li>
+        </ul>
+      </div>
+      <div class="col-box caution frag" data-frag="g2">
+        <h3>結果​（正直な​報告）</h3>
+        <ul class="bullets">
+          <li>最大ショック年2022の​係数は​ほぼゼロ ── 電気・ガスの​急騰を​輸入含有率が​捉えない</li>
+          <li>ショック前の​期間にも​同規模の​係数＝プラセボ基準を​満たさない</li>
+          <li>時系列と​独立な​第2の​設計でも​清浄識別に​失敗</li>
+        </ul>
+      </div>
+    </div>
+    <div class="conv-concl frag" data-frag="c" style="margin-top:22px;">
+      <div class="cc-label">採用のかたち</div>
+      <div class="cc-main">係数ではなく​「曝露 × 分位 × 時点」の​記述形式で​採用 ── 柱②を2025年まで​多年度化</div>
+    </div>
+    <div class="note">DiD＝差の​差分法​（処置群と​対照群の​前後変化の​差で​効果を​測る​設計）。​検証の​詳細は docs/quintile-did-investigation.md。</div>
   </div>
 
   <!-- 09 Discussion (NEW layer) -->
