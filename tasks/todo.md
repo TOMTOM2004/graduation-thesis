@@ -1,5 +1,5 @@
 # Handoff — graduation-thesis 卒業論文（案B・論文執筆フェーズ）
-_Last updated: 2026-07-11 / session: 第2回デッキ p1/p2 グラフ修正（横軸・国名左揃え/列入替/点・回帰線の視認性）→ ITEM-021 起票（柱②多年度化＋五分位DiD検討）→ handoff_
+_Last updated: 2026-07-25 03:10 / session: ITEM-021 一気通貫（e-Statゲート通過→五分位DiD実証調査→柱②多年度化→第3回s8b回答スライド新設→五分位チャート棒高クランプバグ修正→DEC-025 実質所得保留）→ handoff_
 
 ## 📇 案件 index（自動生成・SSOT = `tasks/items/*.md` / 再生成 = `item_indexer.py`・手書き禁止）
 <!-- item_indexer.py が tasks/items/INDEX.md を生成。下表はその転記
@@ -8,7 +8,7 @@ _Last updated: 2026-07-11 / session: 第2回デッキ p1/p2 グラフ修正（�
 | ID | 概要 | priority | status | updated |
 |---|---|---|---|---|
 | ITEM-002 | 論文執筆 — 章ドラフト進行（先行研究・方法論・結果・考察・結論） | P1 | in_progress | 2026-07-07 |
-| ITEM-021 | 柱②曝露(スライド7)の多年度化(2022→2025)＋五分位DiDの証明可能性検討（ゼミ指摘） | P2 | todo | 2026-07-10 |
+| ITEM-021 | 柱②曝露(スライド7)の多年度化(2022→2025)＋五分位DiDの証明可能性検討（ゼミ指摘） | P2 | in_progress | 2026-07-25 |
 | ITEM-001 | 識別限界の鋭利化 — 追加ロバストネス（goods×年FE / exposure-robust推論 / sensemakr任意） | P1 | todo | 2026-07-07 |
 | ITEM-004 | 再現性の残穴 — shapiro e-Statキャッシュ化・GDP vintage確定・stale processed削除判断 | P2 | todo | 2026-07-07 |
 | ITEM-003 | ハンドオフ§8 残り — 現代 event study/DID（小麦補強）③・財政乗数の状態依存④ | P3 | todo | 2026-07-07 |
@@ -19,10 +19,12 @@ _Last updated: 2026-07-11 / session: 第2回デッキ p1/p2 グラフ修正（�
 ## 🎯 Next actions（優先順・直近の作業ポインタ。詳細は各 ITEM ファイル）
 - **ITEM-002**: `paper/03a-identification-strategy.md` 骨子6段落（DEC-024 準拠）のユーザー合意 → 合意後に本文ドラフト＋先行研究章の shift-share 2経路導入。⚠数値は暦年（DEC-023）・thesis-writing スキル必須
 - **ITEM-001**: プラン承認済み・実装は後日（ユーザー指示 2026-07-07）。着手宣言があってから
-- **ITEM-021**: 第一アクション＝家計調査の年次公表性を e-Stat で確認（2023-2025 の五分位別支出表が入手可能か・2022と費目接続可か）。可なら スライド7を多年度化。並行して五分位DiDの証明可能性を DEC-013/015/024 との整合で検討。⚠ ユーザーが「今すぐ e-Stat 調査着手するか」保留中
+- **ITEM-021**: 残り1件のみ＝**論文の識別限界節に「時系列＋クロスセクション曝露の2設計での識別失敗」1段落追記**（thesis-writing スキル経由・素材= `docs/quintile-did-investigation.md`）。他は完遂: ゲート通過(2025年報○)・DiD実証(採否=記述形式で採用/係数不採用)・柱②多年度化・s8b回答スライド・チャートバグ修正・DEC-025
 - 受動待ち（外部条件）: なし
 
 ## 📥 Inbox（未triage）
+- **[繰越] lesson review 期限超過**: 候補32件(hot_to_warm 5 / chromadb_to_warm 27)・前回2026-07-13。次回任意セッション冒頭で「lesson review」起動（承認ゲート伴うため handoff 時に skip した 2026-07-25）
+- **[繰越] 孤児 pending の一括回収**: `~/.claude/state/pending_{lessons,corrections}/` に他セッション分 38+14件（14日TTL内）。次回 claude-brain セッションで lesson-recorder sweep
 - claude-brain: 情報の引き出し方の調査とアップデート＋RAG先行研究調査（Slack #todo より _2026-06-23_）→ **本 repo でなく claude-brain 側の案件**。handoff 時に gh issue 化を試みたが permission 拒否（2026-07-07）＝**次回 claude-brain セッションで ITEM 化して本行を消す**（ITEM-016 retrieval gate と統合可否も判断）
 
 ## 🗂️ 運用・監視（案件でなく反復運用・トリガー型）
@@ -42,10 +44,12 @@ _Last updated: 2026-07-11 / session: 第2回デッキ p1/p2 グラフ修正（�
 - [trap] EnterWorktree は origin/main 起点＝ローカル main の未 push マージを含まない → `git reset --hard main` で追随してから作業する
 - [trap] budoux 再適用で中黒 ZWSP の手動挿入2件（第3回デッキ）が消える → 再挿入が必要
 - [mistake] スライド・docs の数値を記憶や旧ファイルから転記しない（DEC-021 の事故原因）。必ず生成 CSV / decision-log の正準値から
+- [trap] データ駆動チャートの検証は CSS 宣言値の照合で止めない — flex 内ラベル同居で棒の実効上限（~82%）を超えると同長に潰れる。getBoundingClientRect 実測で px/データ比の一定性を確認（2026-07-24 s7b で実害・lesson 記録済）
+- [trap] 家計調査「実収入」は移転込み（2020年は給付金で全分位+11%）かつ勤労者世帯のみ収録 — 賃金ストーリーや全体母集団の実質所得検証には使えない（DEC-025）
 
 ## 📂 Key files
 - `paper/outline.md`（章割り・状態）/ `paper/03a-identification-strategy.md`（識別節骨子・合意待ち）
-- `docs/decision-log.md`（DEC-001〜024・数値と判断の正）/ `docs/research-design.md`（識別の到達点と限界）
+- `docs/decision-log.md`（DEC-001〜025・数値と判断の正）/ `docs/research-design.md`（識別の到達点と限界）
 - `.claude/skills/thesis-writing/SKILL.md`（執筆規律・golden 表）
 - `src/analysis/cost_push_panel.py`（β回帰）/ `tasks/_a4_akm.R`（AKM SE）/ `docs/literature/INDEX.md`（P001〜P087）
 

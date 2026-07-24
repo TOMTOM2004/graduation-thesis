@@ -1,12 +1,12 @@
 ---
 id: ITEM-021
 title: 柱②曝露(スライド7)の多年度化(2022→2025) + 五分位DiDの証明可能性検討(ゼミ指摘)
-status: doing
+status: in_progress
 priority: P2
 source: self
 context: personal
 created: 2026-07-10
-updated: 2026-07-24
+updated: 2026-07-25
 links: [slides/20260626-seminar2-results.html, docs/decision-log.md]
 ---
 
@@ -48,5 +48,9 @@ links: [slides/20260626-seminar2-results.html, docs/decision-log.md]
 - (2026-07-24) **手順3 DiD 実証調査完了**(branch worktree-item021-quintile-did): 40費目×五分位×2015-2024 で (A)価格伝播 event-study と (B)シェア triple-diff を実施。①現状結果を覆さない ②識別は改善されず、独立設計での失敗により DEC-015 の識別限界貢献がむしろ強化 ③因果推定量としての DiD は信頼性で現行に劣る(β_2022≈0・プレ期プラセボ汚染・IO由来IC がエネルギー小売の輸入燃料チャネルを捕捉せず)。詳細 `docs/quintile-did-investigation.md`、コード `src/analysis/quintile_did.py`、出力 `data/processed/did/`。
 - (2026-07-24 決定) **DiD は回帰係数として不採用、記述的コントラストとしてスライド多年度化に統合**(ユーザー承認: 第3回スライドから修正の指示)。第2回デッキは凍結のまま触らない。
 - (2026-07-24) **手順2 実施**: e-Stat API で 2015-2025 五分位データ再取得(`household_quintile_2015_2025.csv`)、golden 2022 一致確認(食料 31.1/22.9・光熱 11.2/6.4)。転記正 = `data/processed/did/slide7_gap_table.csv`(差は非丸め値から算出。食料 gap 2022-25: 8.3/7.2/7.4/8.1pp、光熱・水道: 4.8/4.4/4.6/4.8pp)。第3回デッキ s7 柱②と script、第4回デッキ s7 証拠①に反映。check_slides.py OK。
-- (残) 論文の識別限界節への「2設計での識別失敗」1段落追記(thesis-writing スキル経由)。
+- (残) 論文の識別限界節への「2設計での識別失敗」1段落追記(thesis-writing スキル経由)。**これが本 ITEM の唯一の残タスク**。
+- (2026-07-24) 第3回デッキに先生指摘への回答スライド s8b 新設・原稿⑪追加(全19枚化)。s2 に予告文。
+- (2026-07-24) **s7b/s6b 五分位チャートの棒高クランプバグをユーザー指摘で発見・修正**: flex内ラベル同居で実効上限~82%、--h>82% の棒(2025 Q1-Q4)が同長に潰れていた。全20本を value/15×80 で再生成し実レンダ計測で比例性確認(lesson 記録済)。
+- (2026-07-24) スライド注記を「支出シェア(2019年=コロナ前で固定)」に精緻化(6箇所+原稿2箇所)。
+- (2026-07-25/DEC-025) 五分位別実質所得は**論文本線に入れず保留**: 勤労者世帯で実質 Q1-Q5 gap −2.8〜−6.9pp(方向は仮説補強)だが、コロナ名目ショックとインフレ追随の分離不能・業種異質性・実収入=移転込みのため。`quintile_real_income_worker.py` は内部チェックとして保持。
 - (記録) ITEM番号は個人系列(現状007まで)の次番ではなくユーザー明示指定の021で採番。
