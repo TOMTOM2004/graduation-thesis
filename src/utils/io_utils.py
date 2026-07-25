@@ -199,6 +199,28 @@ def compute_leontief_inverse(A: pd.DataFrame) -> pd.DataFrame:
     return pd.DataFrame(L, index=A.index, columns=A.columns)
 
 
+def compute_import_penetration(io_data: dict) -> pd.Series:
+    """Return sector import penetration ``μ = |imports| / (output + |imports|)``."""
+    imports = io_data["imports"]
+    if imports is None:
+        raise ValueError("Import data not found in IO table")
+
+    output = io_data["output"]
+    abs_imports = imports.abs()
+    total_supply = output + abs_imports
+    return (abs_imports / total_supply.replace(0, np.inf)).fillna(0.0)
+
+
+def compute_domestic_leontief(io_data: dict) -> tuple[pd.DataFrame, pd.Series]:
+    """Return the competitive-import domestic Leontief inverse and import penetration."""
+    A = compute_input_coefficients(io_data)
+    mu = compute_import_penetration(io_data)
+    n = A.shape[0]
+    A_d = (np.eye(n) - np.diag(mu.values)) @ A.values
+    L_d = np.linalg.inv(np.eye(n) - A_d)
+    return pd.DataFrame(L_d, index=A.index, columns=A.columns), mu
+
+
 def compute_import_content(io_data: dict) -> pd.Series:
     """
     Compute import content ratio by sector (competitive-import formulation).
@@ -220,25 +242,74 @@ def compute_import_content(io_data: dict) -> pd.Series:
     -------
     pd.Series — import content ratio for each sector (0..1)
     """
-    A = compute_input_coefficients(io_data)
-    x = io_data["output"]
-    imports = io_data["imports"]
-
-    if imports is None:
-        raise ValueError("Import data not found in IO table")
-
-    # 輸入浸透率 μ = |imports| / (output + |imports|)
-    abs_imports = imports.abs()
-    total_supply = x + abs_imports
-    mu = (abs_imports / total_supply.replace(0, np.inf)).fillna(0.0)
-
-    # 国内投入係数 A^d=(I−M̂)A の国内レオンチェフ L^d=(I−A^d)^{-1}
-    n = A.shape[0]
-    M_hat = np.diag(mu.values)
-    A_d = (np.eye(n) - M_hat) @ A.values
-    L_d = np.linalg.inv(np.eye(n) - A_d)
-
-    import_content = mu.values @ L_d
+    L_d, mu = compute_domestic_leontief(io_data)
+    import_content = mu.values @ L_d.values
     import_content = np.clip(import_content, 0.0, 1.0)
 
     return pd.Series(import_content, index=io_data["sector_codes"], name="import_content")
+
+
+def compute_induced_import_content(
+    io_data: dict,
+    import_sector_mask: list[bool] | np.ndarray | pd.Series | None = None,
+) -> pd.Series:
+    """
+    Compute direct and induced import requirements per unit of sectoral final demand.
+
+    Under the competitive-import proportionality assumption:
+
+        x = L^d (I - M̂) f
+        m = M̂ (A x + f)
+
+    Therefore the import requirement for final demand in sector ``j`` is:
+
+        IC_j = μ_j + (1 - μ_j) (μ^T A L^d)_j
+
+    ``import_sector_mask`` restricts ``μ`` to a subset of origin sectors. Masks that
+    partition all sectors sum exactly to the all-sector result, which permits a
+    mutually exclusive group decomposition.
+
+    Parameters
+    ----------
+    io_data
+        Parsed input-output table.
+    import_sector_mask
+        Optional boolean vector aligned with ``sector_codes``. ``True`` sectors are
+        counted as import origins; omitted means all sectors.
+
+    Returns
+    -------
+    pd.Series
+        Direct plus induced import requirement by final-demand sector.
+    """
+    A = compute_input_coefficients(io_data)
+    L_d, mu = compute_domestic_leontief(io_data)
+    n = len(mu)
+
+    if import_sector_mask is None:
+        mask = np.ones(n, dtype=bool)
+    else:
+        mask = np.asarray(import_sector_mask, dtype=bool)
+        if mask.shape != (n,):
+            raise ValueError(
+                f"import_sector_mask must have shape ({n},), got {mask.shape}"
+            )
+
+    mu_origin = mu.values * mask
+    direct = mu_origin
+    chain = mu_origin @ A.values @ L_d.values
+    import_content = direct + (1.0 - mu.values) * chain
+
+    tolerance = 1e-10
+    if import_content.min() < -tolerance or import_content.max() > 1.0 + tolerance:
+        raise ValueError(
+            "Induced import content falls outside [0, 1]; check IO balance, "
+            "valuation basis, and competitive-import assumptions"
+        )
+
+    import_content = np.clip(import_content, 0.0, 1.0)
+    return pd.Series(
+        import_content,
+        index=io_data["sector_codes"],
+        name="induced_import_content",
+    )

@@ -309,6 +309,37 @@ CPI_CODE_TO_NAME: dict[str, str] = {
 }
 
 
+def build_bridge_matrix_mid_from_io(
+    io_data: dict,
+    category_map: dict | None = None,
+) -> pd.DataFrame:
+    """Build a CPI-middle-category bridge for a supplied IO valuation table."""
+    categories = CPI_MID_CATEGORY_MAP if category_map is None else category_map
+    fd = io_data["final_demand"]
+    if "721" not in fd.columns:
+        raise ValueError("Private consumption column '721' not found in IO table.")
+
+    private_consumption = fd["721"]
+    rows = {}
+    for cat_name, cat in categories.items():
+        sector_values = {
+            sec: max(0.0, private_consumption.get(sec, 0.0))
+            for sec in cat["io_sectors"]
+        }
+        total = sum(sector_values.values())
+        if total > 0:
+            rows[cat_name] = {sec: value / total for sec, value in sector_values.items()}
+        else:
+            rows[cat_name] = {sec: 0.0 for sec in cat["io_sectors"]}
+
+    bridge = pd.DataFrame(rows).T.reindex(
+        columns=io_data["sector_codes"],
+        fill_value=0.0,
+    )
+    bridge.index.name = "cpi_mid_name"
+    return bridge
+
+
 def build_bridge_matrix_mid(force: bool = False) -> pd.DataFrame:
     """
     Build bridge matrix for CPI middle categories.
@@ -333,30 +364,7 @@ def build_bridge_matrix_mid(force: bool = False) -> pd.DataFrame:
 
     print("Building mid-level bridge matrix from IO private consumption column...")
     io_data = load_io_table()
-    fd = io_data["final_demand"]
-
-    if "721" not in fd.columns:
-        raise ValueError("Private consumption column '721' not found in IO table.")
-
-    private_consumption = fd["721"]
-
-    rows = {}
-    for cat_name, cat in CPI_MID_CATEGORY_MAP.items():
-        sector_values = {}
-        for sec in cat["io_sectors"]:
-            val = private_consumption.get(sec, 0.0)
-            sector_values[sec] = max(0.0, val)
-
-        total = sum(sector_values.values())
-        if total > 0:
-            row = {sec: v / total for sec, v in sector_values.items()}
-        else:
-            row = {sec: 0.0 for sec in cat["io_sectors"]}
-        rows[cat_name] = row
-
-    all_sectors = io_data["sector_codes"]
-    bridge = pd.DataFrame(rows).T.reindex(columns=all_sectors, fill_value=0.0)
-    bridge.index.name = "cpi_mid_name"
+    bridge = build_bridge_matrix_mid_from_io(io_data)
 
     bridge.to_csv(cache_path)
     print(f"Saved mid bridge matrix: {bridge.shape} to {cache_path}")
