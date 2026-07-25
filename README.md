@@ -35,7 +35,7 @@ Phase 3（副問3）  Phase 1・2の構造を統合したIO価格モデル + マ
 輸入含有率（IO表算出）の財間差異を利用してコストプッシュをデマンドプルから識別しようとする（コストプッシュなら輸入含有率の高い財ほど価格上昇が大きい）。
 
 - **主たる falsification 証拠**: IC–ΔCPI 年次相関のコントラスト（ショック期 2021-24 = +0.08〜+0.41・全年正 / プラセボ期 2015-19 = −0.10〜−0.27・全年負。暦年＝DEC-023）
-- メイン仕様（競争的輸入財=衣料・履物を除外）のパネルOLS: **β=0.373, p=0.089**（CPI中分類 41カテゴリ × 2021-2024、n=156。暦年再生成＝DEC-023／旧年度ベース 0.425/p=0.047・DEC-021）
+- 正準IC・生産者価格・競争的輸入財除外の関連回帰: **β=0.633, 通常p=0.0009**（n=156）。within-goodsの関係が弱いため因果的な転嫁率とは解釈しない（DEC-026）
 - **重要な限界**: exposure-robust shift-share（グループ別分解）と期間延長（2005遡及）の2手法を実装・検証した結果、**単一マクロ事象からの清浄な cost-push 識別は本設計・データでは不可能**と確認。これを失敗でなく**識別限界の方法論的提示**という貢献に転化（DEC-013/015）。結果は「cost-push と整合的な点推定だが頑健に不確実」と位置づける
 
 詳細は [docs/research-design.md](docs/research-design.md)「識別の到達点と限界」。
@@ -44,7 +44,7 @@ Phase 3（副問3）  Phase 1・2の構造を統合したIO価格モデル + マ
 
 - **Phase 1（交易損失）**: 5グループ合計の中心推計 2022年 約35兆円 / 2023年 約28兆円 / 2024年 約29兆円 / **2025年 約24.8兆円（GDP比4.4%・フロー減衰）**。エネルギーが全損失の約67%
 - **Phase 2（家計帰着）**: 食料・光熱は必需品かつ高輸入含有率。Q1（最低所得）の実効インフレは Q5 より高い（逆進性・実績CPI・暦年）= Q1−Q5 格差 2022年 **+2.01pp** / 2023年 +2.06pp / 2024年 +2.45pp / **2025年 +3.36pp**（暦年再生成＝DEC-023／旧年度ベース +2.14pp・DEC-021）。原因は Q1 の食料・光熱シェアの高さ
-- **Phase 3（政策評価）**: IO価格モデル（コストプッシュ成分）Koyck RMSE 9.24pp（暦年＝DEC-023／旧年度 10.00pp。「検証達成」でなく「誤差＝デマンドプル残差の分解」として提示・C-2）。エネルギー補助・食料支援・複合介入の3シナリオを評価（再較正完了・DEC-014/021。絶対値は例示・結論は符号レベル）
+- **Phase 3（補助的政策例示）**: 正準ICスケール更新後の IO価格モデル Koyck RMSE は10.40ppで、実績CPIを過大予測する。エネルギー補助・食料支援・複合介入は方向・符号のみを結論に使う（DEC-014/026）
 
 > 進捗の最新は [docs/progress.md](docs/progress.md)。設計100% / データ100% / Phase 1-3 100% / 執筆 未着手（全体 約85%）。
 
@@ -121,11 +121,13 @@ python -m src.analysis.bridge_matrix       # 家計調査カテゴリ ⇄ IOセ�
 python -m src.analysis.bridge_matrix_mid   # CPI中分類 ⇄ IOセクターのブリッジ（cost_push_panel / io_price_model が依存）
 python -m src.analysis.cost_push_id        # bridge_matrix に依存（quintile_impact の前提）
 python -m src.analysis.cost_push_panel     # bridge_matrix_mid に依存。cost_push_panel_results.csv を出力
-                                            # → io_price_model の BETA_EMPIRICAL がこの CSV を読むため、必ず先に実行すること
+python -m src.analysis.ic_valuation_sensitivity
+python -m src.analysis.cost_push_ic_sensitivity
+                                            # → io_price_model は正準IC・生産者価格のβを後者から読む
 python -m src.analysis.quintile_impact     # bridge_matrix + cost_push_id に依存（Phase 2 家計帰着）
 python -m src.analysis.shapiro_decomp      # Shapiro分解（e-Stat 直接取得、他モジュールと独立）
 python -m src.analysis.shapiro_quintile    # shapiro_decomp に依存
-python -m src.analysis.io_price_model      # import_content + bridge_matrix_mid + cost_push_panel_results.csv に依存（Phase 3 IO価格モデル）
+python -m src.analysis.io_price_model      # import_content + bridge_matrix_mid + cost_push IC感度結果に依存
 python -m src.analysis.policy_simulation   # quintile_impact + io_price_model に依存（Phase 3 政策シナリオ評価）
 ```
 

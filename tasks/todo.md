@@ -1,5 +1,5 @@
 # Handoff — graduation-thesis 卒業論文（案B・論文執筆フェーズ）
-_Last updated: 2026-07-25 03:10 / session: ITEM-021 一気通貫（e-Statゲート通過→五分位DiD実証調査→柱②多年度化→第3回s8b回答スライド新設→五分位チャート棒高クランプバグ修正→DEC-025 実質所得保留）→ handoff_
+_Last updated: 2026-07-25 / session: ITEM-022 IC正準化・クレーム精緻化・LP統合の監査修正を完了_
 
 ## 📇 案件 index（自動生成・SSOT = `tasks/items/*.md` / 再生成 = `item_indexer.py`・手書き禁止）
 <!-- item_indexer.py が tasks/items/INDEX.md を生成。下表はその転記
@@ -7,6 +7,7 @@ _Last updated: 2026-07-25 03:10 / session: ITEM-021 一気通貫（e-Statゲー�
 
 | ID | 概要 | priority | status | updated |
 |---|---|---|---|---|
+| ITEM-022 | IC正準化・クレーム精緻化・LP統合の監査修正 | P1 | done | 2026-07-25 |
 | ITEM-002 | 論文執筆 — 章ドラフト進行（先行研究・方法論・結果・考察・結論） | P1 | in_progress | 2026-07-07 |
 | ITEM-021 | 柱②曝露(スライド7)の多年度化(2022→2025)＋五分位DiDの証明可能性検討（ゼミ指摘） | P2 | in_progress | 2026-07-25 |
 | ITEM-001 | 識別限界の鋭利化 — 追加ロバストネス（goods×年FE / exposure-robust推論 / sensemakr任意） | P1 | todo | 2026-07-07 |
@@ -34,10 +35,10 @@ _Last updated: 2026-07-25 03:10 / session: ITEM-021 一気通貫（e-Statゲー�
 
 ## 🧠 Context not in code
 - 決定:
-  - **実証の背骨**: Phase 1（~35兆=会計）+ Phase 2b（Q1-Q5 +2.01pp=恒等式・識別仮定に非依存）。Phase 2a は識別限界の方法論的提示（貢献③・DEC-015）、Phase 3 は定性・例示（DEC-014）
+  - **監査後の背骨（DEC-026）**: 固定数量輸入コスト約35兆円（会計近似）+ Q1-Q5固定バスケット生活費 +2.01pp。正準IC回帰はβ=0.633（通常p=0.0009）だが財サービス交絡のため因果解釈しない
   - **識別の枠組（DEC-024）**: 本設計= GPSS share外生設計。shock外生ルートは K=1 で論理的に閉じている。goods/services 交絡=仮定違反の定義そのもの・プラセボ負相関= Test 2 失敗シグナル。「識別に類例がない」は使用禁止
-  - **数値の正**: 全て暦年再生成値（DEC-023）。β=0.373(p=0.089)・Q1-Q5 +1.04/+2.01/+2.06/+2.45pp・2025=+3.36pp・交易損失 35.3/28.4/29.1/24.8兆・Koyck RMSE 9.24pp
-  - βの正体: 年・費目FE二元除去後の単一スロープ=転嫁率。有意が取れない根本は「独立ショックが実質1つ」＝設定に内在・別の回帰では直らない（DEC-013）
+  - **数値の正**: Q1-Q5 +1.04/+2.01/+2.06/+2.45pp・2025=+3.36pp、固定数量輸入コスト35.3/28.4/29.1/24.8兆、正準IC β=0.633、LP gap global p=0.035、Phase3 Koyck RMSE=10.40pp
+  - βは関連の要約であり転嫁率の因果推定ではない。Phase3は正準ICスケールでもovershootし、方向のみ使用
 - 参考情報: 先行研究ハンドオフ = `tasks/先行研究_識別戦略ハンドオフ_20260707.md`（①②消化済みバナーあり）
 
 ## ❌ Don't do (this task)
@@ -49,7 +50,7 @@ _Last updated: 2026-07-25 03:10 / session: ITEM-021 一気通貫（e-Statゲー�
 
 ## 📂 Key files
 - `paper/outline.md`（章割り・状態）/ `paper/03a-identification-strategy.md`（識別節骨子・合意待ち）
-- `docs/decision-log.md`（DEC-001〜025・数値と判断の正）/ `docs/research-design.md`（識別の到達点と限界）
+- `docs/decision-log.md`（DEC-001〜026・数値と判断の正）/ `docs/research-design.md`（識別の到達点と限界）
 - `.claude/skills/thesis-writing/SKILL.md`（執筆規律・golden 表）
 - `src/analysis/cost_push_panel.py`（β回帰）/ `tasks/_a4_akm.R`（AKM SE）/ `docs/literature/INDEX.md`（P001〜P087）
 

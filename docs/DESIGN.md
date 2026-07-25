@@ -169,17 +169,17 @@ Do not use color on body text. Do not use color to decorate bullets or general e
 
 | Level | Role | Size (px) | Notes |
 |-------|------|-----------|-------|
-| L1: Slide title | Topic + argument in short form | 26–28 | `h2` in slide header |
-| L2: Anchor claim | Primary message of anchor slides; key takeaway sentence | 22–30 | Focal point; RQ ≥ 24, title slide h1 ≥ 30 |
-| L3: Card heading / label | Section header within a slide, category name | 17–19 | `.gap-text h3`, `.fw-title`, phase labels |
-| L4: Body text | Bullets, explanatory content, card body | 15–17 | Minimum 15px in cards, 16px for standalone bullets |
-| L5: Note / source | Citations, footnotes, caveats | 14 | Never below 14px — no microtext |
+| L1: Page title | Topic + argument in short form | 48–64 | Deck-wide fixed size within this range |
+| L2: Anchor claim / subtitle | Primary message; key takeaway | 38–48 | Focal point |
+| L3: Body text | Bullets, explanatory content, card body | 32 | Default for projected presentation |
+| L4: Annotation / card label | Short labels and secondary explanation | 22–26 | Not for paragraph-length body copy |
+| L5: Note / source | Citations, footnotes, caveats | 16–20 | Never below 16px |
 
 Additional elements:
-- Eyebrow / section tag: 12px, uppercase, letter-spaced (label-only, not readable content)
-- Primary message bar: 17px, font-weight 600
-- Conclusion emphasis (hypothesis conclusion, key takeaway): 18px, bold
-- Table body: 16px minimum; table header: 14px
+- Eyebrow / section tag: 22px, letter-spaced (label only)
+- Primary message bar: 32px, font-weight 600
+- Conclusion emphasis: 38–48px, bold
+- Table body: 26–32px; table header: 22–26px
 
 **The gap between L1 and L4 must be clearly visible. If all text looks the same size, the hierarchy has failed.**
 
@@ -534,9 +534,10 @@ These slides are designed to be presented via screen sharing (HTML in browser) o
 Apply the following constraints at all times.
 
 ### Readability at Distance
-- Body text minimum: 16px equivalent (no microtext)
-- Slide title: minimum 22–26px equivalent
-- Anchor claim / focal point text: minimum 20px, preferably larger
+- Body text: 32px standard
+- Slide title: 48–64px
+- Anchor claim / focal point text: 38–48px
+- Sources and footnotes: 16–20px
 - Avoid text that requires zooming or squinting
 - Every element must be readable at 70% of the original size
 

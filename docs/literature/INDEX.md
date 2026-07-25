@@ -2,7 +2,7 @@
 
 ## 概要
 
-本研究に関連する先行研究の管理。論文サマリーは `papers/` 以下に1論文1ファイルで格納。計86件。
+本研究に関連する先行研究の管理。論文サマリーは `papers/` 以下に1論文1ファイルで格納。計92件。
 
 ---
 
@@ -20,6 +20,10 @@
 - [P031 Claeys et al. (2023)](papers/claeys-2023-inflation-inequality-eu.md) — EUのインフレ格差とその要因（Bruegel）
 - [P032 Bobasu, di Nino, Osbat (2023)](papers/bobasu-2023-inflation-surge-households-ecb.md) — インフレ急騰の家計層別影響（ECB）
 - [P033 Marin & Vona (2024)](papers/marin-vona-2024-energy-price-distributional.md) — エネルギー価格政策の分配的・気候的含意
+- [P088 Causa et al. (2022)](papers/causa-etal-2022-cost-of-living-squeeze.md) — 日本を含む所得層別インフレ・購買力低下の国際比較
+- [P089 Bank of Japan (2022)](papers/boj-2022-household-inflation-quintiles.md) — 日本の所得五分位別実効インフレ率
+- [P091 Bank of Japan (2026)](papers/boj-2026-import-price-pass-through.md) — IO・VAR・Q-JEMによる輸入価格転嫁
+- [P092 Bank of Japan (2026)](papers/boj-2026-crude-oil-terms-of-trade.md) — 原油高の所得流出・IO価格波及・低所得層負担
 
 ### 貿易政策・IO分析・国際波及・コスト転嫁
 - [P041 Camatte et al. (2023)](papers/camatte-2023-exchange-rate-elasticity-io.md) — IO表による為替→消費者物価弾力性の会計的分解（40カ国+）
@@ -35,6 +39,8 @@
 - [P070 Minton & Somale (2025)](papers/minton-somale-2025-tariff-consumer-prices-real-time.md) — IO輸入含有量で関税の消費者価格効果をリアルタイム検出（FRB FEDS Notes）
 - [P071 Amiti, Itskhoki, Konings (2019)](papers/amiti-itskhoki-konings-2019-international-shocks-markups.md) — 可変マークアップと国際ショックの国内価格転嫁（ベルギー、REStat）
 - [P072 Fajgelbaum et al. (2020)](papers/fajgelbaum-etal-2020-return-protectionism.md) — 2018年米国関税の厚生・分配効果（QJE）
+- [P091 Bank of Japan (2026)](papers/boj-2026-import-price-pass-through.md) — 日本の輸入価格転嫁をIO・VAR・Q-JEMで比較
+- [P092 Bank of Japan (2026)](papers/boj-2026-crude-oil-terms-of-trade.md) — 2020年IO表による原油価格波及とラグ
 
 ### 消費の価格弾力性・カテゴリ別分析
 - [P007 Peersman & Wauters (2024)](papers/peersman-wauters-2024-energy-heterogeneity.md) — エネルギー需要弾力性の非対称性・非線形性
@@ -104,6 +110,8 @@
 - [P055 Balk (2025)](papers/balk-2025-gdp-gdi-trading-gains.md) — 交易利益の代替的定式化（指数理論アプローチ）
 - [P056 Bahar, Arcay Daboin, Pacheco, Hausmann (2024)](papers/bahar-arcay-2024-japan-gni-gdp-gap.md) — 日本のGNI-GDP乖離パズル（所得収支の国内非還流）
 - [P057 新家義貴 (2022)](papers/shinke-2022-trading-loss-risk.md) — 交易損失年率15兆円、実質GDI停滞の定量分析
+- [P090 Di Pace, Juvenal, Petrella (2025)](papers/di-pace-juvenal-petrella-2025-terms-of-trade-shocks.md) — 輸出価格と輸入価格ショックの非対称性
+- [P092 Bank of Japan (2026)](papers/boj-2026-crude-oil-terms-of-trade.md) — 原油高による日本の所得流出シナリオ
 
 ### サービス貿易・デジタル赤字
 - [P068 Suominen (2025)](papers/suominen-2025-digital-services-imports-japan.md) — デジタルサービス輸入の日本経済への効果（CSIS）
@@ -119,6 +127,8 @@
 - [P015 Niizeki & Hori (2023)](papers/niizeki-hori-2023-inflation-expectations-japan.md) — インフレ期待と消費支出（疑似パネル）
 - [P020 Watanabe & Omori (2020)](papers/watanabe-2020-online-consumption-japan.md) — スキャナーデータ・オンライン消費（日本）
 - [P026 Hisanaga (2022)](papers/hisanaga-2022-japan-tax-microsimulation.md) — 日本の税制マイクロシミュレーション（IMF・KHPS使用）
+- [P088 Causa et al. (2022)](papers/causa-etal-2022-cost-of-living-squeeze.md) — 日本を含む所得層別購買力低下
+- [P089 Bank of Japan (2022)](papers/boj-2022-household-inflation-quintiles.md) — 日本の所得五分位別CPI
 
 ### 資金循環・構造変化（日本、背景）
 - [P045 Itoh (2016)](papers/itoh-2016-structural-path-analysis-japan.md) — 地域間SAMの構造的経路分析（所得漏出メカニズム）
