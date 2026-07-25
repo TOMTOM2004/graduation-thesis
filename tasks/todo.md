@@ -1,5 +1,5 @@
 # Handoff — graduation-thesis 卒業論文（案B・論文執筆フェーズ）
-_Last updated: 2026-07-25 / session: ITEM-022 IC正準化・クレーム精緻化・LP統合の監査修正を完了_
+_Last updated: 2026-07-25 / session: ITEM-023 戦争ニュース比較・識別再監査を完了_
 
 ## 📇 案件 index（自動生成・SSOT = `tasks/items/*.md` / 再生成 = `item_indexer.py`・手書き禁止）
 <!-- item_indexer.py が tasks/items/INDEX.md を生成。下表はその転記
@@ -50,13 +50,13 @@ _Last updated: 2026-07-25 / session: ITEM-022 IC正準化・クレーム精緻�
 
 ## 📂 Key files
 - `paper/outline.md`（章割り・状態）/ `paper/03a-identification-strategy.md`（識別節骨子・合意待ち）
-- `docs/decision-log.md`（DEC-001〜026・数値と判断の正）/ `docs/research-design.md`（識別の到達点と限界）
+- `docs/decision-log.md`（DEC-001〜027・数値と判断の正）/ `docs/research-design.md`（識別の到達点と限界）
 - `.claude/skills/thesis-writing/SKILL.md`（執筆規律・golden 表）
-- `src/analysis/cost_push_panel.py`（β回帰）/ `tasks/_a4_akm.R`（AKM SE）/ `docs/literature/INDEX.md`（P001〜P087）
+- `src/analysis/cost_push_panel.py`（β回帰）/ `tasks/_a4_akm.R`（AKM SE）/ `docs/literature/INDEX.md`（P001〜P095）
 
 ## ❌ Out of scope
 - seminar1 スライドの修正（発表済み凍結。旧 todo の「スライドレイアウト修正」計画は凍結方針と矛盾するため破棄＝2026-07-07 ITEM 移行時）
-- 資本フロー・市区町村単位・サプライチェーン/地政学リスク・産業構造変化の原因分析（プロジェクトスコープ外）
+- 資本フロー・市区町村単位・サプライチェーン/一般的な地政学リスク・産業構造変化の原因分析（プロジェクトスコープ外。Russia→Ukraine 戦争ニュースは DEC-027 の識別頑健性比較に限定）
 - P077 型 SE のフルスクラッチ自力実装（ITEM-001 のスコープ外条項）
 
 ---

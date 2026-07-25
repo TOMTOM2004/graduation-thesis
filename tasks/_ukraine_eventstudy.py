@@ -1,12 +1,12 @@
-"""ウクライナ小麦ショックの event-study（DEC-015 の existence-proof leg・最終 decider）。
+"""ウクライナ侵攻前後の小麦価格 event-study（記述的再現用）。
 
 advisor steer: pre-trend の傾きだけで殺さない。treatment(小麦)の pre 期間は flat、
 問題は control(米)の oversupply 下落。よって米を主軸にせず、**小麦自身の flat
 pre-trend に乗る ITS/event-study**で pre 期間 lead 係数を読む。
 
-事前コミットしたルール（結果を見る前に固定）:
-- KEEP(narrow LATE 有効): 小麦の pre 期間 lead が flat(無トレンド) かつ 2022-02 に鋭い break
-- DEAD(bounds へ pivot): pre 期間 lead が trend している
+DEC-027（2026-07-25）:
+- flat pre と侵攻後の break は構造変化の記述として保持する。
+- 有効な対照群がなく同時ショックを除けないため、LATE・因果的存在証明は撤回する。
 
 データ: data/raw/cpi/cpi_items_ukraine_2019_2023.csv（品目別CPI 2020-01..2023-12）。
 """

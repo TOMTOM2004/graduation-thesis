@@ -36,6 +36,9 @@
 | P083 | di Giovanni et al. | 2022 | 多国多部門生産ネットワークGE | コストプッシュ/供給制約をセクター分解。外国ショック+ボトルネックが支配的（ユーロ圏）。重量級benchmark | Medium |
 | P084 | Borusyak & Hull | 2023 | recentered instrument（design-based） | エクスポージャー非ランダム性を反実仮想分布で recenter。share外生性軸 | High |
 | P090 | Di Pace, Juvenal, Petrella | 2025 | 輸出価格・輸入価格ショックの分離 | 交易条件だけでは国際価格ショックを十分に代理できない | High |
+| P093 | Tong | 2024 | 分散不均一性識別×日次戦争ニュース×LP | 53の戦争ニュース日から外生ショックを抽出し、商品価格・インフレ期待・週次GDPへの応答を推定 | High |
+| P094 | Aizenman et al. | 2024 | event-based SVAR | ウクライナ戦争ニュースが小麦・トウモロコシ・欧州天然ガスを押し上げる | High |
+| P095 | Iacoviello & Tong | 2026 | LLM新聞分類・方向付き二国間GPR | 1960年以降のRussia→Ukraine月次指数を公開。ただし構造ショックとしては未識別 | High |
 
 ## Phase 2 関連（シミュレーションモデル）
 

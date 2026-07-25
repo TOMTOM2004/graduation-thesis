@@ -2,7 +2,7 @@
 
 ## 概要
 
-本研究に関連する先行研究の管理。論文サマリーは `papers/` 以下に1論文1ファイルで格納。計92件。
+本研究に関連する先行研究の管理。論文サマリーは `papers/` 以下に1論文1ファイルで格納。計95件。
 
 ---
 
@@ -86,6 +86,9 @@
 - [P083 di Giovanni et al. (2022)](papers/digiovanni-etal-2022-supply-chain-pressures-inflation.md) — 【Q1 benchmark】多国多部門GEでコストプッシュをセクター分解。重量級・引用用途
 - [P084 Borusyak & Hull (2023)](papers/borusyak-hull-2023-nonrandom-exposure.md) — 【Q2 share外生性軸】recentered instrument：エクスポージャー非ランダム性を反実仮想で除去（Econometrica）
 - [P087 Cinelli & Hazlett (2020)](papers/cinelli-hazlett-2020-sensitivity-ovb.md) — 【感度分析・採否未定】partial-R² robustness value。連続処置線形パネルに適合する唯一の感度枠（E-value/Rosenbaum は不適合＝DEC-024）
+- [P093 Tong (2024)](papers/tong-2024-russia-ukraine-war-shocks.md) — 53の戦争ニュース日を分散不均一性で識別し、86か国への動学効果を推定
+- [P094 Aizenman et al. (2024)](papers/aizenman-etal-2024-ukraine-commodity-shocks.md) — event-based SVARで小麦・トウモロコシ・欧州天然ガスへの戦争ショックを推定
+- [P095 Iacoviello & Tong (2026)](papers/iacoviello-tong-2026-ai-gpr.md) — 1960年以降の方向付き二国間AI-GPR。公開長期系列だが構造ショックとしては未識別
 
 ### 国際収支制約と成長（理論・実証）
 - [P064 Thirlwall (1979)](papers/thirlwall-1979-bop-constraint-growth.md) — 国際収支制約による成長率格差の説明（Thirlwall's Law）
