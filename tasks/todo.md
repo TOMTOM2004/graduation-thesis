@@ -1,5 +1,5 @@
 # Handoff — graduation-thesis 卒業論文（案B・論文執筆フェーズ）
-_Last updated: 2026-07-25 / session: ITEM-023 戦争ニュース比較・識別再監査を完了_
+_Last updated: 2026-07-26 / session: ITEM-024 最終発表デッキへの戦争ニュース比較反映を完了_
 
 ## 📇 案件 index（自動生成・SSOT = `tasks/items/*.md` / 再生成 = `item_indexer.py`・手書き禁止）
 <!-- item_indexer.py が tasks/items/INDEX.md を生成。下表はその転記
