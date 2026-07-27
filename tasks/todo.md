@@ -1,5 +1,5 @@
 # Handoff — graduation-thesis 卒業論文（案B・論文執筆フェーズ）
-_Last updated: 2026-07-26 / session: ITEM-024 最終発表デッキへの戦争ニュース比較反映を完了_
+_Last updated: 2026-07-27 22:55 / session: LP調査セッション handoff（main 15コミットを origin へ push・IC過小計上を lesson 化）_
 
 ## 📇 案件 index（自動生成・SSOT = `tasks/items/*.md` / 再生成 = `item_indexer.py`・手書き禁止）
 <!-- item_indexer.py が tasks/items/INDEX.md を生成。下表はその転記
@@ -24,6 +24,8 @@ _Last updated: 2026-07-26 / session: ITEM-024 最終発表デッキへの戦争�
 - 受動待ち（外部条件）: なし
 
 ## 📥 Inbox（未triage）
+- **⚠ 未マージブランチ `codex/20260725-ic-claims`（main+4コミット）**: ITEM-022 監査修正＋ITEM-024 戦争ニュース比較の実体。**ユーザーのマージ判断待ち**（他ツール作業のため自動マージせず 2026-07-27）。マージ後にこの行を消す。注: index の ITEM-022 done / DEC-026-027 / 正準値（β=0.633 等）はこのブランチ上の状態で、main 未着地
+- **[繰越] critic-calib**: pending-review-findings 2件 [deferred]（coherence/testability-critic・claude-brain 側）。次回 claude-brain セッションで「calib」起動
 - **[繰越] lesson review 期限超過**: 候補32件(hot_to_warm 5 / chromadb_to_warm 27)・前回2026-07-13。次回任意セッション冒頭で「lesson review」起動（承認ゲート伴うため handoff 時に skip した 2026-07-25）
 - **[繰越] 孤児 pending の一括回収**: `~/.claude/state/pending_{lessons,corrections}/` に他セッション分 38+14件（14日TTL内）。次回 claude-brain セッションで lesson-recorder sweep
 - claude-brain: 情報の引き出し方の調査とアップデート＋RAG先行研究調査（Slack #todo より _2026-06-23_）→ **本 repo でなく claude-brain 側の案件**。handoff 時に gh issue 化を試みたが permission 拒否（2026-07-07）＝**次回 claude-brain セッションで ITEM 化して本行を消す**（ITEM-016 retrieval gate と統合可否も判断）
