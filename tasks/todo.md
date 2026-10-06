@@ -1,3 +1,6 @@
+> **Status: 中断（2026-10-06・いつか再開）** — 終了ではない。再開時は下記 Next actions から。
+> ic-claims ブランチ（`codex/20260725-ic-claims`）の main マージはユーザー判断待ちのまま。
+
 # Handoff — graduation-thesis 卒業論文（案B・論文執筆フェーズ）
 _Last updated: 2026-07-27 22:55 / session: LP調査セッション handoff（main 15コミットを origin へ push・IC過小計上を lesson 化）_
 
@@ -8,8 +11,8 @@ _Last updated: 2026-07-27 22:55 / session: LP調査セッション handoff（mai
 | ID | 概要 | priority | status | updated |
 |---|---|---|---|---|
 | ITEM-022 | IC正準化・クレーム精緻化・LP統合の監査修正 | P1 | done | 2026-07-25 |
-| ITEM-002 | 論文執筆 — 章ドラフト進行（先行研究・方法論・結果・考察・結論） | P1 | in_progress | 2026-07-07 |
-| ITEM-021 | 柱②曝露(スライド7)の多年度化(2022→2025)＋五分位DiDの証明可能性検討（ゼミ指摘） | P2 | in_progress | 2026-07-25 |
+| ITEM-002 | 論文執筆 — 章ドラフト進行（先行研究・方法論・結果・考察・結論） | P1 | 中断 | 2026-07-07 |
+| ITEM-021 | 柱②曝露(スライド7)の多年度化(2022→2025)＋五分位DiDの証明可能性検討（ゼミ指摘） | P2 | 中断 | 2026-07-25 |
 | ITEM-001 | 識別限界の鋭利化 — 追加ロバストネス（goods×年FE / exposure-robust推論 / sensemakr任意） | P1 | todo | 2026-07-07 |
 | ITEM-004 | 再現性の残穴 — shapiro e-Statキャッシュ化・GDP vintage確定・stale processed削除判断 | P2 | todo | 2026-07-07 |
 | ITEM-003 | ハンドオフ§8 残り — 現代 event study/DID（小麦補強）③・財政乗数の状態依存④ | P3 | todo | 2026-07-07 |
