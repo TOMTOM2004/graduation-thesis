@@ -31,6 +31,7 @@ from src.utils.io_utils import (
 )
 from src.analysis.import_content import SECTOR_GROUP_MAP, GROUPS
 from src.analysis.bridge_matrix_mid import CPI_MID_CATEGORY_MAP
+from src.data.fetch_import_prices import cgpi_import_path  # CGPI_SOURCE_DIR override
 
 DATA_RAW = Path(__file__).resolve().parents[2] / "data" / "raw"
 DATA_PROCESSED = Path(__file__).resolve().parents[2] / "data" / "processed"
@@ -97,7 +98,7 @@ def build_import_price_shock_vector(
     pd.Series index=sector_code, values=m_i (fractional change)
     """
     # Load CGPI group-level annual averages
-    cgpi = pd.read_csv(DATA_RAW / "boj-cgpi" / "import_prices_extracted.csv", parse_dates=["date"])
+    cgpi = pd.read_csv(cgpi_import_path(), parse_dates=["date"])
     cgpi["year"] = cgpi["date"].dt.year
     annual = (
         cgpi.groupby(["year", "group"])["value"]

@@ -10,15 +10,42 @@ concatenated directly to produce a continuous monthly series.
 """
 
 import io
+import os
 import zipfile
 from pathlib import Path
 
-import httpx
 import pandas as pd
 
 RAW_DIR = Path(__file__).resolve().parents[2] / "data" / "raw" / "boj-cgpi"
 
-# BOJ bulk download: all CGPI monthly data (2020/01–present)
+# Source vintage (ITEM-025 / J2). Default = the 2026-10-13 BOJ vintage tracked under
+# data/source-vintages; the superseded 2026-03 snapshot in data/raw/boj-cgpi is only used when
+# CGPI_SOURCE_DIR points at it explicitly. RAW_DIR is kept for fx_decomposition (raw-writing, J6).
+VINTAGE_DIR = Path(__file__).resolve().parents[2] / "data" / "source-vintages" / "boj-cgpi-20261013"
+CGPI_SOURCE_ENV = "CGPI_SOURCE_DIR"
+
+
+def cgpi_dir() -> Path:
+    """Directory of the CGPI source files; resolved at call time so tests/CLI can override."""
+    override = os.environ.get(CGPI_SOURCE_ENV)
+    return Path(override) if override else VINTAGE_DIR
+
+
+def cgpi_import_path() -> Path:
+    """Path of the extracted import-price cache for the active CGPI source."""
+    return cgpi_dir() / "import_prices_extracted.csv"
+
+
+def _require_local(path: Path) -> Path:
+    """A missing source file is an error, never a trigger to fetch a new (unrecorded) vintage."""
+    if not path.exists():
+        raise FileNotFoundError(
+            f"{path.name} not found in {path.parent}; vintages are fixed under data/source-vintages "
+            f"(override with {CGPI_SOURCE_ENV}); refusing to download"
+        )
+    return path
+
+# BOJ source URLs (provenance only; vintages are fetched manually and fixed locally): all CGPI monthly data (2020/01–present)
 CGPI_BULK_URL = "https://www.stat-search.boj.or.jp/info/cgpi_m_jp.zip"
 
 # BOJ linked index: historical chain-linked data (1960/01–2019/12, 2020=100 scale)
@@ -48,41 +75,13 @@ DOMESTIC_CGPI_NAME = "国内企業物価指数 総平均"
 
 
 def fetch_cgpi_bulk() -> Path:
-    """Download BOJ CGPI bulk CSV (ZIP, 2020/01–present)."""
-    RAW_DIR.mkdir(parents=True, exist_ok=True)
-    zip_path = RAW_DIR / "cgpi_m_jp.zip"
-
-    if zip_path.exists():
-        print(f"Already exists: {zip_path}")
-        return zip_path
-
-    print("Downloading BOJ CGPI bulk data...")
-    with httpx.Client(follow_redirects=True, timeout=120) as client:
-        resp = client.get(CGPI_BULK_URL)
-        resp.raise_for_status()
-
-    zip_path.write_bytes(resp.content)
-    print(f"Saved to {zip_path} ({len(resp.content) / 1024 / 1024:.1f} MB)")
-    return zip_path
+    """Return the fixed local CGPI bulk ZIP (2020/01–present); never downloads."""
+    return _require_local(cgpi_dir() / "cgpi_m_jp.zip")
 
 
 def fetch_cgpi_link() -> Path:
-    """Download BOJ CGPI linked index CSV (1960/01–2019/12, 2020=100 scale)."""
-    RAW_DIR.mkdir(parents=True, exist_ok=True)
-    csv_path = RAW_DIR / "cgpilink1.csv"
-
-    if csv_path.exists():
-        print(f"Already exists: {csv_path}")
-        return csv_path
-
-    print("Downloading BOJ CGPI linked index...")
-    with httpx.Client(follow_redirects=True, timeout=60) as client:
-        resp = client.get(CGPI_LINK_URL)
-        resp.raise_for_status()
-
-    csv_path.write_bytes(resp.content)
-    print(f"Saved to {csv_path} ({len(resp.content) / 1024:.0f} KB)")
-    return csv_path
+    """Return the fixed local CGPI linked index CSV (1960/01–2019/12, 2020=100); never downloads."""
+    return _require_local(cgpi_dir() / "cgpilink1.csv")
 
 
 def load_cgpi_raw() -> pd.DataFrame:
@@ -155,7 +154,7 @@ def extract_import_prices() -> pd.DataFrame:
     -------
     pd.DataFrame with columns: date, group, group_ja, value (index, 2020=100)
     """
-    cache_path = RAW_DIR / "import_prices_extracted.csv"
+    cache_path = cgpi_import_path()
     if cache_path.exists():
         print(f"Loading cached: {cache_path}")
         return pd.read_csv(cache_path, parse_dates=["date"])
@@ -195,7 +194,7 @@ def extract_domestic_cgpi() -> pd.DataFrame:
     -------
     pd.DataFrame with columns: date, value (index, 2020=100)
     """
-    cache_path = RAW_DIR / "domestic_cgpi.csv"
+    cache_path = cgpi_dir() / "domestic_cgpi.csv"
     if cache_path.exists():
         print(f"Loading cached: {cache_path}")
         return pd.read_csv(cache_path, parse_dates=["date"])

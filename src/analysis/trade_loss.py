@@ -54,36 +54,87 @@ Where:
 なお (C) は基準年を 2020 トラフから 2015-19 正常水準に補正済み（主因1・2は残置、3は今後の課題）。
 """
 
+import hashlib
 from pathlib import Path
 
-import pandas as pd
 import numpy as np
+import pandas as pd
 
 from src.analysis.import_content import (
     compute_group_import_content,
     GROUPS,
     GROUP_JA,
 )
-from src.data.fetch_import_prices import extract_domestic_cgpi
+from src.data.fetch_import_prices import (
+    cgpi_dir,
+    cgpi_import_path,
+    extract_domestic_cgpi,
+    extract_import_prices,
+)
 
-DATA_RAW = Path(__file__).resolve().parents[2] / "data" / "raw"
 DATA_PROCESSED = Path(__file__).resolve().parents[2] / "data" / "processed"
 TRADE_LOSS_DIR = DATA_PROCESSED / "trade-loss"
 
-CGPI_PATH = DATA_RAW / "boj-cgpi" / "import_prices_extracted.csv"
 BASE_YEAR = 2020
 # 中心推計の参照期（DEC-012）: 2015-2019 平均（識別のプラセボ期と同一窓・サイクル中立）
 REF_BASELINE = (2015, 2019)
 
-# 名目GDP（十億円）。出典: 内閣府「国民経済計算」名目暦年GDP（2022年 ≈561兆円・取得時点の推計値）
-# TODO(DEC-019): 確報改定で値が動くため、論文確定時に vintage（公表回）を明記して更新する
-GDP_BN_BY_YEAR = {2022: 561_000}
+# 名目暦年GDP（十億円）。出典: 内閣府経済社会総合研究所 四半期別GDP速報 2026年4-6月期2次速報
+# （2026-09-08公表・2020年(令和2年)基準・統計表 gaku-mcy2622.csv「名目暦年」国内総生産(支出側)）。
+# vintage と SHA は docs/data-sources/ITEM-025-data-freshness-20261022.md を参照。
+# 旧値 {2022: 561_000} は取得時点不明の推計値で、2023-25 の比にも 2022年GDP を流用していた（ITEM-025 D5 で是正）。
+# TODO(DEC-019): 確報改定で値が動くため、論文確定時に再確認する
+GDP_BN_BY_YEAR = {2022: 584_501.3, 2023: 616_659.4, 2024: 636_893.3, 2025: 666_440.7}
+
+
+def cgpi_source_fingerprint() -> str:
+    """SHA-256 over the active CGPI source's import-price and domestic-CGPI extracts.
+
+    Resolved at call time so CGPI_SOURCE_DIR overrides are honoured. Derived caches are bound to this.
+    """
+    imp = cgpi_import_path()
+    if not imp.exists():
+        extract_import_prices()
+    dom = cgpi_dir() / "domestic_cgpi.csv"
+    if not dom.exists():
+        extract_domestic_cgpi()
+    h = hashlib.sha256()
+    for p in (imp, dom):
+        h.update(p.name.encode())
+        h.update(hashlib.sha256(p.read_bytes()).digest())
+    return h.hexdigest()
+
+
+def _stamp_path(cache_path: Path) -> Path:
+    return cache_path.with_name(cache_path.name + ".srcsha")
+
+
+def _cache_is_current(cache_path: Path) -> bool:
+    """True only if the cache exists and was written from the active CGPI source (stamp match)."""
+    stamp = _stamp_path(cache_path)
+    return (
+        cache_path.exists()
+        and stamp.exists()
+        and stamp.read_text().strip() == cgpi_source_fingerprint()
+    )
+
+
+def _write_stamp(cache_path: Path) -> None:
+    _stamp_path(cache_path).write_text(cgpi_source_fingerprint() + "\n")
 
 
 def load_import_prices() -> pd.DataFrame:
-    """Load BOJ CGPI import price indices (2020=100)."""
-    df = pd.read_csv(CGPI_PATH, parse_dates=["date"])
+    """Load BOJ CGPI import price indices (2020=100). Source dir: CGPI_SOURCE_DIR override or the tracked data/source-vintages vintage."""
+    df = pd.read_csv(cgpi_import_path(), parse_dates=["date"])
     return df
+
+
+def add_gdp_pct(df: pd.DataFrame, value_col: str = "total_corrected_bn_jpy") -> pd.DataFrame:
+    """Add gdp_pct = value / 当該年の名目GDP * 100。GDP未登録年は NaN（例外にしない）。"""
+    out = df.copy()
+    gdp = out["year"].map(GDP_BN_BY_YEAR)
+    out["gdp_pct"] = out[value_col] / gdp * 100
+    return out
 
 
 def compute_annual_price_index(force: bool = False) -> pd.DataFrame:
@@ -99,7 +150,7 @@ def compute_annual_price_index(force: bool = False) -> pd.DataFrame:
     TRADE_LOSS_DIR.mkdir(parents=True, exist_ok=True)
     cache_path = TRADE_LOSS_DIR / "annual_price_index.csv"
 
-    if cache_path.exists() and not force:
+    if not force and _cache_is_current(cache_path):
         print(f"Loading cached: {cache_path}")
         return pd.read_csv(cache_path)
 
@@ -127,6 +178,7 @@ def compute_annual_price_index(force: bool = False) -> pd.DataFrame:
     )
 
     annual.to_csv(cache_path, index=False)
+    _write_stamp(cache_path)
     print(f"Saved annual price index to {cache_path}")
     return annual
 
@@ -202,7 +254,7 @@ def compute_trade_loss(force: bool = False) -> pd.DataFrame:
     TRADE_LOSS_DIR.mkdir(parents=True, exist_ok=True)
     cache_path = TRADE_LOSS_DIR / "trade_loss_by_group.csv"
 
-    if cache_path.exists() and not force:
+    if not force and _cache_is_current(cache_path):
         print(f"Loading cached: {cache_path}")
         return pd.read_csv(cache_path)
 
@@ -258,6 +310,7 @@ def compute_trade_loss(force: bool = False) -> pd.DataFrame:
 
     df = pd.DataFrame(rows).sort_values(["group", "year"]).reset_index(drop=True)
     df.to_csv(cache_path, index=False)
+    _write_stamp(cache_path)
     print(f"Saved trade loss estimates to {cache_path} ({len(df)} rows)")
     return df
 
@@ -281,9 +334,10 @@ def compute_total_trade_loss(force: bool = False) -> pd.DataFrame:
     TRADE_LOSS_DIR.mkdir(parents=True, exist_ok=True)
     cache_path = TRADE_LOSS_DIR / "trade_loss_total.csv"
 
-    if cache_path.exists() and not force:
+    if not force and _cache_is_current(cache_path):
         print(f"Loading cached: {cache_path}")
-        return pd.read_csv(cache_path)
+        # 同一 vintage でも GDP比は常に現行の年別GDPから再計算（古い gdp_pct 列を信用しない）
+        return add_gdp_pct(pd.read_csv(cache_path))
 
     group_loss = compute_trade_loss(force=force)
 
@@ -312,7 +366,9 @@ def compute_total_trade_loss(force: bool = False) -> pd.DataFrame:
         .merge(ub_pivot.reset_index(), on="year")
         .merge(net_pivot.reset_index(), on="year")
     )
+    total = add_gdp_pct(total)
     total.to_csv(cache_path, index=False)
+    _write_stamp(cache_path)
     print(f"Saved total trade loss to {cache_path}")
     return total
 
@@ -411,7 +467,7 @@ if __name__ == "__main__":
     total_df = compute_total_trade_loss()
     print(f"\n{'Year':>6}  {'中心C(tn)':>11}  {'上限A(tn)':>11}  {'net B(tn)':>11}  {'中心%GDP':>9}")
     for _, row in total_df.iterrows():
-        pct = row["total_corrected_bn_jpy"] / GDP_BN_BY_YEAR[2022] * 100
+        pct = row["gdp_pct"]
         print(f"  {int(row['year'])}: {row['total_corrected_tn_jpy']:9.1f}    "
               f"{row['total_ub_tn_jpy']:9.1f}    {row['total_net_tn_jpy']:9.1f}    {pct:7.1f}%")
 

@@ -19,6 +19,8 @@ import numpy as np
 import pandas as pd
 import statsmodels.api as sm
 
+from src.data.fetch_import_prices import cgpi_import_path  # noqa: E402  (CGPI_SOURCE_DIR override)
+
 DATA_RAW = Path(__file__).resolve().parents[2] / "data" / "raw"
 DATA_PROCESSED = Path(__file__).resolve().parents[2] / "data" / "processed"
 PRICE_DIR = DATA_PROCESSED / "price-indices"
@@ -70,8 +72,7 @@ def _load_import_price_annual() -> pd.DataFrame:
     BOJ CGPI 集計輸入物価指数の年次平均を返す。
     Returns pd.DataFrame: columns = year, p_import (2020=100)
     """
-    cgpi_path = DATA_RAW / "boj-cgpi" / "import_prices_extracted.csv"
-    df = pd.read_csv(cgpi_path, parse_dates=["date"])
+    df = pd.read_csv(cgpi_import_path(), parse_dates=["date"])
     df["year"] = df["date"].dt.year
     total = df[df["group"] == "total"].copy()
     annual = (
