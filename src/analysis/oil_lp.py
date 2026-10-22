@@ -48,7 +48,8 @@ attribution, not a full structural decomposition.
 Outputs (data/processed/oil-lp/)
 --------------------------------
 - irf_results.csv           : outcome, sample, h, beta, se_hac, p_hac,
-                              p_perm, n_obs
+                              p_perm, p_perm_fwer, uniform_lower,
+                              uniform_upper, global_p_perm, n_obs
 - historical_decomposition.csv : date, actual/attributed dlog (pp) for
                               headline and the Q1-Q5 gap
 - lp_summary.txt            : peak IRFs, success criteria [A]-[D],
@@ -62,7 +63,6 @@ from pathlib import Path
 
 import numpy as np
 import pandas as pd
-import statsmodels.api as sm
 
 ROOT = Path(__file__).resolve().parents[2]
 PANEL_CSV = ROOT / "data" / "processed" / "oil-lp" / "monthly_panel.csv"
@@ -163,6 +163,52 @@ def standardize_shock(shock: pd.Series, h0_index: pd.DatetimeIndex) -> tuple[pd.
     return shock / sd, sd
 
 
+def joint_permutation_inference(
+    beta_hat: np.ndarray,
+    beta_perm: np.ndarray,
+    alpha: float = ALPHA,
+) -> dict[str, np.ndarray | float]:
+    """Max-statistic randomization inference over one outcome's horizons.
+
+    Coefficients are standardized by their horizon-specific permutation
+    standard deviations.  The maximum absolute statistic over h=0..24 controls
+    the family-wise error rate for a claim selected from those horizons.
+    """
+    beta_hat = np.asarray(beta_hat, dtype=float)
+    beta_perm = np.asarray(beta_perm, dtype=float)
+    if beta_perm.ndim != 2 or beta_perm.shape[1] != beta_hat.shape[0]:
+        raise ValueError("Permutation horizon dimension must match beta_hat")
+    if not 0 < alpha < 1:
+        raise ValueError("alpha must be between zero and one")
+
+    scale = beta_perm.std(axis=0, ddof=1)
+    scale = np.where(scale > 0, scale, np.nan)
+    observed_stat = np.abs(beta_hat) / scale
+    max_perm_stat = np.nanmax(np.abs(beta_perm) / scale, axis=1)
+    p_fwer = np.array(
+        [
+            (1.0 + np.count_nonzero(max_perm_stat >= stat))
+            / (1.0 + len(max_perm_stat))
+            for stat in observed_stat
+        ]
+    )
+    global_stat = float(np.nanmax(observed_stat))
+    global_p = float(
+        (1.0 + np.count_nonzero(max_perm_stat >= global_stat))
+        / (1.0 + len(max_perm_stat))
+    )
+    critical = float(np.nanquantile(max_perm_stat, 1.0 - alpha))
+    half_width = critical * scale
+    return {
+        "p_fwer": p_fwer,
+        "global_p": global_p,
+        "uniform_critical": critical,
+        "uniform_lower": beta_hat - half_width,
+        "uniform_upper": beta_hat + half_width,
+        "permutation_scale": scale,
+    }
+
+
 def run_lp(
     level: pd.Series,
     shock_raw: pd.Series,
@@ -171,6 +217,8 @@ def run_lp(
     rng: np.random.Generator,
 ) -> pd.DataFrame:
     """Estimate the cumulative LP with HAC + permutation inference."""
+    import statsmodels.api as sm
+
     pieces0 = lp_frames(level, shock_raw, start, end)
     if len(pieces0[0]) == 0:
         raise RuntimeError("empty h=0 estimation sample")
@@ -224,7 +272,8 @@ def run_lp(
     m = len(s_ext)
     exceed = np.zeros(H_MAX + 1)
     beta_hat = out["beta"].to_numpy()
-    for _ in range(N_PERM):
+    beta_perm = np.empty((N_PERM, H_MAX + 1))
+    for permutation_index in range(N_PERM):
         sp = s_ext[rng.permutation(m)]
         # lag matrix over ext index: col j = sp shifted by j
         L = np.full((m, N_LAGS + 1), np.nan)
@@ -234,10 +283,17 @@ def run_lp(
             d, C, p = fixed[h]
             X = np.hstack([L[p], C])
             coef, *_ = np.linalg.lstsq(X, d, rcond=None)
+            beta_perm[permutation_index, h] = coef[0]
             if abs(coef[0]) >= abs(beta_hat[h]):
                 exceed[h] += 1
     out["p_perm"] = (1.0 + exceed) / (1.0 + N_PERM)
+    joint = joint_permutation_inference(beta_hat, beta_perm)
+    out["p_perm_fwer"] = joint["p_fwer"]
+    out["uniform_lower"] = joint["uniform_lower"]
+    out["uniform_upper"] = joint["uniform_upper"]
+    out["global_p_perm"] = joint["global_p"]
     out.attrs["shock_sd"] = sd
+    out.attrs["uniform_critical"] = joint["uniform_critical"]
     return out
 
 
@@ -303,14 +359,22 @@ C_ATTR = "#c2591b"
 
 def _plot_irf(ax, sub: pd.DataFrame, title: str, ylab: str) -> None:
     h = sub["h"]
+    if {"uniform_lower", "uniform_upper"}.issubset(sub.columns):
+        lower = sub["uniform_lower"]
+        upper = sub["uniform_upper"]
+        label = "90%同時permutation帯（25期）"
+    else:
+        lower = sub["beta"] - 1.645 * sub["se_hac"]
+        upper = sub["beta"] + 1.645 * sub["se_hac"]
+        label = "90% HAC帯"
     ax.fill_between(
         h,
-        sub["beta"] - 1.645 * sub["se_hac"],
-        sub["beta"] + 1.645 * sub["se_hac"],
+        lower,
+        upper,
         color=C_BAND,
         alpha=0.18,
         lw=0,
-        label="90% HAC帯",
+        label=label,
     )
     ax.plot(h, sub["beta"], color=C_LINE, lw=2)
     ax.axhline(0, color="#888", lw=0.8, ls=":")
@@ -413,14 +477,15 @@ def build_summary(irf: pd.DataFrame, panel: pd.DataFrame, hd: pd.DataFrame,
     lines.append("\n[Peak IRFs — full sample 2005-01..2025-12]")
     lines.append(
         f"{'outcome':<26} {'h*':>3} {'beta':>8} {'p_hac':>7} {'p_perm':>7} "
-        f"{'n_obs(h*)':>9}"
+        f"{'p_FWER':>7} {'n_obs(h*)':>9}"
     )
     for oc in OUTCOMES_FULL:
         sub = irf[(irf["outcome"] == oc) & (irf["sample"] == "full")]
         pk = peak_row(sub)
         lines.append(
             f"{oc:<26} {int(pk['h']):>3} {pk['beta']:>8.3f} "
-            f"{pk['p_hac']:>7.3f} {pk['p_perm']:>7.3f} {int(pk['n_obs']):>9}"
+            f"{pk['p_hac']:>7.3f} {pk['p_perm']:>7.3f} "
+            f"{pk['p_perm_fwer']:>7.3f} {int(pk['n_obs']):>9}"
         )
     lines.append(
         "note: log_import_energy uses the 2015+ BOJ sample only "
@@ -431,23 +496,27 @@ def build_summary(irf: pd.DataFrame, panel: pd.DataFrame, hd: pd.DataFrame,
                  "(precovid shock variant — avoids post-2019 VAR leakage)]")
     lines.append(
         f"{'outcome':<26} {'h*':>3} {'beta':>8} {'p_hac':>7} {'p_perm':>7} "
-        f"{'n_obs(h*)':>9}"
+        f"{'p_FWER':>7} {'n_obs(h*)':>9}"
     )
     for oc in OUTCOMES_PRECOVID:
         sub = irf[(irf["outcome"] == oc) & (irf["sample"] == "precovid")]
         pk = peak_row(sub)
         lines.append(
             f"{oc:<26} {int(pk['h']):>3} {pk['beta']:>8.3f} "
-            f"{pk['p_hac']:>7.3f} {pk['p_perm']:>7.3f} {int(pk['n_obs']):>9}"
+            f"{pk['p_hac']:>7.3f} {pk['p_perm']:>7.3f} "
+            f"{pk['p_perm_fwer']:>7.3f} {int(pk['n_obs']):>9}"
         )
 
     # --- success criteria
     def _sig_pos(oc: str, sample: str) -> tuple[bool, pd.DataFrame]:
         sub = irf[(irf["outcome"] == oc) & (irf["sample"] == sample)]
-        hit = sub[(sub["beta"] > 0) & (sub["p_hac"] < ALPHA)]
+        hit = sub[(sub["beta"] > 0) & (sub["p_perm_fwer"] < ALPHA)]
         return len(hit) > 0, hit
 
-    lines.append(f"\n[Success criteria — significance = p_hac < {ALPHA}]")
+    lines.append(
+        f"\n[Success criteria — significance = within-outcome horizon-family "
+        f"p_perm_FWER < {ALPHA}]"
+    )
 
     ok_a, hit_a = _sig_pos("log_import_energy", "full")
     lines.append(
@@ -471,7 +540,9 @@ def build_summary(irf: pd.DataFrame, panel: pd.DataFrame, hd: pd.DataFrame,
     lines.append(
         f"[C] gap (Q1-Q5) IRF: peak h={int(pk_g['h'])} "
         f"beta={pk_g['beta']:+.3f}pp (p_hac={pk_g['p_hac']:.3f}, "
-        f"p_perm={pk_g['p_perm']:.3f}); "
+        f"p_perm={pk_g['p_perm']:.3f}, "
+        f"p_perm_FWER={pk_g['p_perm_fwer']:.3f}, "
+        f"global p={pk_g['global_p_perm']:.3f}); "
         f"{len(sig_g)} of {len(sub_g)} horizons with p_hac<{ALPHA} "
         f"(h={sorted(sig_g['h'].astype(int).tolist())})"
     )
@@ -524,6 +595,11 @@ def build_summary(irf: pd.DataFrame, panel: pd.DataFrame, hd: pd.DataFrame,
         "and rebuilds all shock lags; n_obs fixed across permutations."
     )
     lines.append(
+        "- horizon-family inference uses the maximum absolute coefficient "
+        "standardized by its permutation SD over h=0..24; p_perm_FWER and "
+        "90% uniform bands control the within-outcome family-wise error rate."
+    )
+    lines.append(
         "- historical decomposition uses full-sample point IRFs "
         "(differenced cumulative betas); linear partial attribution only."
     )
@@ -555,7 +631,20 @@ def main() -> None:
             )
             results.append(res)
     irf = pd.concat(results, ignore_index=True)[
-        ["outcome", "sample", "h", "beta", "se_hac", "p_hac", "p_perm", "n_obs"]
+        [
+            "outcome",
+            "sample",
+            "h",
+            "beta",
+            "se_hac",
+            "p_hac",
+            "p_perm",
+            "p_perm_fwer",
+            "uniform_lower",
+            "uniform_upper",
+            "global_p_perm",
+            "n_obs",
+        ]
     ]
     irf.to_csv(OUT_DIR / "irf_results.csv", index=False)
 

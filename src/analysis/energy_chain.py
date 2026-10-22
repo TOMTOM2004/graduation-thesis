@@ -8,7 +8,8 @@ IO 061/211/212/461/462）経由の比率を計算する。
 
 入力（既存成果物・一切変更しない）:
   - data/processed/import-content/mid_category_ic_by_group.csv
-      IC_{c,g} = Σ_i B(c,i)·(μ_g^T L^d)_i  （tasks/_a4_groupspec.py 生成・B-4是正済）
+      旧定義 IC_{c,g} = Σ_i B(c,i)·(μ_g^T L^d)_i
+      （定義比較用。正準値は本モジュールで誘発輸入式から再計算）
   - data/processed/bridge-matrix/mid_category_import_content.csv
       pc_value_bn_jpy（IO 民間消費列の中分類別消費額 = 集計ウェイト）
   - src/analysis/trade_loss.compute_annual_price_index()
@@ -31,7 +32,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 
-from src.utils.io_utils import load_io_table, compute_input_coefficients
+from src.utils.io_utils import load_io_table, compute_induced_import_content
 from src.analysis.import_content import GROUPS, GROUP_JA, SECTOR_GROUP_MAP
 from src.analysis.bridge_matrix_mid import build_bridge_matrix_mid, CPI_MID_CATEGORY_MAP
 from src.analysis.trade_loss import compute_annual_price_index
@@ -95,21 +96,12 @@ def build_variant_ic_by_group() -> pd.DataFrame:
     本関数はこの定義で中分類別 IC_{c,g} を再計算する（既存ファイルは変更しない）。
     """
     io = load_io_table()
-    A = compute_input_coefficients(io)
-    x = io["output"]
-    imp = io["imports"].abs()
-    mu = (imp / (x + imp).replace(0, np.inf)).fillna(0.0)
-    n = A.shape[0]
-    L_d = np.linalg.inv(np.eye(n) - (np.eye(n) - np.diag(mu.values)) @ A.values)
     codes = io["sector_codes"]
 
     sector_ic_g = {}
     for g in GROUPS:
-        mu_g = np.array([mu[c] if SECTOR_GROUP_MAP.get(c) == g else 0.0 for c in codes])
-        chain = mu_g @ A.values @ L_d  # (μ_g^T A L^d)_j
-        direct = np.array([mu[c] if SECTOR_GROUP_MAP.get(c) == g else 0.0 for c in codes])
-        ic_g = direct + (1.0 - mu.values) * chain
-        sector_ic_g[g] = pd.Series(np.clip(ic_g, 0, 1), index=codes)
+        mask = [SECTOR_GROUP_MAP.get(code) == g for code in codes]
+        sector_ic_g[g] = compute_induced_import_content(io, mask)
 
     bridge = build_bridge_matrix_mid()
     rows = []
@@ -210,9 +202,9 @@ def make_figure(major_canon: pd.DataFrame, major_var: pd.DataFrame, path: Path) 
     y = np.arange(len(d))
     fig, ax = plt.subplots(figsize=(9, 5.8))
     ax.barh(y + 0.2, d["var_share"] * 100, height=0.38, color="#d95f02", alpha=0.9,
-            label="誘発輸入定義（感度・μ̂(Ax+f) ベース）")
+            label="正準IC（誘発輸入・μ̂(Ax+f) ベース）")
     ax.barh(y - 0.2, d["energy_share_of_push"] * 100, height=0.38, color="#1b4965",
-            label="本文既定 IC 定義（B-4是正済）")
+            label="旧IC（mu^T L^d・比較用）")
     ax.set_yticks(y)
     ax.set_yticklabels(d["major_name"], fontsize=10)
     ax.set_xlabel("輸入コスト曝露（2020→2022 ショック加重）に占めるエネルギー起因比率（%）",
@@ -239,12 +231,12 @@ def main() -> None:
 
     shocks = compute_group_shocks()
 
-    # --- 定義1: リポジトリ既定 IC = μ_g^T L^d（B-4是正済・既存CSV再利用）---
+    # --- 定義1: 旧 IC = μ_g^T L^d（比較用・既存CSV再利用）---
     mid = decompose(load_mid_ic_by_group(), shocks)
     major = aggregate_major(mid)
     quint = quintile_energy_origin(major)
 
-    # --- 定義2（感度）: 誘発輸入ベース ---
+    # --- 定義2（正準）: 誘発輸入ベース ---
     base_meta = load_mid_ic_by_group()[
         ["cpi_mid_name", "hh_group", "major_code", "major_name",
          "is_competitive_import", "pc_value_bn_jpy"]
@@ -277,24 +269,29 @@ def main() -> None:
     )
     parts = []
     for df, level, defn in [
-        (mid, "mid", "canonical_muT_Ld"),
-        (mid_v, "mid", "induced_import"),
+        (mid, "mid", "legacy_muT_Ld"),
+        (mid_v, "mid", "canonical_induced_import"),
     ]:
         p = df[out_cols].copy()
         p["level"] = level
         p["definition"] = defn
+        p["ic_scope"] = "five_shock_groups"
         parts.append(p)
-    for df, defn in [(major, "canonical_muT_Ld"), (major_v, "induced_import")]:
+    for df, defn in [
+        (major, "legacy_muT_Ld"),
+        (major_v, "canonical_induced_import"),
+    ]:
         p = df.copy()
         p["cpi_mid_name"] = p["major_name"]
         p["level"] = "major"
         p["definition"] = defn
+        p["ic_scope"] = "five_shock_groups"
         parts.append(p)
     combined = pd.concat(parts, ignore_index=True)
     combined.to_csv(OUT_DIR / "energy_origin_shares.csv", index=False)
 
-    quint["definition"] = "canonical_muT_Ld"
-    quint_v["definition"] = "induced_import"
+    quint["definition"] = "legacy_muT_Ld"
+    quint_v["definition"] = "canonical_induced_import"
     pd.concat([quint, quint_v], ignore_index=True).to_csv(
         OUT_DIR / "quintile_energy_origin.csv", index=False)
 
@@ -308,8 +305,9 @@ def main() -> None:
     lines.append("エネルギー起点の連鎖会計（Task B）— 輸入コスト曝露のエネルギー起因比率")
     lines.append("=" * 72)
     lines.append("")
-    lines.append("【定義】会計分解（因果識別ではない）。IC_{c,g} = Σ_i B(c,i)·(μ_g^T L^d)_i")
-    lines.append("  （2020年IO表・競争輸入型・直接+間接 Leontief 伝播・B-4是正済）")
+    lines.append("【定義】会計分解（因果識別ではない）。2つのIC定義を比較する。")
+    lines.append("  旧定義 = μ_g^T L^d ／ 正準定義 = μ_j1{j∈g}+(1−μ_j)(μ_g^T A L^d)_j")
+    lines.append("  （2020年IO表・競争輸入型・直接+間接 Leontief 伝播）")
     lines.append("  エネルギー = 石油・石炭・天然ガス由来（IO 061/211/212/461/462、原油単独ではない）")
     lines.append("")
     lines.append(f"【輸入物価ショック {SHOCK_FROM}→{SHOCK_TO}（BOJ CGPI 年平均）】")
@@ -317,16 +315,16 @@ def main() -> None:
         lines.append(f"  {GROUP_JA[g]:<16s}: {shocks[g]*+100:+7.1f}%")
     lines.append("")
     for label, a, mj, qt, tp in [
-        ("定義1: 本文既定 IC = μᵀLᵈ（B-4是正済・論文の他数値と整合）",
+        ("定義1: 旧 IC = μᵀLᵈ（比較用）",
          agg, major, quint, top10),
-        ("定義2（感度）: 誘発輸入ベース ic_j = μ_j + (1−μ_j)(μ_gᵀA Lᵈ)_j",
+        ("定義2（正準）: 誘発輸入ベース ic_j = μ_j + (1−μ_j)(μ_gᵀA Lᵈ)_j",
          agg_v, major_v, quint_v, top10_v),
     ]:
         lines.append("─" * 72)
         lines.append(f"◆ {label}")
         lines.append("─" * 72)
         lines.append("【集計（IO民間消費額加重・中分類41カテゴリ）】")
-        lines.append(f"  総輸入含有率 IC          : {a['ic_total']:.4f}")
+        lines.append(f"  5グループ起因IC          : {a['ic_total']:.4f}")
         lines.append(f"  うちエネルギー経由        : {a['ic_energy']:.4f}"
                      f"（構成比 {a['ic_energy']/a['ic_total']*100:.1f}%）")
         lines.append(f"  予測輸入コストプッシュ計   : {a['push_total']:.2f}pp（2020→2022）")
@@ -362,8 +360,8 @@ def main() -> None:
     lines.append("  μ_i·(1−μ_i)·A の重みで数えるため、電気・ガス代の輸入燃料コスト経由の")
     lines.append("  曝露を大幅に過小計上する（061→461 リンクで約1/80）。誘発輸入定義は")
     lines.append("  M=μ̂(Ax+f) から導出した標準形。エネルギー起因比率は定義2の方が高く、")
-    lines.append("  「大元はエネルギー」仮説の評価には定義2が経済的に適切と考えられるが、")
-    lines.append("  論文の既存数値（IC・shift-share 等）は定義1で計算されている点に留意。")
+    lines.append("  「大元はエネルギー」仮説の評価には定義2が経済的に適切であるため、")
+    lines.append("  本研究では定義2を正準ICへ昇格し、定義1は比較用の旧定義として残す。")
     lines.append("")
     lines.append("【留意事項（正直な限界）】")
     lines.append("  1. これはコスト曝露の会計分解（Leontief・行動反応なし・価格設定行動なし）。")

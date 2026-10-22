@@ -1,0 +1,17 @@
+HTTP/1.1 200 OK
+Server: Apache
+X-Frame-Options: SAMEORIGIN
+X-XSS-Protection: 1; mode=block
+X-Content-Type-Options: nosniff
+Content-Security-Policy: default-src 'self' 'unsafe-inline' 'unsafe-eval';img-src 'self' data:;
+Last-Modified: Fri, 22 Apr 2022 01:11:26 GMT
+Accept-Ranges: bytes
+Content-Length: 333873
+Content-Type: text/csv
+Expires: Thu, 22 Oct 2026 11:36:37 GMT
+Cache-Control: max-age=0, no-cache, no-store
+Pragma: no-cache
+Date: Thu, 22 Oct 2026 11:36:37 GMT
+Connection: keep-alive
+Strict-Transport-Security: max-age=15768000
+

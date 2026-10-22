@@ -14,7 +14,7 @@ Phase 3 Step 3-1: IO価格モデル（レオンチェフ価格方程式）。
 
 2仕様で並列実装:
     (i)  β=1.0: レオンチェフ原形（完全転嫁）
-    (ii) β=BETA_EMPIRICAL（cost_push_panel_results.csv spec iii から読込・≈0.43）: 実証スケーリング（Phase 2a-3 パネルOLS 推定値）
+    (ii) β=BETA_EMPIRICAL（正準IC・生産者価格の関連回帰から読込）: 例示的スケーリング
 
 競争的輸入財（衣料・履物）は転嫁係数を 0 に設定（DEC-010）。
 """
@@ -31,27 +31,40 @@ from src.utils.io_utils import (
 )
 from src.analysis.import_content import SECTOR_GROUP_MAP, GROUPS
 from src.analysis.bridge_matrix_mid import CPI_MID_CATEGORY_MAP
+from src.data.fetch_import_prices import cgpi_import_path  # CGPI_SOURCE_DIR override
 
 DATA_RAW = Path(__file__).resolve().parents[2] / "data" / "raw"
 DATA_PROCESSED = Path(__file__).resolve().parents[2] / "data" / "processed"
 SIM_DIR = DATA_PROCESSED / "simulation-params"
 
-def _load_beta_empirical() -> float:
-    """Phase 2a-3 パネルOLS spec(iii) の β を結果CSVから読む（DEC-019: 結果数値のハードコード禁止・回帰再実行に自動追随）"""
-    results_csv = DATA_PROCESSED / "price-indices" / "cost_push_panel_results.csv"
+def load_beta_empirical(results_csv: Path | None = None) -> float:
+    """正準IC・生産者価格の関連回帰 β を結果CSVから読む（DEC-026）。"""
+    if results_csv is None:
+        results_csv = (
+            DATA_PROCESSED
+            / "price-indices"
+            / "cost_push_ic_definition_sensitivity.csv"
+        )
     if not results_csv.exists():
         raise RuntimeError(
-            f"{results_csv} が存在しない。先に `python -m src.analysis.cost_push_panel` を実行すること"
+            f"{results_csv} が存在しない。先に `python -m src.analysis.cost_push_ic_sensitivity` を実行すること"
             "（README「再現手順」参照。本モジュールは import 時に β を読み込む）"
         )
     df = pd.read_csv(results_csv)
-    row = df[df["仕様"].str.contains("競争的輸入財除外", na=False)]
+    row = df[
+        df["ic_variant"].eq("ic_def2_producer")
+        & df["specification"].eq("competitive_imports_excluded")
+    ]
     if len(row) != 1:
-        raise RuntimeError("spec (iii) が cost_push_panel_results.csv に見つからない。先に src/analysis/cost_push_panel.py を実行すること")
-    return float(row["β"].iloc[0])
+        raise RuntimeError(
+            "ic_def2_producer が感度結果に一意に見つからない。"
+            "先に src/analysis/cost_push_ic_sensitivity.py を実行すること"
+        )
+    return float(row["beta"].iloc[0])
 
-# Empirical pass-through coefficient (Phase 2a-3 panel OLS, spec iii)
-BETA_EMPIRICAL = _load_beta_empirical()
+# Illustrative scaling coefficient from the canonical-IC association regression.
+# It is not interpreted as a structural pass-through parameter (DEC-026).
+BETA_EMPIRICAL = load_beta_empirical()
 
 # Koyck partial adjustment: annual pass-through rate
 # δ=0.55 は calibration（推定値ではない）。独立グリッド探索では RMSE 最小は δ≈0.60、
@@ -85,7 +98,7 @@ def build_import_price_shock_vector(
     pd.Series index=sector_code, values=m_i (fractional change)
     """
     # Load CGPI group-level annual averages
-    cgpi = pd.read_csv(DATA_RAW / "boj-cgpi" / "import_prices_extracted.csv", parse_dates=["date"])
+    cgpi = pd.read_csv(cgpi_import_path(), parse_dates=["date"])
     cgpi["year"] = cgpi["date"].dt.year
     annual = (
         cgpi.groupby(["year", "group"])["value"]
@@ -291,7 +304,7 @@ def apply_koyck_lag(
     ----------
     shock_by_year : dict mapping year (int) → sectoral shock vector (pd.Series)
     delta : annual pass-through rate (0 < δ ≤ 1).
-            δ=0.55 is the RMSE-minimizing estimate from 2021-2024 validation data.
+            δ=0.55 is a calibration in the flat RMSE region [0.5, 0.7] (DEC-020).
             δ=1.0 reduces to the static (instantaneous) model.
 
     Returns

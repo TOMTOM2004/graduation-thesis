@@ -78,6 +78,7 @@ if _ROOT not in sys.path:
 
 from src.analysis.cost_push_id import HH_TO_CPI_CODE
 from src.analysis.quintile_impact import load_expenditure_shares
+from src.data.fetch_import_prices import cgpi_import_path  # CGPI_SOURCE_DIR override
 
 ROOT = Path(__file__).resolve().parents[2]
 DATA_RAW = ROOT / "data" / "raw"
@@ -86,7 +87,6 @@ OUT_DIR = ROOT / "data" / "processed" / "oil-lp"
 CPI_OLD = DATA_RAW / "cpi" / "cpi_category_2005_2024.csv"
 CPI_NEW = DATA_RAW / "cpi" / "cpi_category_2015_2025.csv"
 CPI_LONG = DATA_RAW / "cpi" / "cpi_headline_major_2005_2025.csv"
-BOJ_IMPORT = DATA_RAW / "boj-cgpi" / "import_prices_extracted.csv"
 
 # e-Stat CPI 2020-base table (same as fetch_cpi.CPI_2020_TABLE)
 CPI_2020_TABLE = "0003427113"
@@ -332,7 +332,7 @@ def build_effective_cpi(panel: pd.DataFrame) -> pd.DataFrame:
 
 def load_import_energy() -> pd.DataFrame:
     """BOJ import price index, group=energy (円ベース): log level + dlog."""
-    boj = pd.read_csv(BOJ_IMPORT, parse_dates=["date"])
+    boj = pd.read_csv(cgpi_import_path(), parse_dates=["date"])
     en = boj[boj["group"] == "energy"].set_index("date")["value"].astype(float)
     en = en.sort_index()
     out = pd.DataFrame({"log_import_energy": np.log(en)})

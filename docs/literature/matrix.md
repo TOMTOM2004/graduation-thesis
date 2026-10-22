@@ -14,6 +14,10 @@
 | P012 | Hottman & Monarch | 2020 | Nested CES | 米国貿易・支出 | 所得層別 | 低所得層が高い輸入物価インフレを経験 | Medium |
 | P014 | 宇南山 | 2023 | ミクロデータ分析 | 日本・家計調査 | 家計レベル | 日本の消費行動の包括的実態把握 | Medium |
 | P015 | Niizeki & Hori | 2023 | 疑似パネル | 日本・家計調査 | コーホート×四半期 | インフレ期待→耐久財支出増（一時的） | Medium |
+| P088 | Causa et al. | 2022 | 固定バスケット購買力会計 | OECD諸国HBS+CPI（日本含む） | 所得層別 | 全対象国で低所得層の負担が相対的に大きい | High |
+| P089 | Bank of Japan | 2022 | 固定バスケット実効CPI | 日本・家計調査+CPI | 所得五分位 | 2022年5月はQ1 2.5%、Q5 2.1% | High |
+| P091 | Bank of Japan | 2026 | IO分解+VAR+Q-JEM | 日本・IO/物価/SNA | 産業×時系列 | 近年の輸入価格転嫁と二次波及が強い可能性 | High |
+| P092 | Bank of Japan | 2026 | 所得流出シナリオ+IO波及 | 日本・貿易/IO/物価 | 商品×産業 | 原油高の所得流出・供給網波及・低所得層負担を接続 | High |
 
 ## 識別戦略
 
@@ -31,6 +35,10 @@
 | P082 | Bernanke & Blanchard | 2023 | 構造的賃金-物価連立動学+historical decomposition | 外生供給ショック系列を直接投入し供給寄与を識別（control群不要）。重量級benchmark | High |
 | P083 | di Giovanni et al. | 2022 | 多国多部門生産ネットワークGE | コストプッシュ/供給制約をセクター分解。外国ショック+ボトルネックが支配的（ユーロ圏）。重量級benchmark | Medium |
 | P084 | Borusyak & Hull | 2023 | recentered instrument（design-based） | エクスポージャー非ランダム性を反実仮想分布で recenter。share外生性軸 | High |
+| P090 | Di Pace, Juvenal, Petrella | 2025 | 輸出価格・輸入価格ショックの分離 | 交易条件だけでは国際価格ショックを十分に代理できない | High |
+| P093 | Tong | 2024 | 分散不均一性識別×日次戦争ニュース×LP | 53の戦争ニュース日から外生ショックを抽出し、商品価格・インフレ期待・週次GDPへの応答を推定 | High |
+| P094 | Aizenman et al. | 2024 | event-based SVAR | ウクライナ戦争ニュースが小麦・トウモロコシ・欧州天然ガスを押し上げる | High |
+| P095 | Iacoviello & Tong | 2026 | LLM新聞分類・方向付き二国間GPR | 1960年以降のRussia→Ukraine月次指数を公開。ただし構造ショックとしては未識別 | High |
 
 ## Phase 2 関連（シミュレーションモデル）
 
@@ -69,6 +77,8 @@
 | P055 | Balk | 2025 | 指数理論的再定式化 | 理論・数値例 | Kohliアプローチへの代替的定義、手法間差異を検証 | High |
 | P056 | Bahar, Arcay Daboin, Pacheco, Hausmann | 2024 | 構造分解・国際比較 | 日本SNA・国際収支 | GNI-GDP差が先進国中突出、所得収支は国内非還流 | High |
 | P057 | 新家義貴 | 2022 | 交易損失の定量分析 | 日本SNA | 交易損失年率15兆円（GDP比3%）、実質GDI停滞 | High |
+| P090 | Di Pace, Juvenal, Petrella | 2025 | 国際価格ショック分離 | 発展途上国パネル | 輸出価格ショックと輸入価格ショックの効果は非対称 | High |
+| P092 | Bank of Japan | 2026 | 原油価格シナリオ・IO会計 | 日本・貿易/IO | 原油・関連商品高による所得流出と国内価格波及を試算 | High |
 
 ## オルタナティブデータ
 

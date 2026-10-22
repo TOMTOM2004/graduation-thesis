@@ -20,6 +20,7 @@ import pandas as pd
 
 from src.analysis.quintile_impact import run_microsimulation, QUINTILE_LABELS
 from src.analysis.io_price_model import DELTA_KOYCK, BETA_EMPIRICAL
+from src.utils.cache_utils import should_use_cache
 
 DATA_PROCESSED = Path(__file__).resolve().parents[2] / "data" / "processed"
 SIM_DIR = DATA_PROCESSED / "simulation-params"
@@ -393,6 +394,7 @@ def plot_policy_scenarios(
 def sensitivity_analysis_delta(
     deltas: list[float] | None = None,
     year: int = BENCHMARK_YEAR,
+    force: bool = False,
 ) -> pd.DataFrame:
     """
     Assess robustness of policy effects across different Koyck δ values.
@@ -412,7 +414,7 @@ def sensitivity_analysis_delta(
     SIM_DIR.mkdir(parents=True, exist_ok=True)
     cache_path = SIM_DIR / "sensitivity_delta.csv"
 
-    if cache_path.exists():
+    if should_use_cache(cache_path, force=force):
         print(f"Loading cached: {cache_path}")
         return pd.read_csv(cache_path)
 

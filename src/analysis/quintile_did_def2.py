@@ -30,7 +30,11 @@ import numpy as np
 import pandas as pd
 import statsmodels.formula.api as smf
 
-from src.utils.io_utils import load_io_table, compute_input_coefficients
+from src.utils.io_utils import (
+    compute_import_penetration,
+    compute_induced_import_content,
+    load_io_table,
+)
 from src.analysis.bridge_matrix_mid import build_bridge_matrix_mid, CPI_MID_CATEGORY_MAP
 from src.analysis.quintile_did import (
     HH_TO_CPI_MID,
@@ -53,15 +57,7 @@ KEY_ITEMS = ["電気代", "ガス代", "他の光熱", "自動車等関係費"] 
 def compute_def2_sector_ic() -> tuple[pd.Series, pd.Series]:
     """全セクター μ による誘発輸入 IC: ic_j = μ_j + (1−μ_j)(μᵀ A Lᵈ)_j。"""
     io = load_io_table()
-    A = compute_input_coefficients(io)
-    x = io["output"]
-    imp = io["imports"].abs()
-    mu = (imp / (x + imp).replace(0, np.inf)).fillna(0.0)
-    n = A.shape[0]
-    L_d = np.linalg.inv(np.eye(n) - (np.eye(n) - np.diag(mu.values)) @ A.values)
-    chain = mu.values @ A.values @ L_d  # (μᵀ A Lᵈ)_j — μ は全セクター
-    ic = mu.values + (1.0 - mu.values) * chain
-    return pd.Series(np.clip(ic, 0, 1), index=io["sector_codes"]), mu
+    return compute_induced_import_content(io), compute_import_penetration(io)
 
 
 def compute_def2_mid_ic() -> pd.DataFrame:
